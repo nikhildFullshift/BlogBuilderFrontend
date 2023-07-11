@@ -8,14 +8,6 @@ import {
 import { Controller } from 'react-hook-form';
 import { FormInputProps } from './FormInputProps';
 
-// TODO: export FormInputProps from a separate file 
-// interface FormInputProps {
-//   name: string;
-//   control: any;
-//   label: string;
-//   setValue?: any;
-// }
-
 const options = [
   {
     label: 'Checkbox Option 1',

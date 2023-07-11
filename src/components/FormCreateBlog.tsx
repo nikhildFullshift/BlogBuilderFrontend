@@ -34,6 +34,7 @@ export default function FormCreateBlog() {
       <Typography variant="h6"> Create Blog</Typography>
       <FormInputText name="title" control={control} label="Blog Title" />
       <FormInputText name="description" control={control} label="Description" />
+      <TextareaAutosize placeholder="Enter code snippet here" maxRows={20} minRows={20} />
       <FormInputDropdown
         name="dropdownValue"
         control={control}
@@ -53,7 +54,7 @@ export default function FormCreateBlog() {
         {" "}
         Reset{" "}
       </Button>
-      <TextareaAutosize style={{background: 'white', color: "black"}} maxRows={20} minRows={20} />
+      <TextareaAutosize placeholder="Your blog will appear here!" maxRows={20} minRows={20} />
     </Paper>
   );
 };
