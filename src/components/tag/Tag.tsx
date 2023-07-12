@@ -48,8 +48,6 @@ export default function Tag() {
   };
 
   return (
-    // <div className="app">
-    //   <div>
     <ReactTags
       tags={tags}
       suggestions={suggestions}
@@ -61,7 +59,5 @@ export default function Tag() {
       inputFieldPosition="bottom"
       autocomplete={true}
     />
-    //   </div>
-    // </div>
   );
 }
