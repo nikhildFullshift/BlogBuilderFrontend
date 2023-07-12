@@ -4,6 +4,7 @@ import { FormInputMultiCheckbox } from './form-components/FormInputMultiCheckbox
 import { FormInputDropdown } from './form-components/FormInputDropdown';
 import { Button, Container, Paper, Typography } from '@mui/material';
 import { TextareaAutosize } from '@mui/base';
+import Tag from './tag/Tag';
 
 interface IFormInput {
   checkboxValue: string[];
@@ -70,6 +71,7 @@ export default function FormCreateBlog() {
       >
         <FormInputText name="new-title" control={control} label="Title" />
         <TextareaAutosize placeholder="Your blog will appear here!" style={{ width: '100%' }} minRows={40} />
+        <Tag />
       </Container>
     </Paper>
   );
