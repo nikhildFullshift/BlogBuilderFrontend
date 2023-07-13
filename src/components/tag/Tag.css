@@ -39,7 +39,7 @@
   position: absolute;
 }
 .ReactTags__suggestions ul {
-  list-style-type: none;
+  list-style: none;
   box-shadow: 0.05em 0.01em 0.5em rgba(0, 0, 0, 0.2);
   background: white;
   width: 200px;
@@ -49,8 +49,16 @@
 .ReactTags__suggestions li {
   list-style-type: none;
   border-bottom: 1px solid #ddd;
-  padding: 5px;
   margin: 0;
+  padding: 0;
+  width: 232px;
+  text-align: center;
+}
+.ReactTags__suggestions li {
+  margin: 0px;
+  padding: 5px;
+  background-color: #ddd;
+  width: 100%;
 }
 .ReactTags__suggestions li mark {
   text-decoration: underline;
@@ -58,8 +66,9 @@
   font-weight: 600;
 }
 .ReactTags__suggestions ul li.ReactTags__activeSuggestion {
-  background: gainsboro;
+  background: #b7cfe0;
   cursor: pointer;
+  width: 100%;
 }
 
 .ReactTags__remove {
