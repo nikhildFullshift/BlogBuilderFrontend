@@ -11,7 +11,7 @@ interface FormInputProps {
   maxRows?: number
 }
 
-export const FormTextArea = ({ name, control, placeholder, style, minRows, maxRows }: FormInputProps) => {
+export const FormTextArea = ({ name, control, placeholder, style, minRows, maxRows, setValue }: FormInputProps) => {
   return (
     <Controller
       name={name}
@@ -21,22 +21,12 @@ export const FormTextArea = ({ name, control, placeholder, style, minRows, maxRo
         fieldState: { error },
         formState,
       }) => (
-        // <TextField
-        //   helperText={error ? error.message : null}
-        //   size="small"
-        //   error={!!error}
-        //   onChange={onChange}
-        //   value={value || ''}
-        //   fullWidth
-        //   label={label}
-        //   variant="outlined"
-        // />
         <TextareaAutosize
           // name="codeSnippetTextArea"
           placeholder={placeholder}
           style={style}
           onChange={onChange}
-          value={value || ''}
+          value={setValue || value}
           maxRows={maxRows}
           minRows={minRows}
         />

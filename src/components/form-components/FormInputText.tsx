@@ -8,7 +8,7 @@ interface FormInputProps {
   setValue?: any;
 }
 
-export const FormInputText = ({ name, control, label }: FormInputProps) => {
+export const FormInputText = ({ name, control, label, setValue }: FormInputProps) => {
   return (
     <Controller
       name={name}
@@ -23,7 +23,7 @@ export const FormInputText = ({ name, control, label }: FormInputProps) => {
           size="small"
           error={!!error}
           onChange={onChange}
-          value={value || ''}
+          value={setValue || value}
           fullWidth
           label={label}
           variant="outlined"

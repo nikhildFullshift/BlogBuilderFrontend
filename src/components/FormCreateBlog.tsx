@@ -9,9 +9,9 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { TextareaAutosize } from "@mui/base";
 import Tag from "./tag/Tag";
 import { FormTextArea } from "./form-components/FormTextArea";
+import { useState } from "react";
 
 interface IFormInput {
   optionsCheckBoxValue: string[];
@@ -19,6 +19,8 @@ interface IFormInput {
   titleInputTextValue: string,
   descriptionInputTextValue: string,
   codeSnippetTextArea: string,
+  blogTitleInput: string,
+  blogContentInput: string
 }
 
 const defaultValues = {
@@ -26,7 +28,9 @@ const defaultValues = {
   dropdownValue: "",
   titleInputTextValue: "",
   descriptionInputTextValue: "",
-  codeSnippetTextArea: ""
+  codeSnippetTextArea: "",
+  blogTitleInput: "",
+  blogContentInput: ""
 };
 
 export default function FormCreateBlog() {
@@ -40,13 +44,6 @@ export default function FormCreateBlog() {
       optionsCheckBoxValue,
       titleInputTextValue,
     } = data;
-
-    console.log(data, codeSnippetTextArea,
-      descriptionInputTextValue,
-      dropdownValue,
-      optionsCheckBoxValue,
-      titleInputTextValue,);
-
     async function generateBlog(
       url: string,
       config: RequestInit
@@ -54,17 +51,12 @@ export default function FormCreateBlog() {
       const response = await fetch(url, config);
       return await response.json();
     }
-    console.log("generation config");
-
     const body = JSON.stringify({
       title: titleInputTextValue,
       description: descriptionInputTextValue,
       codeSnippet: codeSnippetTextArea,
-      // optional:
     });
     console.log("body", body);
-
-
     const config = {
       method: 'POST',
       headers: {
@@ -73,10 +65,40 @@ export default function FormCreateBlog() {
       body: body
     }
     const response = await generateBlog("https://3f0f-2405-201-a014-b967-a5c6-8937-62e7-6c51.ngrok-free.app/openai/generate", config);
-    console.log("🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:", response)
-
-
+    console.log("🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:", response);
+    const { title, description } = response;
+    setValue('blogTitleInput', title);
+    setValue('blogContentInput', description);
   };
+
+
+  const handleSendToReview = async (data: IFormInput) => {
+    console.log("data", data)
+    const { blogTitleInput, blogContentInput } = data;
+    async function saveBlog(
+      url: string,
+      config: RequestInit
+    ): Promise<any> { // TODO: remove any and write proper response structure
+      const response = await fetch(url, config);
+      return await response.json();
+    }
+
+    const body = JSON.stringify({
+      title: blogTitleInput,
+      description: blogContentInput,
+    });
+    console.log("body =>", body);
+
+    const config = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: body
+    }
+    const response = await saveBlog("https://3f0f-2405-201-a014-b967-a5c6-8937-62e7-6c51.ngrok-free.app/blog/create", config);
+    console.log("🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:", response)
+  }
 
   const theme = createTheme({
     breakpoints: {
@@ -124,7 +146,9 @@ export default function FormCreateBlog() {
           <Button variant="contained" color="error">
             Move to Trash
           </Button>
-          <Button variant="contained" color="success">
+          <Button variant="contained" color="success"
+            onClick={handleSubmit(handleSendToReview)}
+          >
             Send to Review
           </Button>
         </Container>
@@ -173,7 +197,7 @@ export default function FormCreateBlog() {
             label={"Checkbox Input"}
           />
           <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
-            Submit
+            Generate Blog
           </Button>
           <Button onClick={() => reset()} variant={"outlined"}>
             Reset
@@ -197,12 +221,13 @@ export default function FormCreateBlog() {
             },
           }}
         >
-          <FormInputText name="new-title" control={control} label="Title" />
+          <FormInputText name="blogTitleInput" control={control} label="Title" />
           <FormTextArea
-            name="blogContent"
+            name="blogContentInput"
             placeholder="Your blog will appear here!"
-            style={{ width: "100%" }}
-            minRows={20}
+            style={{ width: "100%", overflowY: 'auto' }}
+            minRows={30}
+            maxRows={30}
             control={control}
           />
           <Tag />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Checkbox,
   FormControl,
@@ -52,7 +52,7 @@ export const FormInputMultiCheckbox: React.FC<FormInputProps> = ({
               control={
                 <Controller
                   name={name}
-                  render={({}) => {
+                  render={({ }) => {
                     return (
                       <Checkbox
                         checked={selectedItems.includes(option.value)}
