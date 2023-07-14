@@ -1,6 +1,15 @@
 import { useState } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { WithContext as ReactTags } from "react-tag-input";
-import "./Tag.css";
+import "../tag/Tag.css";
+
+interface FormInputProps {
+  name: string;
+  control: any;
+  label: string;
+  setValue?: any;
+  // suggestions?: string[]
+}
 
 const suggestions = [
   "redis",
@@ -9,7 +18,7 @@ const suggestions = [
   "elasticsearch",
   "kibana",
 ].map((country) => {
-  // console.log("suggestions called, country: ", country);
+  console.log("suggestions called, country: ", country);
   return {
     id: country,
     text: country,
@@ -23,7 +32,8 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-export default function Tag() {
+export const FormTag = ({ name, control, label, setValue }: FormInputProps) => {
+
   const [tags, setTags] = useState([
     { id: "Software Engineering", text: "Software Engineering" },
     { id: "Nodejs", text: "Nodejs" },
@@ -54,16 +64,27 @@ export default function Tag() {
   };
 
   return (
-    <ReactTags
-      tags={tags}
-      suggestions={suggestions}
-      delimiters={delimiters}
-      handleDelete={handleDelete}
-      handleAddition={handleAddition}
-      handleDrag={handleDrag}
-      handleTagClick={handleTagClick}
-      inputFieldPosition="bottom"
-      autocomplete={true}
+    <Controller
+      name={name}
+      control={control}
+      render={({
+        // field: { onChange, value },
+        fieldState: { error },
+        formState,
+      }) => (
+        <ReactTags
+          // inputValue={tags.join(",")}
+          tags={tags}
+          suggestions={suggestions}
+          delimiters={delimiters}
+          handleDelete={handleDelete}
+          handleAddition={handleAddition}
+          handleDrag={handleDrag}
+          handleTagClick={handleTagClick}
+          inputFieldPosition="bottom"
+          autocomplete={true}
+        />
+      )}
     />
   );
-}
+};

@@ -4,12 +4,16 @@ import { FormInputProps } from "./FormInputProps";
 
 const options = [
   {
-    label: "Dropdown Option 1",
+    label: "Short",
     value: "1",
   },
   {
-    label: "Dropdown Option 2",
+    label: "Medium",
     value: "2",
+  },
+  {
+    label: "Long",
+    value: "3",
   },
 ];
 
@@ -17,6 +21,7 @@ export const FormInputDropdown: React.FC<FormInputProps> = ({
   name,
   control,
   label,
+  options
 }) => {
   const generateSingleOptions = () => {
     return options.map((option: any) => {

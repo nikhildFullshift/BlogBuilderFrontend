@@ -12,25 +12,32 @@ import {
 import Tag from "./tag/Tag";
 import { FormTextArea } from "./form-components/FormTextArea";
 import { useState } from "react";
+import { FormTag } from "./form-components/FormTag";
 
+
+const BASE_URL = 'https://fcf0-2405-201-a014-bc33-9124-83ea-a717-4671.ngrok-free.app';
 interface IFormInput {
   optionsCheckBoxValue: string[];
-  dropdownValue: string;
+  articleSize: string;
+  articleTone: string;
   titleInputTextValue: string,
   descriptionInputTextValue: string,
   codeSnippetTextArea: string,
   blogTitleInput: string,
-  blogContentInput: string
+  blogContentInput: string,
+  tags: string[]
 }
 
 const defaultValues = {
   optionsCheckBoxValue: [],
-  dropdownValue: "",
+  articleSize: "short",
+  articleTone: "friendly",
   titleInputTextValue: "",
   descriptionInputTextValue: "",
   codeSnippetTextArea: "",
   blogTitleInput: "",
-  blogContentInput: ""
+  blogContentInput: "",
+  tags: []
 };
 
 export default function FormCreateBlog() {
@@ -40,14 +47,15 @@ export default function FormCreateBlog() {
   const onSubmit = async (data: IFormInput) => {
     const { codeSnippetTextArea,
       descriptionInputTextValue,
-      dropdownValue,
+      articleSize,
+      articleTone,
       optionsCheckBoxValue,
       titleInputTextValue,
     } = data;
     async function generateBlog(
       url: string,
       config: RequestInit
-    ): Promise<any> { // TODO: by Nikhil remove any and write proper response structure
+    ): Promise<any> { // TODO: remove any and write proper response structure
       const response = await fetch(url, config);
       return await response.json();
     }
@@ -55,8 +63,10 @@ export default function FormCreateBlog() {
       title: titleInputTextValue,
       description: descriptionInputTextValue,
       codeSnippet: codeSnippetTextArea,
+      optional: { "tone": articleTone, articleSize }
     });
     console.log("body", body);
+    // return;
     const config = {
       method: 'POST',
       headers: {
@@ -64,7 +74,7 @@ export default function FormCreateBlog() {
       },
       body: body
     }
-    const response = await generateBlog("https://3f0f-2405-201-a014-b967-a5c6-8937-62e7-6c51.ngrok-free.app/openai/generate", config);
+    const response = await generateBlog(`${BASE_URL}/openai/generate`, config);
     console.log("🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:", response);
     const { title, description } = response;
     setValue('blogTitleInput', title);
@@ -85,10 +95,10 @@ export default function FormCreateBlog() {
 
     const body = JSON.stringify({
       title: blogTitleInput,
-      description: blogContentInput,
+      description: blogContentInput
     });
     console.log("body =>", body);
-
+    return
     const config = {
       method: 'POST',
       headers: {
@@ -96,7 +106,7 @@ export default function FormCreateBlog() {
       },
       body: body
     }
-    const response = await saveBlog("https://3f0f-2405-201-a014-b967-a5c6-8937-62e7-6c51.ngrok-free.app/blog/create", config);
+    const response = await saveBlog(`${BASE_URL}/blog/create`, config);
     console.log("🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:", response)
   }
 
@@ -186,9 +196,32 @@ export default function FormCreateBlog() {
             minRows={10}
           />
           <FormInputDropdown
-            name="dropdownValue"
+            name="articleSize"
             control={control}
-            label="Dropdown Input"
+            label="Blog size"
+            options={[
+              {
+                label: "Short",
+                value: "short",
+              },
+              {
+                label: "Medium",
+                value: "medium",
+              },
+              {
+                label: "Long",
+                value: "long",
+              },
+            ]}
+          />
+          <FormInputDropdown
+            name="articleTone"
+            control={control}
+            label="Blog tone"
+            options={[
+              { label: "Friendly", value: "friendly" },
+              { label: "Formal", value: "formal" },
+            ]}
           />
           <FormInputMultiCheckbox
             control={control}
@@ -231,6 +264,8 @@ export default function FormCreateBlog() {
             control={control}
           />
           <Tag />
+          {/* <FormTag name="tags" label="tags" control={control}
+          /> */}
         </Container>
       </Container>
     </Paper >
