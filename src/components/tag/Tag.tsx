@@ -2,13 +2,14 @@ import { useState } from "react";
 import { WithContext as ReactTags } from "react-tag-input";
 import "./Tag.css";
 
-const suggestions = ["india", "nepal", "srilanka", "bhutan"].map((country) => {
-  console.log("suggestions called, country: ", country);
-  return {
-    id: country,
-    text: country,
-  };
-});
+const suggestions = ["Software Engineering", "C++", "Java", "Javascript"].map(
+  (item) => {
+    return {
+      id: item,
+      text: item,
+    };
+  }
+);
 
 const KeyCodes = {
   comma: 188,
@@ -19,10 +20,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 export default function Tag() {
   const [tags, setTags] = useState([
-    { id: "Thailand", text: "Thailand" },
-    { id: "India", text: "India" },
-    { id: "Vietnam", text: "Vietnam" },
-    { id: "Turkey", text: "Turkey" },
+    { id: "Software Engineering", text: "Software Engineering" },
   ]);
 
   const handleDelete = (i: number) => {
