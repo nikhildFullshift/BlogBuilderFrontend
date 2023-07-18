@@ -1,52 +1,42 @@
-import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { WithContext as ReactTags } from "react-tag-input";
+import { useState } from "react";
 import "../tag/Tag.css";
+import { WithContext as ReactTags } from "react-tag-input";
 
 interface FormInputProps {
   name: string;
   control: any;
-  label: string;
   setValue?: any;
-  // suggestions?: string[]
 }
 
-const suggestions = [
-  "redis",
-  "data structures",
-  "algorithms",
-  "elasticsearch",
-  "kibana",
-].map((country) => {
-  console.log("suggestions called, country: ", country);
-  return {
-    id: country,
-    text: country,
+export const FormTag = ({ name, control, setValue }: FormInputProps) => {
+  const suggestions = ["Software Engineering", "C++", "Java", "Javascript"].map(
+    (item) => {
+      return {
+        id: item,
+        text: item,
+      };
+    }
+  );
+
+  const KeyCodes = {
+    comma: 188,
+    enter: 13,
   };
-});
 
-const KeyCodes = {
-  comma: 188,
-  enter: 13,
-};
-
-const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-export const FormTag = ({ name, control, label, setValue }: FormInputProps) => {
-
+  const delimiters = [KeyCodes.comma, KeyCodes.enter];
   const [tags, setTags] = useState([
     { id: "Software Engineering", text: "Software Engineering" },
-    { id: "Nodejs", text: "Nodejs" },
-    { id: "Reactjs", text: "Reactjs" },
-    { id: "Docker", text: "Docker" },
   ]);
 
   const handleDelete = (i: number) => {
     setTags(tags.filter((tag, index) => index !== i));
+    setValue("tags", tags);
   };
 
   const handleAddition = (tag: any) => {
     setTags([...tags, tag]);
+    setValue("tags", tags);
   };
 
   const handleDrag = (tag: any, currPos: number, newPos: number) => {
@@ -62,19 +52,18 @@ export const FormTag = ({ name, control, label, setValue }: FormInputProps) => {
   const handleTagClick = (index: number) => {
     console.log("The tag at index " + index + " was clicked");
   };
-
   return (
     <Controller
       name={name}
       control={control}
       render={({
-        // field: { onChange, value },
+        field: { onChange, value },
         fieldState: { error },
         formState,
       }) => (
         <ReactTags
-          // inputValue={tags.join(",")}
-          tags={tags}
+          name="tags"
+          tags={tags || value}
           suggestions={suggestions}
           delimiters={delimiters}
           handleDelete={handleDelete}

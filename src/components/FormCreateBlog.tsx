@@ -9,23 +9,23 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import Tag from "./tag/Tag";
 import { FormTextArea } from "./form-components/FormTextArea";
-import { useState } from "react";
 import { FormTag } from "./form-components/FormTag";
 
 
 const BASE_URL = 'https://fcf0-2405-201-a014-bc33-9124-83ea-a717-4671.ngrok-free.app';
 interface IFormInput {
   optionsCheckBoxValue: string[];
-  articleSize: string;
+  dropdownValue: string;
+  titleInputTextValue: string;
+  descriptionInputTextValue: string;
+  codeSnippetTextArea: string;
+  blogTitleInput: string;
+  blogContentInput: string;
+  mdEditorContent: string;
+  tags: string[];
   articleTone: string;
-  titleInputTextValue: string,
-  descriptionInputTextValue: string,
-  codeSnippetTextArea: string,
-  blogTitleInput: string,
-  blogContentInput: string,
-  tags: string[]
+  articleSize: string;
 }
 
 const defaultValues = {
@@ -36,8 +36,8 @@ const defaultValues = {
   descriptionInputTextValue: "",
   codeSnippetTextArea: "",
   blogTitleInput: "",
-  blogContentInput: "",
-  tags: []
+  mdEditorContent: "",
+  tags: [],
 };
 
 export default function FormCreateBlog() {
@@ -45,7 +45,8 @@ export default function FormCreateBlog() {
   const { handleSubmit, reset, control, setValue } = methods;
 
   const onSubmit = async (data: IFormInput) => {
-    const { codeSnippetTextArea,
+    const {
+      codeSnippetTextArea,
       descriptionInputTextValue,
       articleSize,
       articleTone,
@@ -55,7 +56,8 @@ export default function FormCreateBlog() {
     async function generateBlog(
       url: string,
       config: RequestInit
-    ): Promise<any> { // TODO: remove any and write proper response structure
+    ): Promise<any> {
+      // TODO: by Nikhil remove any and write proper response structure
       const response = await fetch(url, config);
       return await response.json();
     }
@@ -68,41 +70,40 @@ export default function FormCreateBlog() {
     console.log("body", body);
     // return;
     const config = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: body
     }
     const response = await generateBlog(`${BASE_URL}/openai/generate`, config);
     console.log("🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:", response);
     const { title, description } = response;
-    setValue('blogTitleInput', title);
-    setValue('blogContentInput', description);
+    setValue("blogTitleInput", title);
+    setValue("mdEditorContent", description);
   };
 
-
   const handleSendToReview = async (data: IFormInput) => {
-    console.log("data", data)
-    const { blogTitleInput, blogContentInput } = data;
-    async function saveBlog(
-      url: string,
-      config: RequestInit
-    ): Promise<any> { // TODO: remove any and write proper response structure
+    console.log("data", data);
+    const { blogTitleInput, mdEditorContent, tags } = data;
+    const parsedTags = tags.map((item: any) => item.text);
+    async function saveBlog(url: string, config: RequestInit): Promise<any> {
+      // TODO: remove any and write proper response structure
       const response = await fetch(url, config);
       return await response.json();
     }
 
     const body = JSON.stringify({
       title: blogTitleInput,
-      description: blogContentInput
+      description: mdEditorContent,
+      tags: parsedTags,
     });
     console.log("body =>", body);
-    return
+    // return
     const config = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: body
     }
@@ -156,7 +157,9 @@ export default function FormCreateBlog() {
           <Button variant="contained" color="error">
             Move to Trash
           </Button>
-          <Button variant="contained" color="success"
+          <Button
+            variant="contained"
+            color="success"
             onClick={handleSubmit(handleSendToReview)}
           >
             Send to Review
@@ -182,18 +185,24 @@ export default function FormCreateBlog() {
             },
           }}
         >
-          <FormInputText name="titleInputTextValue" control={control} label="Blog Title" />
           <FormInputText
-            name="descriptionInputTextValue"
+            name="titleInputTextValue"
             control={control}
-            label="Description"
+            label="Blog Title"
+          />
+          <FormTextArea
+            name="descriptionInputTextValue"
+            placeholder="Enter description here"
+            control={control}
+            maxRows={8}
+            minRows={8}
           />
           <FormTextArea
             name="codeSnippetTextArea"
             placeholder="Enter code snippet here"
             control={control}
-            maxRows={10}
-            minRows={10}
+            maxRows={8}
+            minRows={8}
           />
           <FormInputDropdown
             name="articleSize"
@@ -254,20 +263,24 @@ export default function FormCreateBlog() {
             },
           }}
         >
-          <FormInputText name="blogTitleInput" control={control} label="Title" />
+          <FormInputText
+            name="blogTitleInput"
+            control={control}
+            label="Title"
+          />
           <FormTextArea
-            name="blogContentInput"
+            name="mdEditorContent"
             placeholder="Your blog will appear here!"
-            style={{ width: "100%", overflowY: 'auto' }}
-            minRows={30}
-            maxRows={30}
+            style={{
+              width: "100%",
+              overflowY: "auto",
+              height: "100%",
+            }}
             control={control}
           />
-          <Tag />
-          {/* <FormTag name="tags" label="tags" control={control}
-          /> */}
-        </Container>
-      </Container>
+          <FormTag name="tags" control={control} setValue={setValue} />
+        </Container >
+      </Container >
     </Paper >
   );
 }
