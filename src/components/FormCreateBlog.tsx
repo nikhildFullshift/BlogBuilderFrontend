@@ -11,9 +11,10 @@ import {
 } from "@mui/material";
 import { FormTextArea } from "./form-components/FormTextArea";
 import { FormTag } from "./form-components/FormTag";
+import { useEffect, useState } from "react";
 
 
-const BASE_URL = 'https://fcf0-2405-201-a014-bc33-9124-83ea-a717-4671.ngrok-free.app';
+const BASE_URL = 'https://9d54-2405-201-a014-b83b-c04a-5295-15ea-c19d.ngrok-free.app';
 interface IFormInput {
   optionsCheckBoxValue: string[];
   dropdownValue: string;
@@ -43,6 +44,7 @@ const defaultValues = {
 export default function FormCreateBlog() {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue } = methods;
+  const [options, setOptions] = useState([]);
 
   const onSubmit = async (data: IFormInput) => {
     const {
@@ -122,6 +124,40 @@ export default function FormCreateBlog() {
       },
     },
   });
+
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const config = {
+          method: "GET",
+          // mode: 'no-cors',
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            credentials: 'same-origin'
+          },
+        };
+
+        const response = await fetch(`${BASE_URL}/optional`, { mode: 'cors' });
+        // if (!response.ok) {
+        //   throw new Error(
+        //     `This is an HTTP error: The status is ${response.status}`
+        //   );
+        // }
+        let actualData = await response.json();
+        console.log("🚀 ~ file: FormCreateBlog.tsx:139 ~ getData ~ actualData:", actualData)
+        // setData(actualData);
+        // setError(null);
+      } catch (err) {
+        // setError(err.message);
+        // setData(null);
+        console.log(err);
+      } finally {
+        // setLoading(false);
+      }
+    }
+    getData()
+  }, [])
 
   return (
     <Paper
