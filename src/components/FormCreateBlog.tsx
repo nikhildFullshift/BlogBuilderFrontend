@@ -14,7 +14,7 @@ import { FormTag } from "./form-components/FormTag";
 import { useEffect, useState } from "react";
 
 
-const BASE_URL = 'https://9d54-2405-201-a014-b83b-c04a-5295-15ea-c19d.ngrok-free.app';
+const BASE_URL = 'https://eeb1-2405-201-a014-b83b-f95e-65e8-1698-6304.ngrok-free.app';
 interface IFormInput {
   optionsCheckBoxValue: string[];
   dropdownValue: string;
@@ -27,24 +27,27 @@ interface IFormInput {
   tags: string[];
   articleTone: string;
   articleSize: string;
+  articleDomain: string;
 }
 
 const defaultValues = {
   optionsCheckBoxValue: [],
-  articleSize: "short",
-  articleTone: "friendly",
+  articleSize: "",
+  articleTone: "",
   titleInputTextValue: "",
   descriptionInputTextValue: "",
   codeSnippetTextArea: "",
   blogTitleInput: "",
   mdEditorContent: "",
   tags: [],
+  articleDomain: ""
 };
 
 export default function FormCreateBlog() {
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue } = methods;
-  const [options, setOptions] = useState([]);
+  // const [inputFields, setInputFields] = useState([]);
+  const [inputFields, setInputFields] = useState([]);
 
   const onSubmit = async (data: IFormInput) => {
     const {
@@ -131,27 +134,24 @@ export default function FormCreateBlog() {
       try {
         const config = {
           method: "GET",
-          // mode: 'no-cors',
           headers: {
-            "Access-Control-Allow-Origin": "*",
-            credentials: 'same-origin'
+            "ngrok-skip-browser-warning": "true"
           },
         };
 
-        const response = await fetch(`${BASE_URL}/optional`, { mode: 'cors' });
-        // if (!response.ok) {
-        //   throw new Error(
-        //     `This is an HTTP error: The status is ${response.status}`
-        //   );
-        // }
+        const response = await fetch(`${BASE_URL}/optional`, config);
+        if (!response.ok) {
+          throw new Error(
+            `This is an HTTP error: The status is ${response.status}`
+          );
+        }
         let actualData = await response.json();
         console.log("🚀 ~ file: FormCreateBlog.tsx:139 ~ getData ~ actualData:", actualData)
-        // setData(actualData);
-        // setError(null);
+        setInputFields(actualData?.result);
       } catch (err) {
         // setError(err.message);
-        // setData(null);
-        console.log(err);
+        setInputFields([]);
+        console.log("Catch error", err);
       } finally {
         // setLoading(false);
       }
@@ -240,40 +240,29 @@ export default function FormCreateBlog() {
             maxRows={8}
             minRows={8}
           />
-          <FormInputDropdown
-            name="articleSize"
-            control={control}
-            label="Blog size"
-            options={[
-              {
-                label: "Short",
-                value: "short",
-              },
-              {
-                label: "Medium",
-                value: "medium",
-              },
-              {
-                label: "Long",
-                value: "long",
-              },
-            ]}
-          />
-          <FormInputDropdown
-            name="articleTone"
-            control={control}
-            label="Blog tone"
-            options={[
-              { label: "Friendly", value: "friendly" },
-              { label: "Formal", value: "formal" },
-            ]}
-          />
-          <FormInputMultiCheckbox
+          {inputFields.map((inputField: any, index) => {
+            console.log("Value is:", inputField);
+            switch (inputField.type) {
+              case "Dropdown":
+                const dropdown = <FormInputDropdown
+                  key={index}
+                  name={inputField.name}
+                  control={control}
+                  label={inputField.label}
+                  options={inputField.values}
+                />
+                return dropdown;
+
+              default:
+                break;
+            }
+          })}
+          {/* <FormInputMultiCheckbox
             control={control}
             setValue={setValue}
             name={"optionsCheckBoxValue"}
             label={"Checkbox Input"}
-          />
+          /> */}
           <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
             Generate Blog
           </Button>
