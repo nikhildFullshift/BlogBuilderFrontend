@@ -1,0 +1,11 @@
+.parent {
+  width: 90%;
+  margin: 20px auto;
+}
+
+.content {
+  border: 1px solid black;
+  padding: 15px;
+  height: 78vh;
+  overflow-y: auto;
+}

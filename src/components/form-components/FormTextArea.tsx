@@ -31,7 +31,12 @@ export const FormTextArea = ({
         formState,
       }) => {
         return name == "mdEditorContent" ? (
-          <MDEditor style={style} value={value || ""} onChange={onChange} />
+          <MDEditor
+            height={"300px"}
+            style={style}
+            value={value || ""}
+            onChange={onChange}
+          />
         ) : (
           <TextareaAutosize
             name="codeSnippetTextArea"

@@ -13,8 +13,7 @@ import { FormTextArea } from "./form-components/FormTextArea";
 import { FormTag } from "./form-components/FormTag";
 import { useEffect, useState } from "react";
 
-
-const BASE_URL = 'https://9d54-2405-201-a014-b83b-c04a-5295-15ea-c19d.ngrok-free.app';
+const BASE_URL = "http://localhost:3000";
 interface IFormInput {
   optionsCheckBoxValue: string[];
   dropdownValue: string;
@@ -67,7 +66,7 @@ export default function FormCreateBlog() {
       title: titleInputTextValue,
       description: descriptionInputTextValue,
       codeSnippet: codeSnippetTextArea,
-      optional: { "tone": articleTone, articleSize }
+      optional: { tone: articleTone, articleSize },
     });
     console.log("body", body);
     // return;
@@ -76,10 +75,13 @@ export default function FormCreateBlog() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: body
-    }
+      body: body,
+    };
     const response = await generateBlog(`${BASE_URL}/openai/generate`, config);
-    console.log("🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:", response);
+    console.log(
+      "🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:",
+      response
+    );
     const { title, description } = response;
     setValue("blogTitleInput", title);
     setValue("mdEditorContent", description);
@@ -107,11 +109,14 @@ export default function FormCreateBlog() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: body
-    }
+      body: body,
+    };
     const response = await saveBlog(`${BASE_URL}/blog/create`, config);
-    console.log("🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:", response)
-  }
+    console.log(
+      "🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:",
+      response
+    );
+  };
 
   const theme = createTheme({
     breakpoints: {
@@ -125,7 +130,6 @@ export default function FormCreateBlog() {
     },
   });
 
-
   useEffect(() => {
     const getData = async () => {
       try {
@@ -134,18 +138,21 @@ export default function FormCreateBlog() {
           // mode: 'no-cors',
           headers: {
             "Access-Control-Allow-Origin": "*",
-            credentials: 'same-origin'
+            credentials: "same-origin",
           },
         };
 
-        const response = await fetch(`${BASE_URL}/optional`, { mode: 'cors' });
+        const response = await fetch(`${BASE_URL}/optional`, { mode: "cors" });
         // if (!response.ok) {
         //   throw new Error(
         //     `This is an HTTP error: The status is ${response.status}`
         //   );
         // }
         let actualData = await response.json();
-        console.log("🚀 ~ file: FormCreateBlog.tsx:139 ~ getData ~ actualData:", actualData)
+        console.log(
+          "🚀 ~ file: FormCreateBlog.tsx:139 ~ getData ~ actualData:",
+          actualData
+        );
         // setData(actualData);
         // setError(null);
       } catch (err) {
@@ -155,9 +162,9 @@ export default function FormCreateBlog() {
       } finally {
         // setLoading(false);
       }
-    }
-    getData()
-  }, [])
+    };
+    getData();
+  }, []);
 
   return (
     <Paper
@@ -186,8 +193,8 @@ export default function FormCreateBlog() {
           sx={{
             display: "flex",
             flex: 1,
-            justifyContent: "space-evenly",
-            alignItems: "end",
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}
         >
           <Button variant="contained" color="error">
@@ -196,6 +203,7 @@ export default function FormCreateBlog() {
           <Button
             variant="contained"
             color="success"
+            style={{ marginLeft: "5px" }}
             onClick={handleSubmit(handleSendToReview)}
           >
             Send to Review
@@ -214,7 +222,7 @@ export default function FormCreateBlog() {
               height: "75vh",
             },
             [theme.breakpoints.up("md")]: {
-              height: "85vh",
+              height: "95vh",
             },
             [theme.breakpoints.up(1350)]: {
               height: "74vh",
@@ -230,15 +238,15 @@ export default function FormCreateBlog() {
             name="descriptionInputTextValue"
             placeholder="Enter description here"
             control={control}
-            maxRows={8}
-            minRows={8}
+            maxRows={7}
+            minRows={7}
           />
           <FormTextArea
             name="codeSnippetTextArea"
             placeholder="Enter code snippet here"
             control={control}
-            maxRows={8}
-            minRows={8}
+            maxRows={7}
+            minRows={7}
           />
           <FormInputDropdown
             name="articleSize"
@@ -315,8 +323,8 @@ export default function FormCreateBlog() {
             control={control}
           />
           <FormTag name="tags" control={control} setValue={setValue} />
-        </Container >
-      </Container >
-    </Paper >
+        </Container>
+      </Container>
+    </Paper>
   );
 }
