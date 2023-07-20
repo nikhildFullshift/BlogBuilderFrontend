@@ -16,7 +16,6 @@ import moment from "moment";
 
 export default function BlogSearchList() {
   const API_URL = "http://localhost:3000";
-
   const theme = useTheme();
   const [searchParams, setSearchParams] = useSearchParams([["index", "blog"]]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,12 +31,10 @@ export default function BlogSearchList() {
     }
   };
 
-  const handleSearchParams = () => {
-    setSearchParams([...searchParams, ["title", searchTerm]]);
-  };
-
   const fetchResults = async (searchTerm: any) => {
-    if (!searchTerm) return;
+    if (!searchTerm) {
+      return navigate("/");
+    }
     const config = {
       method: "GET",
       headers: {
