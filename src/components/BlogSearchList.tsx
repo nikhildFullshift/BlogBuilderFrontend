@@ -78,18 +78,18 @@ export default function BlogSearchList() {
       />
       {searchResults.map((item: any) => {
         return (
-          <Link to={`/blog/view/${item._source.id}`}>
-            <Card
-              key={item._id}
-              sx={{
-                maxWidth: "53%",
-                [theme.breakpoints.down("sm")]: {
-                  maxWidth: "100%",
-                },
-                marginBottom: "10px",
-              }}
-            >
-              <CardActionArea>
+          <Card
+            key={item._id}
+            sx={{
+              maxWidth: "53%",
+              [theme.breakpoints.down("sm")]: {
+                maxWidth: "100%",
+              },
+              marginBottom: "10px",
+            }}
+          >
+            <CardActionArea>
+              <Link to={`/blog/view/${item._source.id}`}>
                 <CardContent>
                   <div
                     style={{
@@ -154,9 +154,9 @@ export default function BlogSearchList() {
                     </div>
                   </div>
                 </CardContent>
-              </CardActionArea>
-            </Card>
-          </Link>
+              </Link>
+            </CardActionArea>
+          </Card>
         );
       })}
     </Container>
