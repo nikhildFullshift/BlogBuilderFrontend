@@ -30,13 +30,15 @@ export const FormTag = ({ name, control, setValue }: FormInputProps) => {
   ]);
 
   const handleDelete = (i: number) => {
-    setTags(tags.filter((tag, index) => index !== i));
-    setValue("tags", tags);
+    const updatedTags = tags.filter((tag, index) => index !== i);
+    setTags(updatedTags);
+    setValue("tags", updatedTags);
   };
 
   const handleAddition = (tag: any) => {
-    setTags([...tags, tag]);
-    setValue("tags", tags);
+    const updatedTags = [...tags, tag];
+    setTags(updatedTags);
+    setValue("tags", updatedTags);
   };
 
   const handleDrag = (tag: any, currPos: number, newPos: number) => {
@@ -49,9 +51,10 @@ export const FormTag = ({ name, control, setValue }: FormInputProps) => {
     setTags(newTags);
   };
 
-  const handleTagClick = (index: number) => {
-    console.log("The tag at index " + index + " was clicked");
-  };
+  // const handleTagClick = (index: number) => {
+  //   console.log("The tag at index " + index + " was clicked");
+  // };
+
   return (
     <Controller
       name={name}
@@ -69,7 +72,7 @@ export const FormTag = ({ name, control, setValue }: FormInputProps) => {
           handleDelete={handleDelete}
           handleAddition={handleAddition}
           handleDrag={handleDrag}
-          handleTagClick={handleTagClick}
+          // handleTagClick={handleTagClick}
           inputFieldPosition="bottom"
           autocomplete={true}
         />
