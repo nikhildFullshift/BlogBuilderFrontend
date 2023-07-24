@@ -1,5 +1,5 @@
-import { Controller, useFormContext } from "react-hook-form";
-import { TextField, TextareaAutosize } from "@mui/material";
+import { Controller } from "react-hook-form";
+import { TextareaAutosize, TextField } from "@mui/material";
 import MDEditor from "@uiw/react-md-editor";
 
 interface FormInputProps {
@@ -10,6 +10,7 @@ interface FormInputProps {
   style?: object;
   minRows?: number;
   maxRows?: number;
+  label?: string;
 }
 
 export const FormTextArea = ({
@@ -20,6 +21,7 @@ export const FormTextArea = ({
   minRows,
   maxRows,
   setValue,
+  label,
 }: FormInputProps) => {
   return (
     <Controller
@@ -38,12 +40,14 @@ export const FormTextArea = ({
             onChange={onChange}
           />
         ) : (
-          <TextareaAutosize
-            name="codeSnippetTextArea"
+          <TextField
+            name={name}
+            label={label}
             placeholder={placeholder}
             style={style}
             onChange={onChange}
             value={value || ""}
+            multiline
             maxRows={maxRows}
             minRows={minRows}
           />

@@ -235,18 +235,20 @@ export default function FormCreateBlog() {
             label="Blog Title"
           />
           <FormTextArea
+            label="Description"
             name="descriptionInputTextValue"
             placeholder="Enter description here"
             control={control}
-            maxRows={7}
-            minRows={7}
+            maxRows={4}
+            minRows={4}
           />
           <FormTextArea
+            label="Code Snippet"
             name="codeSnippetTextArea"
             placeholder="Enter code snippet here"
             control={control}
-            maxRows={7}
-            minRows={7}
+            maxRows={4}
+            minRows={4}
           />
           {inputFields.map((inputField: any, index) => {
             console.log("Value is:", inputField);

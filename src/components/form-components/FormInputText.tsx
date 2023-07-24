@@ -8,7 +8,12 @@ interface FormInputProps {
   setValue?: any;
 }
 
-export const FormInputText = ({ name, control, label, setValue }: FormInputProps) => {
+export const FormInputText = ({
+  name,
+  control,
+  label,
+  setValue,
+}: FormInputProps) => {
   return (
     <Controller
       name={name}
