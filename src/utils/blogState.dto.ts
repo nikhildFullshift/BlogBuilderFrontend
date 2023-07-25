@@ -3,7 +3,7 @@ export interface BlogContextProps {
     activeStep: 0;
     title: "";
     description: "";
-    result: {};
+    result: { title: ""; description: "" };
   };
   dispatch: ({ type: string, payload: any }) => void;
 }

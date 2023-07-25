@@ -5,6 +5,7 @@ import { Blogcontext } from "../../App";
 import { FormInputDropdown } from "../form-components/FormInputDropdown";
 import { FormInputText } from "../form-components/FormInputText";
 import { FormTextArea } from "../form-components/FormTextArea";
+import NextPrevFormButton from "../next-prev/NextPrevFormButton";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -199,12 +200,7 @@ function BlogInput(props: any) {
             name={"optionsCheckBoxValue"}
             label={"Checkbox Input"}
           /> */}
-      <Button onClick={handleSubmit(onSubmit)} variant={"contained"}>
-        Generate Blog
-      </Button>
-      <Button onClick={() => reset()} variant={"outlined"}>
-        Reset
-      </Button>
+      <NextPrevFormButton handleSubmit={handleSubmit(onSubmit)} />
     </Container>
   );
 }

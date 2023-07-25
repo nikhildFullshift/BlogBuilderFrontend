@@ -1,9 +1,11 @@
 import { Container, createTheme } from "@mui/material";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { Blogcontext } from "../../App";
 import { FormInputText } from "../form-components/FormInputText";
 import { FormTag } from "../form-components/FormTag";
 import { FormTextArea } from "../form-components/FormTextArea";
+import NextPrevFormButton from "../next-prev/NextPrevFormButton";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -49,6 +51,7 @@ function EditReview(props: any) {
 
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
   const { handleSubmit, reset, control, setValue } = methods;
+  const { state, dispatch } = useContext(Blogcontext);
 
   const handleSendToReview = async (data: IFormInput) => {
     console.log("data", data);
@@ -80,6 +83,14 @@ function EditReview(props: any) {
       response
     );
   };
+
+  useEffect(() => {
+    if (state?.result) {
+      setValue("blogTitleInput", state.result.title);
+      setValue("mdEditorContent", state.result.description);
+    }
+  }, []);
+
   return (
     <Container
       sx={{
@@ -111,6 +122,7 @@ function EditReview(props: any) {
         control={control}
       />
       <FormTag name="tags" control={control} setValue={setValue} />
+      <NextPrevFormButton handleSubmit={handleSubmit(handleSendToReview)} />
     </Container>
   );
 }

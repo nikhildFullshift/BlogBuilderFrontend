@@ -2,7 +2,7 @@ export const initalState = {
   activeStep: 0,
   title: "",
   description: "",
-  result: {},
+  result: { title: "", description: "" },
 };
 
 export const blog_reducer = (state: any, action: any) => {

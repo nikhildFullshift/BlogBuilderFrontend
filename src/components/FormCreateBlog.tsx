@@ -37,7 +37,6 @@ export default function FormCreateBlog() {
         </Stepper>
       </Container>
       <Container>{activeStep === 0 ? <BlogInput /> : <EditReview />}</Container>
-      <NextPrevFormButton />
     </Paper>
   );
 }

@@ -2,9 +2,10 @@ import { Button, Container } from "@mui/material";
 import React, { useContext } from "react";
 import { Blogcontext } from "../../App";
 
-function NextPrevFormButton() {
+function NextPrevFormButton(props: any) {
   const { state, dispatch } = useContext(Blogcontext);
-  const handleSteps = (step: number) => {
+  const handleSteps = async (step: number) => {
+    await props.handleSubmit();
     dispatch({ type: "UPDATE_ACTIVE_STEP", payload: state.activeStep + step });
   };
 
