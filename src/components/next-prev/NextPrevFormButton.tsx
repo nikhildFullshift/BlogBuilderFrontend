@@ -5,15 +5,17 @@ import { Blogcontext } from "../../App";
 function NextPrevFormButton(props: any) {
   const { state, dispatch } = useContext(Blogcontext);
   const handleSteps = async (step: number) => {
-    await props.handleSubmit();
-    dispatch({ type: "UPDATE_ACTIVE_STEP", payload: state.activeStep + step });
+    if (step > 0) {
+      await props.handleSubmit();
+    }
+    dispatch({ type: "UPDATE_ACTIVE_STEP", payload: step });
   };
 
   return (
     <Container sx={{ display: "flex", justifyContent: "space-between" }}>
       <Button
         disabled={state?.activeStep === 0}
-        onClick={() => handleSteps(-1)}
+        onClick={() => handleSteps(0)}
       >
         Prev
       </Button>

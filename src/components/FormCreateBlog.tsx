@@ -12,9 +12,7 @@ export default function FormCreateBlog() {
 
   useEffect(() => {
     console.log("Called", activeStep);
-    if (state?.activeStep !== null) {
-      setActiveStep(state.activeStep);
-    }
+    setActiveStep(state.activeStep);
   }, [state.activeStep]);
 
   return (
