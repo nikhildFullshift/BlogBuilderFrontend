@@ -41,11 +41,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create("width"),
-    width: "100%",
+    width: "8rem",
     [theme.breakpoints.up("sm")]: {
-      width: "12ch",
+      width: "7rem",
       "&:focus": {
-        width: "20ch",
+        width: "7rem",
       },
     },
   },
@@ -76,6 +76,7 @@ export default function SearchBarAligned(props: any) {
               </IconButton>
             </Link>
             <StyledInputBase
+              sx={{ width: "8 rem" }}
               onChange={props.handleSearchTerm}
               onKeyUp={props.handleSearchTerm}
               value={props.searchTerm}

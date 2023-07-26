@@ -85,7 +85,7 @@ export default function BlogSearchList() {
               [theme.breakpoints.down("sm")]: {
                 maxWidth: "100%",
               },
-              marginBottom: "10px",
+              marginBottom: "0.8rem",
             }}
           >
             <CardActionArea>
