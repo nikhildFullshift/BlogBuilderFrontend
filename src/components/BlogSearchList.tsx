@@ -104,7 +104,7 @@ export default function BlogSearchList() {
                   </div>
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <div style={{ flex: 3 }}>
-                      <Typography gutterBottom variant="h5" component="div">
+                      <Typography gutterBottom variant="h6" component="div">
                         {item._source.title}
                       </Typography>
                       {item._source.meta_description && (
@@ -114,7 +114,7 @@ export default function BlogSearchList() {
                       )}
                     </div>
                     <img
-                      style={{ flex: 1, borderRadius: "3%", height: "100px" }}
+                      style={{ flex: 1, borderRadius: "3%", maxWidth: "150px" }}
                       src="https://mui.com/static/images/cards/contemplative-reptile.jpg"
                       alt="green iguana"
                     />
