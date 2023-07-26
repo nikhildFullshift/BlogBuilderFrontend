@@ -26,7 +26,7 @@ export default function SearchBar() {
           value={searchTerm}
           onChange={handleChange}
           onKeyUp={handleChange}
-          sx={{ width: "24rem" }}
+          sx={{ width: "34rem" }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
