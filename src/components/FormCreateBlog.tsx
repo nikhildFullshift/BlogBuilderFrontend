@@ -16,16 +16,8 @@ export default function FormCreateBlog() {
   }, [state.activeStep]);
 
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        padding: "20px",
-        alignItems: "center",
-        maxWidth: "100%",
-      }}
-    >
-      <Container>
+    <>
+      <Container sx={{ marginTop: "20px" }}>
         <Stepper activeStep={activeStep} alternativeLabel>
           {steps.map((label) => (
             <Step key={label}>
@@ -35,6 +27,6 @@ export default function FormCreateBlog() {
         </Stepper>
       </Container>
       <Container>{activeStep === 0 ? <BlogInput /> : <EditReview />}</Container>
-    </Paper>
+    </>
   );
 }
