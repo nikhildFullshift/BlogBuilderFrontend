@@ -103,7 +103,7 @@ export default function BlogSearchList() {
                       ))}
                   </div>
                   <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ flex: 3 }}>
+                    <div style={{ flex: 3, marginRight: "5px" }}>
                       <Typography gutterBottom variant="h6" component="div">
                         {item._source.title}
                       </Typography>
