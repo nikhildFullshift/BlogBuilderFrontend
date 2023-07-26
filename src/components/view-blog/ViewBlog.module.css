@@ -6,6 +6,4 @@
 .content {
   border: 1px solid black;
   padding: 15px;
-  height: 78vh;
-  overflow-y: auto;
 }
