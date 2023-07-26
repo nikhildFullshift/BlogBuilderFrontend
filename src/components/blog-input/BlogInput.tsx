@@ -79,6 +79,9 @@ function BlogInput(props: any) {
       const response = await fetch(url, config);
       return await response.json();
     }
+    if (!titleInputTextValue || !descriptionInputTextValue) {
+      throw new Error("Title/Description is mandatory to fill");
+    }
     const body = JSON.stringify({
       title: titleInputTextValue,
       description: descriptionInputTextValue,

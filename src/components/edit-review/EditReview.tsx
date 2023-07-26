@@ -56,6 +56,9 @@ function EditReview(props: any) {
   const handleSendToReview = async (data: IFormInput) => {
     console.log("data", data);
     const { blogTitleInput, mdEditorContent, tags } = data;
+    if (!blogTitleInput || !mdEditorContent) {
+      throw new Error("Title/Content cannot be empty");
+    }
     const parsedTags = tags.map((item: any) => item.text);
     async function saveBlog(url: string, config: RequestInit): Promise<any> {
       // TODO: remove any and write proper response structure
