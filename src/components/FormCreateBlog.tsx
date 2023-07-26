@@ -17,7 +17,7 @@ export default function FormCreateBlog() {
 
   return (
     <>
-      <Container sx={{ marginTop: "20px" }}>
+      <Container sx={{ marginTop: "1rem" }}>
         <Stepper activeStep={activeStep} alternativeLabel>
           {steps.map((label) => (
             <Step key={label}>

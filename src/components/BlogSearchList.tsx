@@ -107,9 +107,20 @@ export default function BlogSearchList() {
                         />
                       ))}
                   </div>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div style={{ flex: 3, marginRight: "5px" }}>
-                      <Typography gutterBottom variant="h6" component="div">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "0.7rem",
+                    }}
+                  >
+                    <div style={{ flex: 3, marginRight: "0.35rem" }}>
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        sx={{ fontSize: "1rem" }}
+                        component="div"
+                      >
                         {item._source.title}
                       </Typography>
                       {item._source.meta_description && (
@@ -127,7 +138,7 @@ export default function BlogSearchList() {
                   <div
                     style={{
                       display: "flex",
-                      marginTop: "15px",
+                      marginTop: "1rem",
                       justifyContent: "space-between",
                       alignItems: "end",
                     }}
@@ -136,7 +147,7 @@ export default function BlogSearchList() {
                       <div>
                         <Avatar
                           src={"https://i.pravatar.cc/300?img=13"}
-                          style={{ marginRight: "7px" }}
+                          style={{ marginRight: "0.5rem" }}
                         />
                       </div>
                       <div>

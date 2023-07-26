@@ -18,7 +18,7 @@ export default function SearchBar() {
   return (
     <div className={SearchBarStyle["search-bar-container"]}>
       <h1>GPS Blog Builder</h1>
-      <Container maxWidth="md" sx={{ mt: 0 }}>
+      <Container maxWidth="md" sx={{ mt: 0, paddingLeft: "2rem" }}>
         <TextField
           id="search"
           type="search"
@@ -26,7 +26,7 @@ export default function SearchBar() {
           value={searchTerm}
           onChange={handleChange}
           onKeyUp={handleChange}
-          sx={{ width: 600 }}
+          sx={{ width: "24rem" }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
