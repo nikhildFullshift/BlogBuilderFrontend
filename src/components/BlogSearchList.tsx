@@ -98,8 +98,13 @@ export default function BlogSearchList() {
                     }}
                   >
                     {!item._source._tags &&
-                      item._source.tags?.map((tagItem: any) => (
-                        <Chip label={tagItem} size="small" variant="outlined" />
+                      item._source.tags?.map((tagItem: any, index: number) => (
+                        <Chip
+                          key={index}
+                          label={tagItem}
+                          size="small"
+                          variant="outlined"
+                        />
                       ))}
                   </div>
                   <div style={{ display: "flex", alignItems: "center" }}>
