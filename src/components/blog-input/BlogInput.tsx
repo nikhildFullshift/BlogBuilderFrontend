@@ -6,6 +6,7 @@ import { FormInputDropdown } from "../form-components/FormInputDropdown";
 import { FormInputText } from "../form-components/FormInputText";
 import { FormTextArea } from "../form-components/FormTextArea";
 import NextPrevFormButton from "../next-prev/NextPrevFormButton";
+import BackdropLoader from "../loader/BackdropLoader";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -54,8 +55,19 @@ function BlogInput(props: any) {
   const { handleSubmit, reset, control, setValue } = methods;
   const [inputFields, setInputFields] = useState([]);
   const { state, dispatch } = useContext(Blogcontext);
+  const [loader, setLoader] = useState(false);
+
+  const handleLoaderClose = () => {
+    setLoader(false);
+  };
+
+  const handleLoaderOpen = () => {
+    setLoader(true);
+  };
 
   const onSubmit = async (data: IFormInput) => {
+    handleLoaderOpen();
+
     const {
       codeSnippetTextArea,
       descriptionInputTextValue,
@@ -89,7 +101,6 @@ function BlogInput(props: any) {
       optional: { tone: articleTone, articleSize },
     });
     console.log("body", body);
-    // return;
     const config = {
       method: "POST",
       headers: {
@@ -102,6 +113,7 @@ function BlogInput(props: any) {
       "🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:",
       response
     );
+    handleLoaderClose();
     const { title, description } = response;
     dispatch({ type: "UPDATE_BLOG_RESULT", payload: { title, description } });
   };
@@ -204,6 +216,7 @@ function BlogInput(props: any) {
             label={"Checkbox Input"}
           /> */}
       <NextPrevFormButton handleSubmit={handleSubmit(onSubmit)} />
+      <BackdropLoader isOpen={loader} />
     </Container>
   );
 }
