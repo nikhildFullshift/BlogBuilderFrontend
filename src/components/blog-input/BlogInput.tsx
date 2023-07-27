@@ -156,17 +156,17 @@ function BlogInput(props: any) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "90vh",
+        height: "32rem",
         justifyContent: "space-around",
         flex: 1,
         [theme.breakpoints.down("sm")]: {
-          height: "75vh",
+          height: "calc(32rem * 1.75)",
         },
         [theme.breakpoints.up("md")]: {
-          height: "95vh",
+          height: "calc(32rem * 1.3)",
         },
         [theme.breakpoints.up(1350)]: {
-          height: "74vh",
+          height: "34rem",
         },
       }}
     >

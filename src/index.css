@@ -55,3 +55,25 @@ button:hover {
     background-color: #f9f9f9;
   }
 }
+
+html {
+  font-size: 100%;
+}
+
+@media (max-width: 420px) {
+  html {
+    font-size: 50%;
+  }
+}
+
+@media (max-width: 800px) {
+  html {
+    font-size: 90%;
+  }
+}
+
+@media (min-width: 801px) {
+  html {
+    font-size: 77%;
+  }
+}

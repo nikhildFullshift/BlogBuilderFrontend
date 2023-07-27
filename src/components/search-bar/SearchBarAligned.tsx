@@ -76,7 +76,7 @@ export default function SearchBarAligned(props: any) {
               </IconButton>
             </Link>
             <StyledInputBase
-              sx={{ width: "8 rem" }}
+              sx={{ width: "8rem" }}
               onChange={props.handleSearchTerm}
               onKeyUp={props.handleSearchTerm}
               value={props.searchTerm}
