@@ -10,6 +10,7 @@ import ViewBlog from "./components/view-blog/ViewBlog";
 import { createContext, useReducer } from "react";
 import { blog_reducer, initalState } from "./reducers/blogReducer";
 import { BlogContextProps } from "./utils/blogState.dto";
+import BlogListing from "./components/BlogListing";
 
 export const Blogcontext = createContext({} as BlogContextProps);
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/search",
     element: <BlogSearchList />,
+  },
+  {
+    path: "/blog/list",
+    element: <BlogListing />,
   },
 ]);
 

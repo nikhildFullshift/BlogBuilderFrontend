@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -87,6 +88,7 @@ export default function CustomizedTables() {
               <StyledTableCell align="right">{row.dateApproved}</StyledTableCell>
               <StyledTableCell align="right">{row.datePublished}</StyledTableCell>
               <StyledTableCell align="right">{row.status}</StyledTableCell>
+              <StyledTableCell align="right"><Link to='#'>Edit | Delete</Link></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
