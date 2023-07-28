@@ -176,17 +176,17 @@ function BlogInput(props: any) {
         label="Blog Title"
       />
       <FormTextArea
-        label="Description"
-        name="descriptionInputTextValue"
-        placeholder="Enter description here"
+        label="Code Snippet"
+        name="codeSnippetTextArea"
+        placeholder="Enter code snippet here"
         control={control}
         maxRows={4}
         minRows={4}
       />
       <FormTextArea
-        label="Code Snippet"
-        name="codeSnippetTextArea"
-        placeholder="Enter code snippet here"
+        label="Description"
+        name="descriptionInputTextValue"
+        placeholder="Enter description here"
         control={control}
         maxRows={4}
         minRows={4}

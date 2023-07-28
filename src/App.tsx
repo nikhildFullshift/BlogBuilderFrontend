@@ -20,7 +20,7 @@ const router = createBrowserRouter([
     element: <SearchBar />,
   },
   {
-    path: "/create-blog",
+    path: "/blog/create",
     element: <FormCreateBlog />,
   },
   {
