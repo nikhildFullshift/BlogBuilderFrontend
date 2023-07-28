@@ -86,6 +86,7 @@ function EditReview(props: any) {
         "🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:",
         response
       );
+      alert("Great! Successfully send for review!");
     } catch (error) {
       console.log("handleSendToReview error", error);
     }
