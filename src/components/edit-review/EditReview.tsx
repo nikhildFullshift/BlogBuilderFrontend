@@ -53,38 +53,42 @@ function EditReview(props: any) {
   const { handleSubmit, reset, control, setValue } = methods;
   const { state, dispatch } = useContext(Blogcontext);
 
-  const handleSendToReview = async (data: IFormInput) => {
-    console.log("data", data);
-    const { blogTitleInput, mdEditorContent, tags } = data;
-    if (!blogTitleInput || !mdEditorContent) {
-      throw new Error("Title/Content cannot be empty");
-    }
-    const parsedTags = tags.map((item: any) => item.text);
-    async function saveBlog(url: string, config: RequestInit): Promise<any> {
-      // TODO: remove any and write proper response structure
-      const response = await fetch(url, config);
-      return await response.json();
-    }
+  async function saveBlog(url: string, config: RequestInit): Promise<any> {
+    // TODO: remove any and write proper response structure
+    const response = await fetch(url, config);
+    return await response.json();
+  }
 
-    const body = JSON.stringify({
-      title: blogTitleInput,
-      description: mdEditorContent,
-      tags: parsedTags,
-    });
-    console.log("body =>", body);
-    // return
-    const config = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: body,
-    };
-    const response = await saveBlog(`${BASE_URL}/blog/create`, config);
-    console.log(
-      "🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:",
-      response
-    );
+  const handleSendToReview = async (data: IFormInput) => {
+    try {
+      console.log("data", data);
+      const { blogTitleInput, mdEditorContent, tags } = data;
+      if (!blogTitleInput || !mdEditorContent) {
+        throw new Error("Title/Content cannot be empty");
+      }
+      const parsedTags = tags.map((item: any) => item.text);
+      const body = JSON.stringify({
+        title: blogTitleInput,
+        description: mdEditorContent,
+        tags: parsedTags,
+      });
+      console.log("body =>", body);
+      // return
+      const config = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      };
+      const response = await saveBlog(`${BASE_URL}/blog/create`, config);
+      console.log(
+        "🚀 ~ file: FormCreateBlog.tsx:108 ~ handleSendToReview ~ response:",
+        response
+      );
+    } catch (error) {
+      console.log("handleSendToReview error", error);
+    }
   };
 
   useEffect(() => {

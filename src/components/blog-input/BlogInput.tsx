@@ -65,9 +65,14 @@ function BlogInput(props: any) {
     setLoader(true);
   };
 
+  async function generateBlog(url: string, config: RequestInit): Promise<any> {
+    // TODO: by Nikhil remove any and write proper response structure
+    const response = await fetch(url, config);
+    return await response.json();
+  }
+
   const onSubmit = async (data: IFormInput) => {
     handleLoaderOpen();
-
     const {
       codeSnippetTextArea,
       descriptionInputTextValue,
@@ -83,14 +88,6 @@ function BlogInput(props: any) {
         description: descriptionInputTextValue,
       },
     });
-    async function generateBlog(
-      url: string,
-      config: RequestInit
-    ): Promise<any> {
-      // TODO: by Nikhil remove any and write proper response structure
-      const response = await fetch(url, config);
-      return await response.json();
-    }
     if (!titleInputTextValue || !descriptionInputTextValue) {
       throw new Error("Title/Description is mandatory to fill");
     }
