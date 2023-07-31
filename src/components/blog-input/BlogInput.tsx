@@ -7,6 +7,7 @@ import { FormInputText } from "../form-components/FormInputText";
 import { FormTextArea } from "../form-components/FormTextArea";
 import NextPrevFormButton from "../next-prev/NextPrevFormButton";
 import BackdropLoader from "../loader/BackdropLoader";
+import FormCodeSnippet from "../form-components/FormCodeSnippet";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -208,7 +209,7 @@ function BlogInput(props: any) {
           /> */}
         </Container>
         <Container sx={{ flex: 3, maxWidth: "100%" }}>
-          <FormTextArea
+          {/* <FormTextArea
             style={{ marginTop: "2.1rem", width: "100%" }}
             label="Code Snippet"
             name="codeSnippetTextArea"
@@ -216,6 +217,10 @@ function BlogInput(props: any) {
             control={control}
             maxRows={25}
             minRows={25}
+          /> */}
+          <FormCodeSnippet
+            name="codeSnippetTextArea"
+            control={control}
           />
         </Container>
       </Container>

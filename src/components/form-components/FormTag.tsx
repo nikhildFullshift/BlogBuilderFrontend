@@ -72,7 +72,6 @@ export const FormTag = ({ name, control, setValue }: FormInputProps) => {
           handleDelete={handleDelete}
           handleAddition={handleAddition}
           handleDrag={handleDrag}
-          // handleTagClick={handleTagClick}
           inputFieldPosition="bottom"
           autocomplete={true}
         />
