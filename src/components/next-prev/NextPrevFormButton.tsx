@@ -9,7 +9,7 @@ function NextPrevFormButton(props: any) {
       if (step > 0) {
         await props.handleSubmit();
       }
-      dispatch({ type: "UPDATE_ACTIVE_STEP", payload: step });
+      // dispatch({ type: "UPDATE_ACTIVE_STEP", payload: step });
     } catch (error: any) {
       console.log(error.message);
     }

@@ -27,7 +27,6 @@ export const FormCodeSnippet = ({
         <Editor
           height="70vh"
           language={language}
-          defaultLanguage="typescript"
           defaultValue="// add your code here"
           onChange={onChange}
           theme="vs-dark"

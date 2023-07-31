@@ -70,7 +70,7 @@ function BlogInput(props: any) {
   });
 
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, setValue, watch } = methods;
+  const { handleSubmit, reset, control, register, watch } = methods;
   const language = watch("language");
   const [inputFields, setInputFields] = useState([]);
   const { state, dispatch } = useContext(Blogcontext);
@@ -99,6 +99,7 @@ function BlogInput(props: any) {
       optionsCheckBoxValue,
       titleInputTextValue,
     } = data;
+    return;
     dispatch({
       type: "UPDATE_BLOG_QUERY",
       payload: {
