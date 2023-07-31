@@ -150,72 +150,77 @@ function BlogInput(props: any) {
   }, []);
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        height: "65rem",
-        justifyContent: "space-around",
-        flex: 1,
-        // [theme.breakpoints.down("sm")]: {
-        //   height: "calc(32rem * 1.75)",
-        // },
-        // [theme.breakpoints.up("md")]: {
-        //   height: "calc(32rem * 1.3)",
-        // },
-        // [theme.breakpoints.up(1350)]: {
-        //   height: "34rem",
-        // },
-      }}
-    >
-      <FormInputText
-        name="titleInputTextValue"
-        control={control}
-        label="Blog Title"
-      />
-      <FormTextArea
-        label="Code Snippet"
-        name="codeSnippetTextArea"
-        placeholder="Enter code snippet here"
-        control={control}
-        maxRows={4}
-        minRows={4}
-      />
-      <FormTextArea
-        label="Instruction"
-        name="instructionInputTextValue"
-        placeholder="Enter instruction here"
-        control={control}
-        maxRows={4}
-        minRows={4}
-      />
-      {inputFields.map((inputField: any, index: number) => {
-        switch (inputField.type) {
-          case "Dropdown":
-            const dropdown = (
-              <FormInputDropdown
-                key={index}
-                name={inputField.name}
-                control={control}
-                label={inputField.label}
-                options={inputField.values}
-              />
-            );
-            return dropdown;
+    <>
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+        }}
+      >
+        <Container
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            height: "45rem",
+            justifyContent: "space-around",
+            flex: 1,
+          }}
+        >
+          <FormInputText
+            name="titleInputTextValue"
+            control={control}
+            label="Blog Title"
+          />
 
-          default:
-            break;
-        }
-      })}
-      {/* <FormInputMultiCheckbox
+          <FormTextArea
+            label="Instruction"
+            name="instructionInputTextValue"
+            placeholder="Enter instruction here"
+            control={control}
+            maxRows={4}
+            minRows={4}
+          />
+          {inputFields.map((inputField: any, index: number) => {
+            switch (inputField.type) {
+              case "Dropdown":
+                const dropdown = (
+                  <FormInputDropdown
+                    key={index}
+                    name={inputField.name}
+                    control={control}
+                    label={inputField.label}
+                    options={inputField.values}
+                  />
+                );
+                return dropdown;
+
+              default:
+                break;
+            }
+          })}
+          {/* <FormInputMultiCheckbox
             control={control}
             setValue={setValue}
             name={"optionsCheckBoxValue"}
             label={"Checkbox Input"}
           /> */}
+        </Container>
+        <Container sx={{ flex: 1, maxWidth: "100%" }}>
+          <FormTextArea
+            style={{ marginTop: "2.1rem", width: "100%" }}
+            label="Code Snippet"
+            name="codeSnippetTextArea"
+            placeholder="Enter code snippet here"
+            control={control}
+            maxRows={25}
+            minRows={25}
+          />
+        </Container>
+      </Container>
       <NextPrevFormButton handleSubmit={handleSubmit(onSubmit)} />
       <BackdropLoader isOpen={loader} />
-    </Container>
+    </>
   );
 }
 
