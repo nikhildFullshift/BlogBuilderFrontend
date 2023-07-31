@@ -9,10 +9,6 @@ interface FormInputProps {
   language: string;
 }
 
-// function handleEditorChange(value, event) {
-//   console.log('here is the current model value:', value);
-// }
-
 export const FormCodeSnippet = ({
   name,
   control,

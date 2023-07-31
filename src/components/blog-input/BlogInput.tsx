@@ -38,7 +38,7 @@ const defaultValues = {
   mdEditorContent: "",
   tags: [],
   articleDomain: "",
-  language: "java",
+  language: "",
 };
 
 const languageOptions = [
@@ -70,11 +70,11 @@ function BlogInput(props: any) {
   });
 
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, setValue, getValues } = methods;
+  const { handleSubmit, reset, control, setValue, watch } = methods;
+  const language = watch("language");
   const [inputFields, setInputFields] = useState([]);
   const { state, dispatch } = useContext(Blogcontext);
   const [loader, setLoader] = useState(false);
-  const [language, setLanguage] = useState("");
 
   const handleLoaderClose = () => {
     setLoader(false);
@@ -243,8 +243,6 @@ function BlogInput(props: any) {
             control={control}
             label="Select language"
             options={languageOptions}
-            setValue={setValue}
-            setLanguage={setLanguage}
           />
           <FormCodeSnippet
             name="codeSnippetTextArea"
