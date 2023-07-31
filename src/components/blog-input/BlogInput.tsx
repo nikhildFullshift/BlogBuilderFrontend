@@ -14,7 +14,7 @@ interface IFormInput {
   optionsCheckBoxValue: string[];
   dropdownValue: string;
   titleInputTextValue: string;
-  descriptionInputTextValue: string;
+  instructionInputTextValue: string;
   codeSnippetTextArea: string;
   blogTitleInput: string;
   blogContentInput: string;
@@ -30,7 +30,7 @@ const defaultValues = {
   articleSize: "",
   articleTone: "",
   titleInputTextValue: "",
-  descriptionInputTextValue: "",
+  instructionInputTextValue: "",
   codeSnippetTextArea: "",
   blogTitleInput: "",
   mdEditorContent: "",
@@ -75,7 +75,7 @@ function BlogInput(props: any) {
     handleLoaderOpen();
     const {
       codeSnippetTextArea,
-      descriptionInputTextValue,
+      instructionInputTextValue,
       articleSize,
       articleTone,
       optionsCheckBoxValue,
@@ -85,15 +85,16 @@ function BlogInput(props: any) {
       type: "UPDATE_BLOG_QUERY",
       payload: {
         title: titleInputTextValue,
-        description: descriptionInputTextValue,
+        instruction: instructionInputTextValue,
+        codeSnippet: codeSnippetTextArea,
       },
     });
-    if (!titleInputTextValue || !descriptionInputTextValue) {
-      throw new Error("Title/Description is mandatory to fill");
+    if (!titleInputTextValue || !codeSnippetTextArea) {
+      throw new Error("Title/CodeSnippet is mandatory to fill");
     }
     const body = JSON.stringify({
       title: titleInputTextValue,
-      description: descriptionInputTextValue,
+      instruction: instructionInputTextValue,
       codeSnippet: codeSnippetTextArea,
       optional: { tone: articleTone, articleSize },
     });
@@ -153,18 +154,18 @@ function BlogInput(props: any) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "32rem",
+        height: "65rem",
         justifyContent: "space-around",
         flex: 1,
-        [theme.breakpoints.down("sm")]: {
-          height: "calc(32rem * 1.75)",
-        },
-        [theme.breakpoints.up("md")]: {
-          height: "calc(32rem * 1.3)",
-        },
-        [theme.breakpoints.up(1350)]: {
-          height: "34rem",
-        },
+        // [theme.breakpoints.down("sm")]: {
+        //   height: "calc(32rem * 1.75)",
+        // },
+        // [theme.breakpoints.up("md")]: {
+        //   height: "calc(32rem * 1.3)",
+        // },
+        // [theme.breakpoints.up(1350)]: {
+        //   height: "34rem",
+        // },
       }}
     >
       <FormInputText
@@ -181,9 +182,9 @@ function BlogInput(props: any) {
         minRows={4}
       />
       <FormTextArea
-        label="Description"
-        name="descriptionInputTextValue"
-        placeholder="Enter description here"
+        label="Instruction"
+        name="instructionInputTextValue"
+        placeholder="Enter instruction here"
         control={control}
         maxRows={4}
         minRows={4}

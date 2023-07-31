@@ -1,9 +1,8 @@
-import { Container, Paper, Step, StepLabel, Stepper } from "@mui/material";
+import { Container, Step, StepLabel, Stepper } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { Blogcontext } from "../App";
 import BlogInput from "./blog-input/BlogInput";
 import EditReview from "./edit-review/EditReview";
-import NextPrevFormButton from "./next-prev/NextPrevFormButton";
 
 export default function FormCreateBlog() {
   const steps = ["Create Blog", "Edit/Review"];
@@ -11,13 +10,12 @@ export default function FormCreateBlog() {
   const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
-    console.log("Called", activeStep);
     setActiveStep(state.activeStep);
   }, [state.activeStep]);
 
   return (
     <>
-      <Container sx={{ margin: "1rem auto" }}>
+      <Container sx={{ margin: "3rem auto" }}>
         <Stepper activeStep={activeStep} alternativeLabel>
           {steps.map((label) => (
             <Step key={label}>
