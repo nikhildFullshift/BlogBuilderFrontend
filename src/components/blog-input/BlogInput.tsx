@@ -164,7 +164,8 @@ function BlogInput(props: any) {
             flexDirection: "column",
             height: "45rem",
             justifyContent: "space-around",
-            flex: 1,
+            flex: 2,
+            maxWidth: "100%",
           }}
         >
           <FormInputText
@@ -206,7 +207,7 @@ function BlogInput(props: any) {
             label={"Checkbox Input"}
           /> */}
         </Container>
-        <Container sx={{ flex: 1, maxWidth: "100%" }}>
+        <Container sx={{ flex: 3, maxWidth: "100%" }}>
           <FormTextArea
             style={{ marginTop: "2.1rem", width: "100%" }}
             label="Code Snippet"
