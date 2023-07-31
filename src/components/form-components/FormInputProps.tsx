@@ -5,4 +5,5 @@ export interface FormInputProps {
   setValue?: any;
   options?: any;
   styles?: any;
+  setLanguage?: any;
 }

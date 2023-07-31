@@ -24,6 +24,7 @@ interface IFormInput {
   articleTone: string;
   articleSize: string;
   articleDomain: string;
+  language: string;
 }
 
 const defaultValues = {
@@ -37,7 +38,23 @@ const defaultValues = {
   mdEditorContent: "",
   tags: [],
   articleDomain: "",
+  language: "java",
 };
+
+const languageOptions = [
+  {
+    label: "Java",
+    value: "java",
+  },
+  {
+    label: "Javascript",
+    value: "javascript",
+  },
+  {
+    label: "Typescript",
+    value: "typescript",
+  },
+];
 
 function BlogInput(props: any) {
   const theme = createTheme({
@@ -53,10 +70,11 @@ function BlogInput(props: any) {
   });
 
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, setValue } = methods;
+  const { handleSubmit, reset, control, setValue, getValues } = methods;
   const [inputFields, setInputFields] = useState([]);
   const { state, dispatch } = useContext(Blogcontext);
   const [loader, setLoader] = useState(false);
+  const [language, setLanguage] = useState("");
 
   const handleLoaderClose = () => {
     setLoader(false);
@@ -73,7 +91,6 @@ function BlogInput(props: any) {
   }
 
   const onSubmit = async (data: IFormInput) => {
-    handleLoaderOpen();
     const {
       codeSnippetTextArea,
       instructionInputTextValue,
@@ -93,6 +110,7 @@ function BlogInput(props: any) {
     if (!titleInputTextValue || !codeSnippetTextArea) {
       throw new Error("Title/CodeSnippet is mandatory to fill");
     }
+    handleLoaderOpen();
     const body = JSON.stringify({
       title: titleInputTextValue,
       instruction: instructionInputTextValue,
@@ -107,6 +125,7 @@ function BlogInput(props: any) {
       },
       body: body,
     };
+
     const response = await generateBlog(`${BASE_URL}/openai/generate`, config);
     console.log(
       "🚀 ~ file: FormCreateBlog.tsx:64 ~ onSubmit ~ response:",
@@ -165,7 +184,7 @@ function BlogInput(props: any) {
             flexDirection: "column",
             height: "45rem",
             justifyContent: "space-around",
-            flex: 2,
+            flex: 1,
             maxWidth: "100%",
           }}
         >
@@ -218,9 +237,19 @@ function BlogInput(props: any) {
             maxRows={25}
             minRows={25}
           /> */}
+          <FormInputDropdown
+            styles={{ width: "30%" }}
+            name="language"
+            control={control}
+            label="Select language"
+            options={languageOptions}
+            setValue={setValue}
+            setLanguage={setLanguage}
+          />
           <FormCodeSnippet
             name="codeSnippetTextArea"
             control={control}
+            language={language}
           />
         </Container>
       </Container>
