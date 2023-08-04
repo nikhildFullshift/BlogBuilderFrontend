@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
-import { TextareaAutosize, TextField } from "@mui/material";
-import MDEditor from "@uiw/react-md-editor";
+import { Button, TextareaAutosize, TextField } from "@mui/material";
+import MDEditor, { commands } from "@uiw/react-md-editor";
 
 interface FormInputProps {
   name: string;
@@ -38,6 +38,7 @@ export const FormTextArea = ({
             style={style}
             value={value || ""}
             onChange={onChange}
+            preview="preview"
           />
         ) : (
           <TextField

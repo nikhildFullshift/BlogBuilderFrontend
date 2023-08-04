@@ -7,7 +7,7 @@ import EditReview from "./edit-review/EditReview";
 export default function FormCreateBlog() {
   const steps = ["Create Blog", "Edit/Review"];
   const { state, dispatch } = useContext(Blogcontext);
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState(1);
 
   useEffect(() => {
     setActiveStep(state.activeStep);

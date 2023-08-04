@@ -9,7 +9,10 @@ function NextPrevFormButton(props: any) {
       if (step > 0) {
         await props.handleSubmit();
       }
-      // dispatch({ type: "UPDATE_ACTIVE_STEP", payload: step });
+      dispatch({
+        type: "UPDATE_ACTIVE_STEP",
+        payload: state?.activeStep + step,
+      });
     } catch (error: any) {
       console.log(error.message);
     }
@@ -17,7 +20,10 @@ function NextPrevFormButton(props: any) {
 
   return (
     <Container sx={{ display: "flex", justifyContent: "space-between" }}>
-      <Button disabled={state?.activeStep === 0} onClick={() => handleSteps(0)}>
+      <Button
+        disabled={state?.activeStep === 0}
+        onClick={() => handleSteps(-1)}
+      >
         Prev
       </Button>
       <Button onClick={() => handleSteps(1)}>

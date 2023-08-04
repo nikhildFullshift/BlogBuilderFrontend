@@ -99,7 +99,6 @@ function BlogInput(props: any) {
       optionsCheckBoxValue,
       titleInputTextValue,
     } = data;
-    return;
     dispatch({
       type: "UPDATE_BLOG_QUERY",
       payload: {
