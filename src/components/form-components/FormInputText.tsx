@@ -36,6 +36,7 @@ export const FormInputText = ({
               fullWidth
               label={label}
               variant="outlined"
+              margin="normal"
             />
             {errors[`${name}`] && (
               <Typography variant="body2">This field is required</Typography>

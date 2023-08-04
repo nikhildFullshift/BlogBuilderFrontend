@@ -51,6 +51,7 @@ export const FormTextArea = ({
             multiline
             maxRows={maxRows}
             minRows={minRows}
+            margin="normal"
           />
         );
       }}

@@ -19,7 +19,7 @@ function NextPrevFormButton(props: any) {
   };
 
   return (
-    <Container sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Container sx={{ display: "flex", justifyContent: "space-between", marginTop: "2rem", fontWeight: 'medium' }}>
       <Button
         disabled={state?.activeStep === 0}
         onClick={() => handleSteps(-1)}
@@ -29,7 +29,7 @@ function NextPrevFormButton(props: any) {
       <Button onClick={() => handleSteps(1)}>
         {state.activeStep === 0 ? "Next" : "Send To Review"}
       </Button>
-    </Container>
+    </Container >
   );
 }
 
