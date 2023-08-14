@@ -1,5 +1,5 @@
-import { Button, Container, createTheme } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import { Container } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Blogcontext } from "../../App";
 import { FormInputDropdown } from "../form-components/FormInputDropdown";
@@ -47,30 +47,18 @@ const languageOptions = [
     value: "java",
   },
   {
-    label: "Javascript",
+    label: "JavaScript",
     value: "javascript",
   },
   {
-    label: "Typescript",
+    label: "TypeScript",
     value: "typescript",
   },
 ];
 
 function BlogInput(props: any) {
-  const theme = createTheme({
-    breakpoints: {
-      values: {
-        xs: 0,
-        sm: 600,
-        md: 900,
-        lg: 1200,
-        xl: 1536,
-      },
-    },
-  });
-
   const methods = useForm<IFormInput>({ defaultValues: defaultValues });
-  const { handleSubmit, reset, control, register, watch } = methods;
+  const { handleSubmit, control, watch } = methods;
   const language = watch("language");
   const [inputFields, setInputFields] = useState([]);
   const { state, dispatch } = useContext(Blogcontext);

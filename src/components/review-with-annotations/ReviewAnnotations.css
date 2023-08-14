@@ -1,0 +1,29 @@
+#tooltip {
+  position: absolute;
+  visibility: hidden;
+  padding: 10px;
+  bottom: -15px;
+  right: -500px;
+  user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+}
+
+.tooltip-parent {
+  position: relative;
+}
+
+.addBorder {
+  border: 1px solid black;
+}
+
+.commentDiv {
+  padding: 10px;
+  background-color: whitesmoke;
+}
+
+.commentDiv:hover {
+  cursor: pointer;
+}

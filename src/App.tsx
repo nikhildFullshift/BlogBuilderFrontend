@@ -11,6 +11,7 @@ import { createContext, useReducer } from "react";
 import { blog_reducer, initalState } from "./reducers/blogReducer";
 import { BlogContextProps } from "./utils/blogState.dto";
 import BlogListing from "./components/BlogListing";
+import ReviewAnnotations from "./components/review-with-annotations/ReviewAnnotations";
 
 export const Blogcontext = createContext({} as BlogContextProps);
 
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
   {
     path: "/blog/list",
     element: <BlogListing />,
+  },
+  {
+    path: "/blog/review/:version",
+    element: <ReviewAnnotations />,
   },
 ]);
 
