@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 
 const MenuBar = ({ editor }) => {
@@ -27,6 +27,80 @@ const ReviewAnnotations = () => {
 
   const lastHightlighted = useRef(null);
 
+  const eventHandleAndCommentBox = async (id, isNewComment) => {
+    const prevInnerHTML = document.getElementById(id.toString()).innerHTML;
+
+    if (document.getElementById(`tooltip`)) {
+      document.getElementById(`tooltip`).remove();
+    }
+    document.getElementById(
+      id.toString()
+    ).innerHTML = `${prevInnerHTML}<div style="border:1px solid black;z-index:100;" id="tooltip">
+            <input type="text" id="comment${id}" value="${
+      isNewComment ? "" : comments[id - 1].comment
+    }"/>
+            <button id="submitComment">${
+              isNewComment ? "Add" : "Update"
+            } Comment</button>
+            </div>`;
+
+    document.getElementById(`comment${id}`).addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+      },
+      { once: true }
+    );
+
+    document.getElementById("submitComment").addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+        setAddedComment(true);
+
+        if (isNewComment) {
+          setComments([
+            ...comments,
+            {
+              id,
+              comment: (
+                document.getElementById(`comment${id}`) as HTMLInputElement
+              ).value,
+            },
+          ]);
+          document.getElementById("tooltip").style.display = "none";
+          document.getElementById("addcomment").style.display = "none";
+          document.getElementById(id.toString()).innerHTML = prevInnerHTML;
+          setAddedComment(false);
+          lastHightlighted.current = null;
+          setId(id + 1);
+        } else {
+          setComments(
+            comments.map((item) => {
+              if (item.id == id) {
+                return {
+                  id,
+                  comment: (
+                    document.getElementById(`comment${id}`) as HTMLInputElement
+                  ).value,
+                };
+              } else {
+                return item;
+              }
+            })
+          );
+          document.getElementById("tooltip").style.display = "none";
+          document.getElementById("addcomment").style.display = "none";
+          document.getElementById(id.toString()).innerHTML = prevInnerHTML;
+          setAddedComment(false);
+          lastHightlighted.current = null;
+        }
+      },
+      { once: true }
+    );
+    document.getElementById("tooltip").style.display = "block";
+  };
+
   const togglehighlightComment = async (id: number, toaddBorder: boolean) => {
     if (id < 0) {
       return;
@@ -36,9 +110,10 @@ const ReviewAnnotations = () => {
       if (Number(item.id) === id) {
         if (toaddBorder && lastHighlightedBorder != id) {
           togglehighlightComment(lastHighlightedBorder, false);
+          eventHandleAndCommentBox(id, false);
           item.classList.add("addBorder");
           setLastHighlightedBorder(id);
-        } else if (lastHighlightedBorder !== id) {
+        } else if (lastHighlightedBorder != id) {
           item.classList.remove("addBorder");
         } else {
           item.classList.remove("addBorder");
@@ -56,46 +131,7 @@ const ReviewAnnotations = () => {
       .run();
 
     lastHightlighted.current = editor.chain().focus();
-
-    const prevInnerHTML = document.getElementById(id.toString()).innerHTML;
-
-    document.getElementById(
-      id.toString()
-    ).innerHTML = `${prevInnerHTML}<div style="border:1px solid black;z-index:100;" id="tooltip">
-    <input type="text" id="comment${id}" />
-    <button id="submitComment">Add Comment</button>
-    </div>`;
-
-    document
-      .getElementById(`comment${id}`)
-      .addEventListener("click", (event) => {
-        event.stopPropagation();
-      });
-
-    document.getElementById("submitComment").addEventListener(
-      "click",
-      (event) => {
-        event.stopPropagation();
-        setComments([
-          ...comments,
-          {
-            id,
-            comment: (
-              document.getElementById(`comment${id}`) as HTMLInputElement
-            ).value,
-          },
-        ]);
-        setAddedComment(true);
-        document.getElementById("tooltip").style.visibility = "hidden";
-        document.getElementById("addcomment").style.display = "none";
-        document.getElementById(id.toString()).innerHTML = prevInnerHTML;
-        setId(id + 1);
-        setAddedComment(false);
-        lastHightlighted.current = null;
-      },
-      { once: true }
-    );
-    document.getElementById("tooltip").style.visibility = "visible";
+    eventHandleAndCommentBox(id, true);
   };
 
   document.addEventListener("click", (e) => {
@@ -114,7 +150,7 @@ const ReviewAnnotations = () => {
       }
       setAddedComment(false);
       if (document.getElementById("tooltip"))
-        document.getElementById("tooltip").style.visibility = "hidden";
+        document.getElementById("tooltip").style.display = "none";
 
       if (lastHighlightedBorder)
         togglehighlightComment(lastHighlightedBorder, false);
@@ -187,7 +223,7 @@ const ReviewAnnotations = () => {
             Oh devs just wanna have fun<br>
             (devs, they wanna, wanna have fun, devs wanna have)
           </p>`);
-    }, 4000);
+    }, 1000);
   }
 
   if (!editor) return null;
@@ -215,9 +251,7 @@ const ReviewAnnotations = () => {
             className="commentDiv"
             key={item.id}
           >
-            <p>
-              {item.id} : {item.comment}
-            </p>
+            <p>{item.comment}</p>
           </div>
         ))}
       </div>

@@ -1,9 +1,9 @@
 #tooltip {
   position: absolute;
-  visibility: hidden;
+  display: none;
   padding: 10px;
-  bottom: -15px;
-  right: -500px;
+  bottom: -27px;
+  right: -577px;
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
