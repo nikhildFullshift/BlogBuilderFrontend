@@ -28,7 +28,6 @@ const ReviewAnnotations = () => {
   const lastHightlighted = useRef(null);
 
   const togglehighlightComment = async (id: number, toaddBorder: boolean) => {
-    console.log(lastHighlightedBorder, id);
     if (id < 0) {
       return;
     }
@@ -53,15 +52,15 @@ const ReviewAnnotations = () => {
     editor
       .chain()
       .focus()
-      .toggleHighlight({ id: id, class: "tooltip-parent" })
+      .toggleHighlight({ id: id.toString(), class: "tooltip-parent" })
       .run();
 
     lastHightlighted.current = editor.chain().focus();
 
-    const prevInnerHTML = document.getElementById(id).innerHTML;
+    const prevInnerHTML = document.getElementById(id.toString()).innerHTML;
 
     document.getElementById(
-      id
+      id.toString()
     ).innerHTML = `${prevInnerHTML}<div style="border:1px solid black;z-index:100;" id="tooltip">
     <input type="text" id="comment${id}" />
     <button id="submitComment">Add Comment</button>
@@ -77,15 +76,19 @@ const ReviewAnnotations = () => {
       "click",
       (event) => {
         event.stopPropagation();
-        console.log("HERE", id, document.getElementById(`comment${id}`).value);
         setComments([
           ...comments,
-          { id, comment: document.getElementById(`comment${id}`).value },
+          {
+            id,
+            comment: (
+              document.getElementById(`comment${id}`) as HTMLInputElement
+            ).value,
+          },
         ]);
         setAddedComment(true);
         document.getElementById("tooltip").style.visibility = "hidden";
         document.getElementById("addcomment").style.display = "none";
-        document.getElementById(id).innerHTML = prevInnerHTML;
+        document.getElementById(id.toString()).innerHTML = prevInnerHTML;
         setId(id + 1);
         setAddedComment(false);
         lastHightlighted.current = null;
@@ -113,7 +116,6 @@ const ReviewAnnotations = () => {
       if (document.getElementById("tooltip"))
         document.getElementById("tooltip").style.visibility = "hidden";
 
-      // console.log(lastHighlightedBorder.current);
       if (lastHighlightedBorder)
         togglehighlightComment(lastHighlightedBorder, false);
     }
