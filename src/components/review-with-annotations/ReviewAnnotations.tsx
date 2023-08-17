@@ -4,6 +4,7 @@ import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
 import { useRef, useState } from "react";
 import "./ReviewAnnotations.css";
+import BackdropLoader from "../loader/BackdropLoader";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -195,11 +196,14 @@ const ReviewAnnotations = () => {
     ],
   });
 
-  if (true && editor?.isEmpty) {
+  const [loader, setLoader] = useState(false);
+
+  if (editor?.isEmpty) {
     //here call the background api to get html data of version
     setTimeout(() => {
+      setLoader(true);
       editor.commands.setContent(`<p>Hello World! 🌎️</p>
-        <h3 >
+        <h3>
             Devs Just Want to Have Fun by Cyndi Lauper
           </h3>
           <p>
@@ -223,39 +227,45 @@ const ReviewAnnotations = () => {
             Oh devs just wanna have fun<br>
             (devs, they wanna, wanna have fun, devs wanna have)
           </p>`);
+      setTimeout(() => {
+        setLoader(false);
+      }, 1000);
     }, 1000);
   }
 
   if (!editor) return null;
 
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <div>
-        <button
-          id="addcomment"
-          onClick={handleComment}
-          style={{ display: "none" }}
-        >
-          Add Comment
-        </button>
-        <MenuBar editor={editor} />
-        <EditorContent contentEditable={false} editor={editor} />
-      </div>
-      <div>
-        {comments.map((item: any) => (
-          <div
-            onClick={(event) => {
-              event.stopPropagation();
-              togglehighlightComment(item.id, true);
-            }}
-            className="commentDiv"
-            key={item.id}
+    <>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div>
+          <button
+            id="addcomment"
+            onClick={handleComment}
+            style={{ display: "none" }}
           >
-            <p>{item.comment}</p>
-          </div>
-        ))}
+            Add Comment
+          </button>
+          <MenuBar editor={editor} />
+          <EditorContent contentEditable={false} editor={editor} />
+        </div>
+        <div>
+          {comments.map((item: any) => (
+            <div
+              onClick={(event) => {
+                event.stopPropagation();
+                togglehighlightComment(item.id, true);
+              }}
+              className="commentDiv"
+              key={item.id}
+            >
+              <p>{item.comment}</p>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+      <BackdropLoader isOpen={loader} />
+    </>
   );
 };
 
