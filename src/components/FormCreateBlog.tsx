@@ -15,15 +15,6 @@ export default function FormCreateBlog() {
 
   return (
     <>
-      <Container sx={{ margin: "3rem auto" }}>
-        <Stepper activeStep={activeStep} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Container>
       <Container>{activeStep === 0 ? <BlogInput /> : <EditReview />}</Container>
     </>
   );

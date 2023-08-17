@@ -61,7 +61,6 @@ function EditReview(props: any) {
 
   const handleSendToReview = async (data: IFormInput) => {
     try {
-      console.log("data", data);
       const { blogTitleInput, mdEditorContent, tags } = data;
       if (!blogTitleInput || !mdEditorContent) {
         throw new Error("Title/Content cannot be empty");
@@ -100,38 +99,41 @@ function EditReview(props: any) {
   }, []);
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        height: "90vh",
-        justifyContent: "space-evenly",
-        [theme.breakpoints.down("sm")]: {
-          height: "75vh",
-        },
-        [theme.breakpoints.up("md")]: {
-          height: "85vh",
-        },
-        [theme.breakpoints.up(1350)]: {
-          height: "74vh",
-        },
-      }}
-    >
-      <FormInputText name="blogTitleInput" control={control} label="Title" />
-      <FormTextArea
-        name="mdEditorContent"
-        placeholder="Your blog will appear here!"
-        style={{
-          width: "100%",
-          overflowY: "auto",
-          height: "100%",
-        }}
-        control={control}
-      />
-      <FormTag name="tags" control={control} setValue={setValue} />
+    <>
       <NextPrevFormButton handleSubmit={handleSubmit(handleSendToReview)} />
-    </Container>
+
+      <Container
+        sx={{
+          display: "flex",
+          flex: 1,
+          flexDirection: "column",
+          height: "90vh",
+          justifyContent: "space-evenly",
+          [theme.breakpoints.down("sm")]: {
+            height: "75vh",
+          },
+          [theme.breakpoints.up("md")]: {
+            height: "85vh",
+          },
+          [theme.breakpoints.up(1350)]: {
+            height: "74vh",
+          },
+        }}
+      >
+        <FormInputText name="blogTitleInput" control={control} label="Title" />
+        <FormTextArea
+          name="mdEditorContent"
+          placeholder="Your blog will appear here!"
+          style={{
+            width: "100%",
+            overflowY: "auto",
+            height: "100%",
+          }}
+          control={control}
+        />
+        <FormTag name="tags" control={control} setValue={setValue} />
+      </Container>
+    </>
   );
 }
 

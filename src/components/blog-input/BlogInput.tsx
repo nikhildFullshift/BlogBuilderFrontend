@@ -159,6 +159,7 @@ function BlogInput(props: any) {
 
   return (
     <>
+      <NextPrevFormButton handleSubmit={handleSubmit(onSubmit)} />
       <Container
         sx={{
           display: "flex",
@@ -239,7 +240,7 @@ function BlogInput(props: any) {
           />
         </Container>
       </Container>
-      <NextPrevFormButton handleSubmit={handleSubmit(onSubmit)} />
+
       <BackdropLoader isOpen={loader} />
     </>
   );
