@@ -69,9 +69,22 @@ const ReviewAnnotations = () => {
               ).value,
             },
           ]);
+
           document.getElementById("tooltip").style.display = "none";
           document.getElementById("addcomment").style.display = "none";
-          document.getElementById(id.toString()).innerHTML = prevInnerHTML;
+          document.getElementById(
+            id.toString()
+          ).innerHTML = `${prevInnerHTML} <div id="commentDiv12" class="commentDiv">${
+            (document.getElementById(`comment${id}`) as HTMLInputElement).value
+          }</div>`;
+
+          document
+            .getElementById("commentDiv12")
+            .addEventListener("click", (event) => {
+              console.log(typeof id, id);
+              event.stopPropagation();
+              togglehighlightComment(id, true);
+            });
           setAddedComment(false);
           lastHightlighted.current = null;
           setId(id + 1);

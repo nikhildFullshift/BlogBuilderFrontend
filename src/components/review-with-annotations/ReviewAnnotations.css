@@ -23,6 +23,9 @@
   padding: 10px;
   background-color: whitesmoke;
   margin-bottom: 10px;
+  position: absolute;
+  left: 350px;
+  top: 0;
 }
 
 .commentDiv:hover {
