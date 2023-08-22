@@ -3,12 +3,13 @@
   display: none;
   padding: 10px;
   bottom: -27px;
-  right: -577px;
+  right: -477px;
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   -o-user-select: none;
+  background-color: white;
 }
 
 .tooltip-parent {

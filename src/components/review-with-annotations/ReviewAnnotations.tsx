@@ -67,6 +67,8 @@ const ReviewAnnotations = () => {
               comment: (
                 document.getElementById(`comment${id}`) as HTMLInputElement
               ).value,
+              position: event.pageY,
+              isFocused: false,
             },
           ]);
 
@@ -97,9 +99,11 @@ const ReviewAnnotations = () => {
                   comment: (
                     document.getElementById(`comment${id}`) as HTMLInputElement
                   ).value,
+                  position: item.position,
+                  isFocused: true,
                 };
               } else {
-                return item;
+                return { ...item, isFocused: false };
               }
             })
           );
@@ -248,9 +252,31 @@ const ReviewAnnotations = () => {
 
   if (!editor) return null;
 
+  const handleFocus = (id) => {
+    setComments(
+      comments.map((item) => {
+        if (item.id == id) {
+          return {
+            ...item,
+            isFocused: item.isFocused ? false : true,
+          };
+        } else {
+          return { ...item, isFocused: false };
+        }
+      })
+    );
+  };
+
   return (
     <>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          position: "relative",
+          width: "50%",
+        }}
+      >
         <div>
           <button
             id="addcomment"
@@ -265,14 +291,45 @@ const ReviewAnnotations = () => {
         <div>
           {comments.map((item: any) => (
             <div
-              onClick={(event) => {
-                event.stopPropagation();
-                togglehighlightComment(item.id, true);
-              }}
               className="commentDiv"
+              id={"commentDiv" + item.id}
+              onClick={() => handleFocus(item.id)}
               key={item.id}
+              style={{
+                top: `calc(${item.position}px - 65px)`,
+                position: "absolute",
+                right: `${item.isFocused ? "-240px" : "0px"}`,
+                transition: "all 1s ease 0s",
+                border: "1px solid",
+              }}
             >
-              <p>{item.comment}</p>
+              <div
+                style={{
+                  position: "relative",
+                  width: "150px",
+                  wordWrap: "break-word",
+                }}
+              >
+                <p
+                  style={{
+                    maxHeight: "50px",
+                    overflow: "hidden",
+                    marginBottom: "10px",
+                  }}
+                >
+                  {item.comment}
+                </p>
+                {item.isFocused && (
+                  <button
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      togglehighlightComment(item.id, true);
+                    }}
+                  >
+                    edit
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
