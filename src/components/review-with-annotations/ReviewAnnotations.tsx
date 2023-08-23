@@ -119,20 +119,26 @@ const ReviewAnnotations = () => {
     document.getElementById("tooltip").style.display = "block";
   };
 
-  const togglehighlightComment = async (id: number, toaddBorder: boolean) => {
-    if (id < 0) {
-      return;
-    }
+  const togglehighlightComment = async (
+    id: number,
+    toaddBorder: boolean,
+    toAddComment: boolean
+  ) => {
     const elements = document.getElementsByClassName("tooltip-parent");
     for (let item of elements) {
       if (Number(item.id) === id) {
-        if (toaddBorder && lastHighlightedBorder != id) {
-          togglehighlightComment(lastHighlightedBorder, false);
-          eventHandleAndCommentBox(id, false);
+        if (toaddBorder && lastHighlightedBorder == id) {
+          setLastHighlightedBorder(id);
+          if (toAddComment) {
+            eventHandleAndCommentBox(id, false);
+          }
+        } else if (toaddBorder && lastHighlightedBorder != id) {
+          togglehighlightComment(lastHighlightedBorder, false, toAddComment);
+          if (toAddComment) {
+            eventHandleAndCommentBox(id, false);
+          }
           item.classList.add("addBorder");
           setLastHighlightedBorder(id);
-        } else if (lastHighlightedBorder != id) {
-          item.classList.remove("addBorder");
         } else {
           item.classList.remove("addBorder");
           setLastHighlightedBorder(-1);
@@ -141,11 +147,15 @@ const ReviewAnnotations = () => {
     }
   };
 
-  const handleComment = async () => {
+  const handleComment = async (e) => {
+    e.stopPropagation();
     editor
       .chain()
       .focus()
-      .toggleHighlight({ id: id.toString(), class: "tooltip-parent" })
+      .toggleHighlight({
+        id,
+        class: "tooltip-parent",
+      })
       .run();
 
     lastHightlighted.current = editor.chain().focus();
@@ -171,7 +181,7 @@ const ReviewAnnotations = () => {
         document.getElementById("tooltip").style.display = "none";
 
       if (lastHighlightedBorder)
-        togglehighlightComment(lastHighlightedBorder, false);
+        togglehighlightComment(lastHighlightedBorder, false, false);
     }
   });
 
@@ -252,7 +262,8 @@ const ReviewAnnotations = () => {
 
   if (!editor) return null;
 
-  const handleFocus = (id) => {
+  const handleFocus = (e, id) => {
+    e.stopPropagation();
     setComments(
       comments.map((item) => {
         if (item.id == id) {
@@ -265,6 +276,7 @@ const ReviewAnnotations = () => {
         }
       })
     );
+    togglehighlightComment(id, true, false);
   };
 
   return (
@@ -280,7 +292,7 @@ const ReviewAnnotations = () => {
         <div>
           <button
             id="addcomment"
-            onClick={handleComment}
+            onClick={(e) => handleComment(e)}
             style={{ display: "none" }}
           >
             Add Comment
@@ -293,7 +305,7 @@ const ReviewAnnotations = () => {
             <div
               className="commentDiv"
               id={"commentDiv" + item.id}
-              onClick={() => handleFocus(item.id)}
+              onClick={(e) => handleFocus(e, item.id)}
               key={item.id}
               style={{
                 top: `calc(${item.position}px - 65px)`,
@@ -323,7 +335,7 @@ const ReviewAnnotations = () => {
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
-                      togglehighlightComment(item.id, true);
+                      togglehighlightComment(item.id, true, true);
                     }}
                   >
                     edit
