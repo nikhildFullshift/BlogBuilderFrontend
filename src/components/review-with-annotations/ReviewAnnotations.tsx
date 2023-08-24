@@ -34,20 +34,14 @@ const ReviewAnnotations = () => {
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
   const [isSelected, setIsSelected] = useState(false);
   const [positionY, setPositionY] = useState(0);
+  const [isNewComment, setIsNewComment] = useState(false);
 
   const lastHightlighted = useRef(null);
 
   const eventHandleAndCommentBox = async (id, isNewComment) => {
-    const prevInnerHTML = document.getElementById(id.toString()).innerHTML;
-
     if (document.getElementById(`tooltip`)) {
       document.getElementById(`tooltip`).remove();
     }
-    document.getElementById(
-      id.toString()
-    ).innerHTML = `${prevInnerHTML} ${ReactDOMServer.renderToString(
-      <CommentCard />
-    )}`;
 
     document.getElementById(`comment${id}`).addEventListener(
       "click",
@@ -101,7 +95,6 @@ const ReviewAnnotations = () => {
           );
           document.getElementById("tooltip").style.display = "none";
           document.getElementById("addcomment").style.display = "none";
-          document.getElementById(id.toString()).innerHTML = prevInnerHTML;
           setAddedComment(false);
           lastHightlighted.current = null;
         }
@@ -141,6 +134,7 @@ const ReviewAnnotations = () => {
 
   const handleComment = async (e) => {
     e.stopPropagation();
+    setIsSelected(true);
     editor
       .chain()
       .focus()
@@ -157,11 +151,11 @@ const ReviewAnnotations = () => {
   document.addEventListener("click", (e) => {
     const selection = window.getSelection();
     if (selection.type === "Range") {
-      console.log(e.pageY);
-      setIsSelected(true);
       setPositionY(e.pageY);
+      setIsNewComment(true);
       document.getElementById("addcomment").style.display = "block";
     } else {
+      setIsNewComment(false);
       setIsSelected(false);
       document.getElementById("addcomment").style.display = "none";
 
@@ -277,7 +271,7 @@ const ReviewAnnotations = () => {
 
   return (
     <>
-      {isSelected && <CommentCard y={positionY} />}
+      {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
       <div
         style={{
           display: "flex",
@@ -303,46 +297,8 @@ const ReviewAnnotations = () => {
         </Card>
         <div>
           {comments.map((item: any) => (
-            <div
-              className="commentDiv"
-              id={"commentDiv" + item.id}
-              onClick={(e) => handleFocus(e, item.id)}
-              key={item.id}
-              style={{
-                top: `calc(${item.position}px - 65px)`,
-                position: "absolute",
-                right: `${item.isFocused ? "-240px" : "0px"}`,
-                transition: "all 1s ease 0s",
-                border: "1px solid",
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  width: "150px",
-                  wordWrap: "break-word",
-                }}
-              >
-                <p
-                  style={{
-                    maxHeight: "50px",
-                    overflow: "hidden",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {item.comment}
-                </p>
-                {item.isFocused && (
-                  <button
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      togglehighlightComment(item.id, true, true);
-                    }}
-                  >
-                    edit
-                  </button>
-                )}
-              </div>
+            <div>
+              <CommentCard textValue={item.comment} />
             </div>
           ))}
         </div>

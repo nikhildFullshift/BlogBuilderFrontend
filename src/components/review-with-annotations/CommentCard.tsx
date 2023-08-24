@@ -9,16 +9,26 @@ import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Button, Container, TextField } from "@mui/material";
 
-const CommentForm = () => <>
-  <TextField id="standard-basic" label="Standard" variant="standard" fullWidth />
-  <Container sx={{ marginTop: "5px", paddingLeft: "0!important" }}>
-    <Button sx={{ marginRight: "5px" }} variant="contained">Comment</Button>
-    <Button variant="outlined">Cancel</Button>
-  </Container>
-</>
+const CommentForm = () => (
+  <>
+    <TextField
+      id="standard-basic"
+      label="Comment"
+      variant="standard"
+      fullWidth
+      onClick={(e) => e.stopPropagation()}
+    />
+    <Container sx={{ marginTop: "5px", paddingLeft: "0!important" }}>
+      <Button sx={{ marginRight: "5px" }} variant="contained">
+        Comment
+      </Button>
+      <Button variant="outlined">Cancel</Button>
+    </Container>
+  </>
+);
 
 export default function CommentCard(props: any) {
-  const { isAddComment } = props;
+  const { isNewComment, textValue } = props;
 
   return (
     <Card
@@ -26,7 +36,7 @@ export default function CommentCard(props: any) {
         maxWidth: 340,
         marginBottom: "1em",
         marginTop: `${props.y}px`,
-        marginLeft: "400px",
+        marginLeft: "55%",
         position: "absolute",
       }}
     >
@@ -45,11 +55,14 @@ export default function CommentCard(props: any) {
         title="Varun"
         subheader="Aug 23, 2023"
       />
-      <CardContent sx={{ padding: "1em!important" }}>
-        {(isAddComment) ? <CommentForm /> : <Typography variant="body1" color="text.secondary">
-          This impressive card is a comment added as annotation by the reviewer
-          on the blog content created by the author.
-        </Typography>}
+      <CardContent sx={{ padding: "5px 15px 10px" }}>
+        {isNewComment ? (
+          <CommentForm />
+        ) : (
+          <Typography variant="body1" color="text.secondary">
+            {textValue}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
