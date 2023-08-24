@@ -7,6 +7,7 @@ import ReactDOMServer from "react-dom/server";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
+import { Card, CardContent } from "@mui/material";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -281,17 +282,21 @@ const ReviewAnnotations = () => {
           width: "50%",
         }}
       >
-        <div>
-          <button
-            id="addcomment"
-            onClick={(e) => handleComment(e)}
-            style={{ display: "none" }}
-          >
-            Add Comment
-          </button>
-          <MenuBar editor={editor} />
-          <EditorContent contentEditable={false} editor={editor} />
-        </div>
+        <Card sx={{ width: "100%" }}>
+          <CardContent>
+            <div>
+              <button
+                id="addcomment"
+                onClick={(e) => handleComment(e)}
+                style={{ display: "none" }}
+              >
+                Add Comment
+              </button>
+              <MenuBar editor={editor} />
+              <EditorContent contentEditable={false} editor={editor} />
+            </div>
+          </CardContent>
+        </Card>
         <div>
           {comments.map((item: any) => (
             <div

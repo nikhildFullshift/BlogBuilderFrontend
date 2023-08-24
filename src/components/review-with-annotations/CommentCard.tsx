@@ -50,7 +50,6 @@ export default function CommentCard(props: any) {
           This impressive card is a comment added as annotation by the reviewer
           on the blog content created by the author.
         </Typography>}
-
       </CardContent>
     </Card>
   );
