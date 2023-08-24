@@ -16,9 +16,13 @@ const MenuBar = ({ editor }) => {
 
   return (
     <>
-      <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+      <Button
+        id="addcomment"
+        onClick={() => editor.chain().focus().unsetAllMarks().run()}
+        variant="outlined"
+      >
         Clear All Annotations
-      </button>
+      </Button>
     </>
   );
 };
@@ -285,7 +289,13 @@ const ReviewAnnotations = () => {
         <Card sx={{ width: "100%" }}>
           <CardContent>
             <div>
-              <Button id="addcomment" onClick={(e) => handleComment(e)} sx={{ marginRight: "5px", display: "none" }} variant="contained">Add Comment</Button>
+              <Button
+                id="addcomment"
+                onClick={(e) => handleComment(e)}
+                sx={{ marginRight: "5px", display: "none" }}
+                variant="contained">
+                Add Comment
+              </Button>
               <MenuBar editor={editor} />
               <EditorContent contentEditable={false} editor={editor} />
             </div>
