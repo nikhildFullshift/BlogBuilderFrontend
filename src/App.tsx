@@ -9,11 +9,19 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ViewBlog from "./components/view-blog/ViewBlog";
 import { createContext, useReducer } from "react";
 import { blog_reducer, initalState } from "./reducers/blogReducer";
-import { BlogContextProps } from "./utils/blogState.dto";
+import {
+  AnnotationContextProps,
+  BlogContextProps,
+} from "./utils/globalState.dto";
 import BlogListing from "./components/BlogListing";
 import ReviewAnnotations from "./components/review-with-annotations/ReviewAnnotations";
+import {
+  annotation_reducer,
+  initialAnnotationState,
+} from "./reducers/annotationReducer";
 
 export const Blogcontext = createContext({} as BlogContextProps);
+export const AnnotationContext = createContext({} as AnnotationContextProps);
 
 const router = createBrowserRouter([
   {
@@ -44,9 +52,17 @@ const router = createBrowserRouter([
 
 function App() {
   const [state, dispatch] = useReducer(blog_reducer, initalState);
+  const [annotationState, dispatchAnnotation] = useReducer(
+    annotation_reducer,
+    initialAnnotationState
+  );
   return (
     <Blogcontext.Provider value={{ state, dispatch }}>
-      <RouterProvider router={router} />
+      <AnnotationContext.Provider
+        value={{ annotationState, dispatchAnnotation }}
+      >
+        <RouterProvider router={router} />
+      </AnnotationContext.Provider>
     </Blogcontext.Provider>
   );
 }

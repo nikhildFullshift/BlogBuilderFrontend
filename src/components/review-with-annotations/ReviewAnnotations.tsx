@@ -2,12 +2,12 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import React, { useRef, useState } from "react";
-import ReactDOMServer from "react-dom/server";
+import { useContext, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
 import { Button, Card, CardContent } from "@mui/material";
+import { AnnotationContext } from "../../App";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -28,12 +28,11 @@ const MenuBar = ({ editor }) => {
 };
 
 const ReviewAnnotations = () => {
-  const [id, setId] = useState(1);
+  const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const { comments, id, positionY, isSelected } = annotationState;
+
   const [addedComment, setAddedComment] = useState(false);
-  const [comments, setComments] = useState([]);
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
-  const [isSelected, setIsSelected] = useState(false);
-  const [positionY, setPositionY] = useState(0);
   const [isNewComment, setIsNewComment] = useState(false);
 
   const lastHightlighted = useRef(null);
@@ -43,65 +42,13 @@ const ReviewAnnotations = () => {
       document.getElementById(`tooltip`).remove();
     }
 
-    document.getElementById(`comment${id}`).addEventListener(
+    document.getElementById(`comment${id}`)?.addEventListener(
       "click",
       (event) => {
         event.stopPropagation();
       },
       { once: true }
     );
-
-    document.getElementById("submitComment").addEventListener(
-      "click",
-      (event) => {
-        event.stopPropagation();
-        setAddedComment(true);
-
-        if (isNewComment) {
-          setComments([
-            ...comments,
-            {
-              id,
-              comment: (
-                document.getElementById(`comment${id}`) as HTMLInputElement
-              ).value,
-              position: event.pageY,
-              isFocused: false,
-            },
-          ]);
-
-          document.getElementById("tooltip").style.display = "none";
-          document.getElementById("addcomment").style.display = "none";
-
-          setAddedComment(false);
-          lastHightlighted.current = null;
-          setId(id + 1);
-        } else {
-          setComments(
-            comments.map((item) => {
-              if (item.id == id) {
-                return {
-                  id,
-                  comment: (
-                    document.getElementById(`comment${id}`) as HTMLInputElement
-                  ).value,
-                  position: item.position,
-                  isFocused: true,
-                };
-              } else {
-                return { ...item, isFocused: false };
-              }
-            })
-          );
-          document.getElementById("tooltip").style.display = "none";
-          document.getElementById("addcomment").style.display = "none";
-          setAddedComment(false);
-          lastHightlighted.current = null;
-        }
-      },
-      { once: true }
-    );
-    document.getElementById("tooltip").style.display = "block";
   };
 
   const togglehighlightComment = async (
@@ -134,7 +81,11 @@ const ReviewAnnotations = () => {
 
   const handleComment = async (e) => {
     e.stopPropagation();
-    setIsSelected(true);
+    dispatchAnnotation({
+      type: "UPDATE_TO_SHOW_COMMENT_BOX",
+      payload: true,
+    });
+    setIsNewComment(true);
     editor
       .chain()
       .focus()
@@ -151,12 +102,17 @@ const ReviewAnnotations = () => {
   document.addEventListener("click", (e) => {
     const selection = window.getSelection();
     if (selection.type === "Range") {
-      setPositionY(e.pageY);
-      setIsNewComment(true);
+      dispatchAnnotation({
+        type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
+        payload: e.pageY,
+      });
       document.getElementById("addcomment").style.display = "block";
     } else {
       setIsNewComment(false);
-      setIsSelected(false);
+      dispatchAnnotation({
+        type: "UPDATE_TO_SHOW_COMMENT_BOX",
+        payload: false,
+      });
       document.getElementById("addcomment").style.display = "none";
 
       //to avoid highlight if no comment was added
@@ -166,7 +122,6 @@ const ReviewAnnotations = () => {
       } else {
         lastHightlighted.current = null;
       }
-      setAddedComment(false);
       if (document.getElementById("tooltip"))
         document.getElementById("tooltip").style.display = "none";
 
@@ -254,18 +209,18 @@ const ReviewAnnotations = () => {
 
   const handleFocus = (e, id) => {
     e.stopPropagation();
-    setComments(
-      comments.map((item) => {
-        if (item.id == id) {
-          return {
-            ...item,
-            isFocused: item.isFocused ? false : true,
-          };
-        } else {
-          return { ...item, isFocused: false };
-        }
-      })
-    );
+    // setComments(
+    //   comments.map((item) => {
+    //     if (item.id == id) {
+    //       return {
+    //         ...item,
+    //         isFocused: item.isFocused ? false : true,
+    //       };
+    //     } else {
+    //       return { ...item, isFocused: false };
+    //     }
+    //   })
+    // );
     togglehighlightComment(id, true, false);
   };
 
@@ -286,8 +241,9 @@ const ReviewAnnotations = () => {
               <Button
                 id="addcomment"
                 onClick={(e) => handleComment(e)}
-                sx={{ marginRight: "5px", display: "none" }}
-                variant="contained">
+                sx={{ marginBottom: "5px", display: "none" }}
+                variant="outlined"
+              >
                 Add Comment
               </Button>
               <MenuBar editor={editor} />
@@ -298,7 +254,7 @@ const ReviewAnnotations = () => {
         <div>
           {comments.map((item: any) => (
             <div>
-              <CommentCard textValue={item.comment} />
+              <CommentCard textValue={item.value} y={positionY} />
             </div>
           ))}
         </div>

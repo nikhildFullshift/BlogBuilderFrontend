@@ -3,31 +3,72 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useContext, useState } from "react";
+import { AnnotationContext } from "../../App";
 import { Button, Container, TextField } from "@mui/material";
 
-const CommentForm = () => (
-  <>
-    <TextField
-      id="standard-basic"
-      label="Comment"
-      variant="standard"
-      fullWidth
-      onClick={(e) => e.stopPropagation()}
-    />
-    <Container sx={{ marginTop: "5px", paddingLeft: "0!important" }}>
-      <Button sx={{ marginRight: "5px" }} variant="contained">
-        Comment
-      </Button>
-      <Button variant="outlined">Cancel</Button>
-    </Container>
-  </>
-);
+const CommentForm = (props: any) => {
+  const { isNewComment } = props;
+  const [commentValue, setCommentValue] = useState("");
+  const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+
+  const { id: commentId, positionY } = annotationState;
+
+  const addComment = (event) => {
+    event.stopPropagation();
+
+    if (isNewComment) {
+      dispatchAnnotation({
+        type: "UPDATE_TO_SHOW_COMMENT_BOX",
+        payload: false,
+      });
+      dispatchAnnotation({
+        type: "ADD_COMMENTS",
+        payload: { id: commentId, value: commentValue, positionY },
+      });
+      dispatchAnnotation({ type: "UPDATE_ID", payload: 1 });
+    } else {
+      dispatchAnnotation({
+        type: "UPDATE_COMMENTS",
+        payload: {
+          id: commentId,
+          value: commentValue,
+        },
+      });
+    }
+  };
+
+  return (
+    <>
+      <TextField
+        id="standard-basic"
+        label="Comment"
+        variant="standard"
+        fullWidth
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => setCommentValue(e.target.value)}
+      />
+      <Container sx={{ marginTop: "5px", paddingLeft: "0!important" }}>
+        <Button
+          sx={{ marginRight: "5px" }}
+          variant="contained"
+          onClick={(e) => addComment(e)}
+        >
+          Comment
+        </Button>
+        <Button variant="outlined">Cancel</Button>
+      </Container>
+    </>
+  );
+};
 
 export default function CommentCard(props: any) {
+  const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const { positionY } = annotationState;
   const { isNewComment, textValue } = props;
 
   return (
@@ -35,8 +76,8 @@ export default function CommentCard(props: any) {
       sx={{
         maxWidth: 340,
         marginBottom: "1em",
-        marginTop: `${props.y}px`,
-        marginLeft: "55%",
+        marginTop: `${positionY}px`,
+        marginLeft: `${isNewComment ? "50%" : "20px"}`,
         position: "absolute",
       }}
     >
@@ -57,7 +98,7 @@ export default function CommentCard(props: any) {
       />
       <CardContent sx={{ padding: "5px 15px 10px" }}>
         {isNewComment ? (
-          <CommentForm />
+          <CommentForm isNewComment={isNewComment} />
         ) : (
           <Typography variant="body1" color="text.secondary">
             {textValue}
