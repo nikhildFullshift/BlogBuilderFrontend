@@ -1,17 +1,24 @@
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import Avatar from '@mui/material/Avatar';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { blue } from '@mui/material/colors';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
+import Avatar from "@mui/material/Avatar";
+import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import { blue } from "@mui/material/colors";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-export default function CommentCard() {
-
+export default function CommentCard(props: any) {
   return (
-    <Card sx={{ maxWidth: 340, marginBottom: "1em" }}>
+    <Card
+      sx={{
+        maxWidth: 340,
+        marginBottom: "1em",
+        marginTop: `${props.y}px`,
+        marginLeft: "400px",
+        position: "absolute",
+      }}
+    >
       <CardHeader
         sx={{ padding: "1em 1em 0" }}
         avatar={
@@ -27,11 +34,10 @@ export default function CommentCard() {
         title="Varun"
         subheader="Aug 23, 2023"
       />
-      <CardContent
-        sx={{ padding: "1em!important" }}
-      >
+      <CardContent sx={{ padding: "1em!important" }}>
         <Typography variant="body1" color="text.secondary">
-          This impressive card is a comment added as annotation by the reviewer on the blog content created by the author.
+          This impressive card is a comment added as annotation by the reviewer
+          on the blog content created by the author.
         </Typography>
       </CardContent>
     </Card>

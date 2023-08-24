@@ -2,9 +2,11 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
+import ReactDOMServer from "react-dom/server";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
+import CommentCard from "./CommentCard";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -25,6 +27,8 @@ const ReviewAnnotations = () => {
   const [addedComment, setAddedComment] = useState(false);
   const [comments, setComments] = useState([]);
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
+  const [isSelected, setIsSelected] = useState(false);
+  const [positionY, setPositionY] = useState(0);
 
   const lastHightlighted = useRef(null);
 
@@ -36,14 +40,9 @@ const ReviewAnnotations = () => {
     }
     document.getElementById(
       id.toString()
-    ).innerHTML = `${prevInnerHTML}<div style="border:1px solid black;z-index:100;" id="tooltip">
-            <input type="text" id="comment${id}" value="${
-      isNewComment ? "" : comments[id - 1].comment
-    }"/>
-            <button id="submitComment">${
-              isNewComment ? "Add" : "Update"
-            } Comment</button>
-            </div>`;
+    ).innerHTML = `${prevInnerHTML} ${ReactDOMServer.renderToString(
+      <CommentCard />
+    )}`;
 
     document.getElementById(`comment${id}`).addEventListener(
       "click",
@@ -74,19 +73,7 @@ const ReviewAnnotations = () => {
 
           document.getElementById("tooltip").style.display = "none";
           document.getElementById("addcomment").style.display = "none";
-          document.getElementById(
-            id.toString()
-          ).innerHTML = `${prevInnerHTML} <div id="commentDiv12" class="commentDiv">${
-            (document.getElementById(`comment${id}`) as HTMLInputElement).value
-          }</div>`;
 
-          document
-            .getElementById("commentDiv12")
-            .addEventListener("click", (event) => {
-              console.log(typeof id, id);
-              event.stopPropagation();
-              togglehighlightComment(id, true);
-            });
           setAddedComment(false);
           lastHightlighted.current = null;
           setId(id + 1);
@@ -165,8 +152,12 @@ const ReviewAnnotations = () => {
   document.addEventListener("click", (e) => {
     const selection = window.getSelection();
     if (selection.type === "Range") {
+      console.log(e.pageY);
+      setIsSelected(true);
+      setPositionY(e.pageY);
       document.getElementById("addcomment").style.display = "block";
     } else {
+      setIsSelected(false);
       document.getElementById("addcomment").style.display = "none";
 
       //to avoid highlight if no comment was added
@@ -281,6 +272,7 @@ const ReviewAnnotations = () => {
 
   return (
     <>
+      {isSelected && <CommentCard y={positionY} />}
       <div
         style={{
           display: "flex",
