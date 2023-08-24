@@ -7,8 +7,19 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Button, Container, TextField } from "@mui/material";
+
+const CommentForm = () => <>
+  <TextField id="standard-basic" label="Standard" variant="standard" fullWidth />
+  <Container sx={{ marginTop: "5px", paddingLeft: "0!important" }}>
+    <Button sx={{ marginRight: "5px" }} variant="contained">Comment</Button>
+    <Button variant="outlined">Cancel</Button>
+  </Container>
+</>
 
 export default function CommentCard(props: any) {
+  const { isAddComment } = props;
+
   return (
     <Card
       sx={{
@@ -35,10 +46,11 @@ export default function CommentCard(props: any) {
         subheader="Aug 23, 2023"
       />
       <CardContent sx={{ padding: "1em!important" }}>
-        <Typography variant="body1" color="text.secondary">
+        {(isAddComment) ? <CommentForm /> : <Typography variant="body1" color="text.secondary">
           This impressive card is a comment added as annotation by the reviewer
           on the blog content created by the author.
-        </Typography>
+        </Typography>}
+
       </CardContent>
     </Card>
   );
