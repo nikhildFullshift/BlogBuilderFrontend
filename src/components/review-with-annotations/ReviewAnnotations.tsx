@@ -7,7 +7,7 @@ import ReactDOMServer from "react-dom/server";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
-import { Card, CardContent } from "@mui/material";
+import { Button, Card, CardContent } from "@mui/material";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -285,13 +285,7 @@ const ReviewAnnotations = () => {
         <Card sx={{ width: "100%" }}>
           <CardContent>
             <div>
-              <button
-                id="addcomment"
-                onClick={(e) => handleComment(e)}
-                style={{ display: "none" }}
-              >
-                Add Comment
-              </button>
+              <Button id="addcomment" onClick={(e) => handleComment(e)} sx={{ marginRight: "5px", display: "none" }} variant="contained">Add Comment</Button>
               <MenuBar editor={editor} />
               <EditorContent contentEditable={false} editor={editor} />
             </div>
