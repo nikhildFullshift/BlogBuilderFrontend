@@ -71,7 +71,6 @@ export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { positionY } = annotationState;
   const { isNewComment, textValue, y, commentId } = props;
-  console.log("🚀 ~ file: CommentCard.tsx:74 ~ CommentCard ~ y:", y);
 
   return (
     <Card

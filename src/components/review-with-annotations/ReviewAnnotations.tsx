@@ -66,7 +66,7 @@ const ReviewAnnotations = () => {
             eventHandleAndCommentBox(id, false);
           }
         } else if (toaddBorder && lastHighlightedBorder != id) {
-          togglehighlightComment(lastHighlightedBorder, false, toAddComment);
+          // togglehighlightComment(lastHighlightedBorder, false, toAddComment);
           if (toAddComment) {
             eventHandleAndCommentBox(id, false);
           }
@@ -100,36 +100,40 @@ const ReviewAnnotations = () => {
     eventHandleAndCommentBox(id, true);
   };
 
-  document.addEventListener("click", (e) => {
-    const selection = window.getSelection();
-    if (selection.type === "Range") {
-      dispatchAnnotation({
-        type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
-        payload: e.pageY,
-      });
-      document.getElementById("addcomment").style.display = "block";
-    } else {
-      setIsNewComment(false);
-      dispatchAnnotation({
-        type: "UPDATE_TO_SHOW_COMMENT_BOX",
-        payload: false,
-      });
-      document.getElementById("addcomment").style.display = "none";
-
-      //to avoid highlight if no comment was added
-      if (!addedComment && lastHightlighted.current) {
-        lastHightlighted.current.unsetHighlight().run();
-        lastHightlighted.current = null;
+  document.addEventListener(
+    "click",
+    (e) => {
+      const selection = window.getSelection();
+      if (selection.type === "Range") {
+        dispatchAnnotation({
+          type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
+          payload: e.pageY,
+        });
+        document.getElementById("addcomment").style.display = "block";
       } else {
-        lastHightlighted.current = null;
-      }
-      if (document.getElementById("tooltip"))
-        document.getElementById("tooltip").style.display = "none";
+        setIsNewComment(false);
+        // dispatchAnnotation({
+        //   type: "UPDATE_TO_SHOW_COMMENT_BOX",
+        //   payload: false,
+        // });
+        document.getElementById("addcomment").style.display = "none";
 
-      if (lastHighlightedBorder)
-        togglehighlightComment(lastHighlightedBorder, false, false);
-    }
-  });
+        //to avoid highlight if no comment was added
+        if (!addedComment && lastHightlighted.current) {
+          lastHightlighted.current.unsetHighlight().run();
+          lastHightlighted.current = null;
+        } else {
+          lastHightlighted.current = null;
+        }
+        if (document.getElementById("tooltip"))
+          document.getElementById("tooltip").style.display = "none";
+
+        // if (lastHighlightedBorder)
+        // togglehighlightComment(lastHighlightedBorder, false, false);
+      }
+    },
+    { once: true }
+  );
 
   const CustomHighlight = Highlight.extend({
     addAttributes() {
@@ -222,7 +226,7 @@ const ReviewAnnotations = () => {
     //     }
     //   })
     // );
-    togglehighlightComment(id, true, false);
+    // togglehighlightComment(id, true, false);
   };
 
   const handleMargin = (index, item) => {
@@ -237,18 +241,29 @@ const ReviewAnnotations = () => {
 
     const fixedMargin = 10;
 
-    const height = document.getElementById("comment" + item.id)?.offsetHeight;
+    const height = document.getElementById(
+      "comment" + comments[index - 1].id
+    )?.offsetHeight;
+    console.log(
+      "🚀 ~ file: ReviewAnnotations.tsx:247 ~ handleMargin ~ height:",
+      height
+    );
     const differenceOfHeightOfPrevAndCurrentComment =
       comments[index].positionY - comments[index - 1].positionY - height;
+    console.log(
+      "🚀 ~ file: ReviewAnnotations.tsx:252 ~ handleMargin ~ differenceOfHeightOfPrevAndCurrentComment:",
+      differenceOfHeightOfPrevAndCurrentComment
+    );
+
+    //update the postionY for each comment with this result in margin property
+    // new Position Y/margin will be previous elements Y + result of this.
+
     if (differenceOfHeightOfPrevAndCurrentComment >= fixedMargin) {
       //when current comment Y is greater than Prevcomment + its height
-      return comments[index].positionY;
+      return differenceOfHeightOfPrevAndCurrentComment;
     } else if (differenceOfHeightOfPrevAndCurrentComment >= 0) {
       //when current comment Y is greater than Prevcomment + its height ,but less than our fixed margin
-      return (
-        comments[index].positionY +
-        (fixedMargin - differenceOfHeightOfPrevAndCurrentComment)
-      );
+      return fixedMargin;
     } else {
       return Math.abs(differenceOfHeightOfPrevAndCurrentComment) + fixedMargin;
     }

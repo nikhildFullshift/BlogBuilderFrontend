@@ -27,10 +27,14 @@ export const annotation_reducer = (state: any, action: any) => {
     return { ...state, comment: filterComments };
   } else if (action.type === "ADD_COMMENTS") {
     const { id, value, positionY } = action.payload;
-    return {
+    const newState = {
       ...state,
       comments: [...state.comments, { id, value, positionY }],
     };
+    newState.comments.sort(function (item1, item2) {
+      return item1.positionY - item2.positionY;
+    });
+    return newState;
   } else if (action.type == "CLEAR") {
     return initialAnnotationState;
   }
