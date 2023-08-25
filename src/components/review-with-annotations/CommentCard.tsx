@@ -10,6 +10,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useContext, useState } from "react";
 import { AnnotationContext } from "../../App";
 import { Button, Container, TextField } from "@mui/material";
+import zIndex from "@mui/material/styles/zIndex";
 
 const CommentForm = (props: any) => {
   const { isNewComment } = props;
@@ -69,16 +70,18 @@ const CommentForm = (props: any) => {
 export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { positionY } = annotationState;
-  const { isNewComment, textValue } = props;
+  const { isNewComment, textValue, y, commentId } = props;
+  console.log("🚀 ~ file: CommentCard.tsx:74 ~ CommentCard ~ y:", y);
 
   return (
     <Card
+      id={`${isNewComment ? "" : `comment${commentId}`}`}
       sx={{
-        maxWidth: 340,
-        marginBottom: "1em",
-        marginTop: `${positionY}px`,
-        marginLeft: `${isNewComment ? "50%" : "20px"}`,
-        position: "absolute",
+        width: "340px",
+        marginTop: `${isNewComment ? positionY : y}px`,
+        marginLeft: `${isNewComment ? "50%" : "2%"}`,
+        position: `${isNewComment ? "absolute" : ""}`,
+        zIndex: `${isNewComment ? 10 : 0}`,
       }}
     >
       <CardHeader

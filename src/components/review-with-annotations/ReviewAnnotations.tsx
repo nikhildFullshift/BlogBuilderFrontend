@@ -8,6 +8,7 @@ import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
 import { Button, Card, CardContent } from "@mui/material";
 import { AnnotationContext } from "../../App";
+import { comment } from "@uiw/react-md-editor";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -224,6 +225,35 @@ const ReviewAnnotations = () => {
     togglehighlightComment(id, true, false);
   };
 
+  const handleMargin = (index, item) => {
+    if (index === 0) {
+      console.log(
+        "🚀 ~ file: ReviewAnnotations.tsx:229 ~ handleMargin ~ item:",
+        item
+      );
+
+      return item.positionY;
+    }
+
+    const fixedMargin = 10;
+
+    const height = document.getElementById("comment" + item.id)?.offsetHeight;
+    const differenceOfHeightOfPrevAndCurrentComment =
+      comments[index].positionY - comments[index - 1].positionY - height;
+    if (differenceOfHeightOfPrevAndCurrentComment >= fixedMargin) {
+      //when current comment Y is greater than Prevcomment + its height
+      return comments[index].positionY;
+    } else if (differenceOfHeightOfPrevAndCurrentComment >= 0) {
+      //when current comment Y is greater than Prevcomment + its height ,but less than our fixed margin
+      return (
+        comments[index].positionY +
+        (fixedMargin - differenceOfHeightOfPrevAndCurrentComment)
+      );
+    } else {
+      return Math.abs(differenceOfHeightOfPrevAndCurrentComment) + fixedMargin;
+    }
+  };
+
   return (
     <>
       {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
@@ -232,10 +262,10 @@ const ReviewAnnotations = () => {
           display: "flex",
           justifyContent: "space-between",
           position: "relative",
-          width: "50%",
+          width: "100%",
         }}
       >
-        <Card sx={{ width: "100%" }}>
+        <Card sx={{ width: "75%" }}>
           <CardContent>
             <div>
               <Button
@@ -251,12 +281,17 @@ const ReviewAnnotations = () => {
             </div>
           </CardContent>
         </Card>
-        <div>
-          {comments.map((item: any) => (
-            <div>
-              <CommentCard textValue={item.value} y={positionY} />
-            </div>
-          ))}
+        <div style={{ width: "25%" }}>
+          {comments.map((item: any, index: number) => {
+            return (
+              <CommentCard
+                commentId={item.id}
+                key={item.id}
+                textValue={item.value}
+                y={handleMargin(index, item)}
+              />
+            );
+          })}
         </div>
       </div>
       <BackdropLoader isOpen={loader} />
