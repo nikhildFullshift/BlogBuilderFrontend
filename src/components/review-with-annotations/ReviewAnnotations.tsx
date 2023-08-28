@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import { useContext, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
@@ -112,10 +112,10 @@ const ReviewAnnotations = () => {
         document.getElementById("addcomment").style.display = "block";
       } else {
         setIsNewComment(false);
-        // dispatchAnnotation({
-        //   type: "UPDATE_TO_SHOW_COMMENT_BOX",
-        //   payload: false,
-        // });
+        dispatchAnnotation({
+          type: "UPDATE_TO_SHOW_COMMENT_BOX",
+          payload: false,
+        });
         document.getElementById("addcomment").style.display = "none";
 
         //to avoid highlight if no comment was added
@@ -229,46 +229,6 @@ const ReviewAnnotations = () => {
     // togglehighlightComment(id, true, false);
   };
 
-  const handleMargin = (index, item) => {
-    if (index === 0) {
-      console.log(
-        "🚀 ~ file: ReviewAnnotations.tsx:229 ~ handleMargin ~ item:",
-        item
-      );
-
-      return item.positionY;
-    }
-
-    const fixedMargin = 10;
-
-    const height = document.getElementById(
-      "comment" + comments[index - 1].id
-    )?.offsetHeight;
-    console.log(
-      "🚀 ~ file: ReviewAnnotations.tsx:247 ~ handleMargin ~ height:",
-      height
-    );
-    const differenceOfHeightOfPrevAndCurrentComment =
-      comments[index].positionY - comments[index - 1].positionY - height;
-    console.log(
-      "🚀 ~ file: ReviewAnnotations.tsx:252 ~ handleMargin ~ differenceOfHeightOfPrevAndCurrentComment:",
-      differenceOfHeightOfPrevAndCurrentComment
-    );
-
-    //update the postionY for each comment with this result in margin property
-    // new Position Y/margin will be previous elements Y + result of this.
-
-    if (differenceOfHeightOfPrevAndCurrentComment >= fixedMargin) {
-      //when current comment Y is greater than Prevcomment + its height
-      return differenceOfHeightOfPrevAndCurrentComment;
-    } else if (differenceOfHeightOfPrevAndCurrentComment >= 0) {
-      //when current comment Y is greater than Prevcomment + its height ,but less than our fixed margin
-      return fixedMargin;
-    } else {
-      return Math.abs(differenceOfHeightOfPrevAndCurrentComment) + fixedMargin;
-    }
-  };
-
   return (
     <>
       {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
@@ -297,13 +257,13 @@ const ReviewAnnotations = () => {
           </CardContent>
         </Card>
         <div style={{ width: "25%" }}>
-          {comments.map((item: any, index: number) => {
+          {comments.map((item: any) => {
             return (
               <CommentCard
                 commentId={item.id}
                 key={item.id}
                 textValue={item.value}
-                y={handleMargin(index, item)}
+                y={item.marginY}
               />
             );
           })}

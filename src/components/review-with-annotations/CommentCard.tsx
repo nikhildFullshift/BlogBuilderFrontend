@@ -10,7 +10,6 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useContext, useState } from "react";
 import { AnnotationContext } from "../../App";
 import { Button, Container, TextField } from "@mui/material";
-import zIndex from "@mui/material/styles/zIndex";
 
 const CommentForm = (props: any) => {
   const { isNewComment } = props;
