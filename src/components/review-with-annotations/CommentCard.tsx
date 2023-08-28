@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useContext, useState } from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { AnnotationContext } from "../../App";
 import { Button, Container, TextField } from "@mui/material";
 
@@ -70,9 +70,79 @@ export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { positionY } = annotationState;
   const { isNewComment, textValue, y, commentId } = props;
+  const [height, setHeight] = useState(0);
+  const elementRef = useRef(null);
+
+  const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
+    //update the postionY for each comment with this result in margin property
+    // new Position Y/margin will be previous elements Y + result of this.
+    const fixedMargin = 10;
+
+    if (differenceOfHeightOfPrevAndCurrentComment >= fixedMargin) {
+      //when current comment Y is greater than Prevcomment + its height
+      return differenceOfHeightOfPrevAndCurrentComment;
+    } else if (differenceOfHeightOfPrevAndCurrentComment >= 0) {
+      //when current comment Y is greater than Prevcomment + its height ,but less than our fixed margin
+      return fixedMargin;
+    } else {
+      return fixedMargin;
+    }
+  };
+
+  const handleMargin = (annotationState) => {
+    const { comments } = annotationState;
+
+    let offsetTop;
+    for (let index = 0; index < comments.length; index++) {
+      if (index === 0) {
+        offsetTop = comments[index].positionY;
+
+        comments[index] = {
+          ...comments[index],
+          marginY: comments[index].positionY,
+          offsetTop: comments[index].positionY,
+          height: elementRef.current.offsetHeight,
+        };
+        continue;
+      }
+
+      const prevHeight = comments[index - 1].height;
+      console.log(
+        "🚀 ~ file: annotationReducer.ts:38 ~ updatedComments ",
+        index,
+        offsetTop,
+        comments[index].positionY
+      );
+      const differenceOfHeightOfPrevAndCurrentComment =
+        comments[index].positionY - offsetTop - prevHeight;
+
+      const calculatedmargin = calculateNetmargin(
+        differenceOfHeightOfPrevAndCurrentComment
+      );
+
+      comments[index] = {
+        ...comments[index],
+        marginY: calculatedmargin,
+        offsetTop: calculatedmargin + offsetTop + prevHeight,
+        height: elementRef.current.offsetHeight,
+      };
+      offsetTop = calculatedmargin + offsetTop + prevHeight;
+    }
+
+    dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
+  };
+
+  useLayoutEffect(() => {
+    if (!isNewComment) {
+      console.log("dsd");
+      setHeight(elementRef.current.offsetHeight);
+      handleMargin(annotationState);
+    }
+  }, []);
 
   return (
     <Card
+      ref={elementRef}
       id={`${isNewComment ? "" : `comment${commentId}`}`}
       sx={{
         width: "340px",
