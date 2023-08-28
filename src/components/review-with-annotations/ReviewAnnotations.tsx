@@ -8,7 +8,6 @@ import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
 import { Button, Card, CardContent } from "@mui/material";
 import { AnnotationContext } from "../../App";
-import { comment } from "@uiw/react-md-editor";
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -30,9 +29,9 @@ const MenuBar = ({ editor }) => {
 
 const ReviewAnnotations = () => {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
-  const { comments, id, positionY, isSelected } = annotationState;
+  const { comments, id, positionY, isSelected, isAddedComment } =
+    annotationState;
 
-  const [addedComment, setAddedComment] = useState(false);
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
   const [isNewComment, setIsNewComment] = useState(false);
 
@@ -109,6 +108,10 @@ const ReviewAnnotations = () => {
           type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
           payload: e.pageY,
         });
+        dispatchAnnotation({
+          type: "COMMENT_ADDED",
+          payload: false,
+        });
         document.getElementById("addcomment").style.display = "block";
       } else {
         setIsNewComment(false);
@@ -119,7 +122,7 @@ const ReviewAnnotations = () => {
         document.getElementById("addcomment").style.display = "none";
 
         //to avoid highlight if no comment was added
-        if (!addedComment && lastHightlighted.current) {
+        if (!isAddedComment && lastHightlighted.current) {
           lastHightlighted.current.unsetHighlight().run();
           lastHightlighted.current = null;
         } else {

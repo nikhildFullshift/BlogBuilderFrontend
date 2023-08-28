@@ -20,6 +20,10 @@ const CommentForm = (props: any) => {
 
   const addComment = (event) => {
     event.stopPropagation();
+    dispatchAnnotation({
+      type: "COMMENT_ADDED",
+      payload: true,
+    });
 
     if (isNewComment) {
       dispatchAnnotation({
@@ -70,7 +74,6 @@ export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { positionY } = annotationState;
   const { isNewComment, textValue, y, commentId } = props;
-  const [height, setHeight] = useState(0);
   const elementRef = useRef(null);
 
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
@@ -96,7 +99,6 @@ export default function CommentCard(props: any) {
     for (let index = 0; index < comments.length; index++) {
       if (index === 0) {
         offsetTop = comments[index].positionY;
-
         comments[index] = {
           ...comments[index],
           marginY: comments[index].positionY,
@@ -110,7 +112,6 @@ export default function CommentCard(props: any) {
       console.log(
         "🚀 ~ file: annotationReducer.ts:38 ~ updatedComments ",
         index,
-        offsetTop,
         comments[index].positionY
       );
       const differenceOfHeightOfPrevAndCurrentComment =
@@ -134,11 +135,9 @@ export default function CommentCard(props: any) {
 
   useLayoutEffect(() => {
     if (!isNewComment) {
-      console.log("dsd");
-      setHeight(elementRef.current.offsetHeight);
       handleMargin(annotationState);
     }
-  }, []);
+  }, [annotationState.comments]);
 
   return (
     <Card

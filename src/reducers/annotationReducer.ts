@@ -3,6 +3,7 @@ export const initialAnnotationState = {
   comments: [],
   isSelected: false,
   positionY: 0,
+  isAddedComment: false,
 };
 
 export const annotation_reducer = (state: any, action: any) => {
@@ -10,6 +11,8 @@ export const annotation_reducer = (state: any, action: any) => {
     return { ...state, id: state.id + action.payload };
   } else if (action.type === "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT") {
     return { ...state, positionY: action.payload };
+  } else if (action.type === "COMMENT_ADDED") {
+    return { ...state, isAddedComment: action.payload };
   } else if (action.type === "UPDATE_TO_SHOW_COMMENT_BOX") {
     return { ...state, isSelected: action.payload };
   } else if (action.type === "UPDATE_COMMENTS") {

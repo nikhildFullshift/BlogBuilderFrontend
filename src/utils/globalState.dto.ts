@@ -14,6 +14,7 @@ export interface AnnotationContextProps {
     id: 1;
     comments: [];
     isSelected: false;
+    isAddedComment: false;
     positionY: number;
   };
   dispatchAnnotation: ({ type, payload }) => void;
