@@ -85,7 +85,7 @@ const ReviewAnnotations = () => {
   const handleComment = async (e) => {
     e.stopPropagation();
 
-    // setIsHighlighted(false);
+    setIsHighlighted(false);
     setIsNewComment(true);
 
     dispatchAnnotation({
@@ -274,6 +274,7 @@ const ReviewAnnotations = () => {
       type: "UPDATE_TO_SHOW_COMMENT_BOX",
       payload: false,
     });
+
     if (!isAddedComment && lastHightlighted.current) {
       lastHightlighted.current.unsetHighlight().run();
       lastHightlighted.current = null;
