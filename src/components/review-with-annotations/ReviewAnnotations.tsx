@@ -233,15 +233,22 @@ const ReviewAnnotations = () => {
     // togglehighlightComment(id, true, false);
   };
 
+  const handleHighlightedText = (e) => {
+    e.stopPropagation();
+    setIsHighlighted(false);
+  };
+
   return (
     <>
       {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
       <div
+        onClick={(e) => handleHighlightedText(e)}
         style={{
           display: "flex",
           justifyContent: "space-between",
           position: "relative",
           width: "100%",
+          height: "100vh",
         }}
       >
         <Card sx={{ width: "75%" }}>
