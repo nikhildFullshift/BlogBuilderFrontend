@@ -102,15 +102,14 @@ const ReviewAnnotations = () => {
   document.addEventListener(
     "click",
     (e) => {
+      e.stopPropagation();
+
       const selection = window.getSelection();
+
       if (selection.type === "Range") {
         dispatchAnnotation({
           type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
           payload: e.pageY,
-        });
-        dispatchAnnotation({
-          type: "COMMENT_ADDED",
-          payload: false,
         });
         document.getElementById("addcomment").style.display = "block";
       } else {

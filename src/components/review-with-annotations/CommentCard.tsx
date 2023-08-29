@@ -84,9 +84,6 @@ export default function CommentCard(props: any) {
     if (differenceOfHeightOfPrevAndCurrentComment >= fixedMargin) {
       //when current comment Y is greater than Prevcomment + its height
       return differenceOfHeightOfPrevAndCurrentComment;
-    } else if (differenceOfHeightOfPrevAndCurrentComment >= 0) {
-      //when current comment Y is greater than Prevcomment + its height ,but less than our fixed margin
-      return fixedMargin;
     } else {
       return fixedMargin;
     }
@@ -141,6 +138,7 @@ export default function CommentCard(props: any) {
 
   return (
     <Card
+      onClick={(e) => e.stopPropagation()}
       ref={elementRef}
       id={`${isNewComment ? "" : `comment${commentId}`}`}
       sx={{
