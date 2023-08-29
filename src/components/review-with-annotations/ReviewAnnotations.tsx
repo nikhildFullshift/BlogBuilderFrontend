@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
@@ -34,6 +34,8 @@ const ReviewAnnotations = () => {
 
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
   const [isNewComment, setIsNewComment] = useState(false);
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const lastHightlighted = useRef(null);
 
@@ -99,43 +101,45 @@ const ReviewAnnotations = () => {
     eventHandleAndCommentBox(id, true);
   };
 
-  document.addEventListener(
-    "click",
-    (e) => {
-      e.stopPropagation();
+  // document.addEventListener(
+  //   "click",
+  //   ,
+  //   { once: true }
+  // );
 
-      const selection = window.getSelection();
+  const handleContentEvents = (e) => {
+    e.stopPropagation();
 
-      if (selection.type === "Range") {
-        dispatchAnnotation({
-          type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
-          payload: e.pageY,
-        });
-        document.getElementById("addcomment").style.display = "block";
+    const selection = window.getSelection();
+
+    if (selection.type === "Range") {
+      dispatchAnnotation({
+        type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
+        payload: e.pageY,
+      });
+      setIsHighlighted(true);
+    } else {
+      setIsNewComment(false);
+      dispatchAnnotation({
+        type: "UPDATE_TO_SHOW_COMMENT_BOX",
+        payload: false,
+      });
+
+      setIsHighlighted(false);
+      //to avoid highlight if no comment was added
+      if (!isAddedComment && lastHightlighted.current) {
+        lastHightlighted.current.unsetHighlight().run();
+        lastHightlighted.current = null;
       } else {
-        setIsNewComment(false);
-        dispatchAnnotation({
-          type: "UPDATE_TO_SHOW_COMMENT_BOX",
-          payload: false,
-        });
-        document.getElementById("addcomment").style.display = "none";
-
-        //to avoid highlight if no comment was added
-        if (!isAddedComment && lastHightlighted.current) {
-          lastHightlighted.current.unsetHighlight().run();
-          lastHightlighted.current = null;
-        } else {
-          lastHightlighted.current = null;
-        }
-        if (document.getElementById("tooltip"))
-          document.getElementById("tooltip").style.display = "none";
-
-        // if (lastHighlightedBorder)
-        // togglehighlightComment(lastHighlightedBorder, false, false);
+        lastHightlighted.current = null;
       }
-    },
-    { once: true }
-  );
+      if (document.getElementById("tooltip"))
+        document.getElementById("tooltip").style.display = "none";
+
+      // if (lastHighlightedBorder)
+      // togglehighlightComment(lastHighlightedBorder, false, false);
+    }
+  };
 
   const CustomHighlight = Highlight.extend({
     addAttributes() {
@@ -174,8 +178,6 @@ const ReviewAnnotations = () => {
       CustomHighlight,
     ],
   });
-
-  const [loader, setLoader] = useState(false);
 
   if (editor?.isEmpty) {
     //here call the background api to get html data of version
@@ -245,16 +247,22 @@ const ReviewAnnotations = () => {
         <Card sx={{ width: "75%" }}>
           <CardContent>
             <div>
-              <Button
-                id="addcomment"
-                onClick={(e) => handleComment(e)}
-                sx={{ marginBottom: "5px", display: "none" }}
-                variant="outlined"
-              >
-                Add Comment
-              </Button>
+              {isHighlighted && (
+                <Button
+                  id="addcomment"
+                  onClick={(e) => handleComment(e)}
+                  sx={{ marginBottom: "5px" }}
+                  variant="outlined"
+                >
+                  Add Comment
+                </Button>
+              )}
               <MenuBar editor={editor} />
-              <EditorContent contentEditable={false} editor={editor} />
+              <EditorContent
+                onClick={(e) => handleContentEvents(e)}
+                contentEditable={false}
+                editor={editor}
+              />
             </div>
           </CardContent>
         </Card>

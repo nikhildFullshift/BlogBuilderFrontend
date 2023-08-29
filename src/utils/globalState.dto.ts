@@ -11,8 +11,8 @@ export interface BlogContextProps {
 
 export interface AnnotationContextProps {
   annotationState: {
-    id: 1;
-    comments: [];
+    id: number;
+    comments: any[];
     isSelected: false;
     isAddedComment: false;
     positionY: number;
