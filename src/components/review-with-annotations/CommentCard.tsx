@@ -146,8 +146,12 @@ export default function CommentCard(props: any) {
         marginTop: `${isNewComment ? positionY : y}px`,
         marginLeft: `${isNewComment ? "50%" : "2%"}`,
         position: `${isNewComment ? "absolute" : ""}`,
+        background: `${!isNewComment ? "#edf2fa" : ""}`,
+        borderRadius: `${!isNewComment ? "10px" : ""}`,
         zIndex: `${isNewComment ? 10 : 0}`,
       }}
+      // square={true}
+      elevation={0}
     >
       <CardHeader
         sx={{ padding: "1em 1em 0" }}
