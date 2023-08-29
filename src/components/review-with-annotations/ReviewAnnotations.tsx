@@ -249,7 +249,7 @@ const ReviewAnnotations = () => {
           justifyContent: "space-between",
           position: "relative",
           width: "100%",
-          height: "100vh",
+          // height: "100vh",
         }}
       >
         <Card sx={{ width: "75%" }}>
@@ -257,6 +257,7 @@ const ReviewAnnotations = () => {
             <div>
               <MenuBar editor={editor} />
               <EditorContent
+                style={{ overflowY: "auto" }}
                 onClick={(e) => handleContentEvents(e)}
                 contentEditable={false}
                 editor={editor}
@@ -280,7 +281,7 @@ const ReviewAnnotations = () => {
           <Tooltip
             title="Add comment"
             arrow
-            sx={{ position: "absolute", left: "74%", top: "25%" }}
+            sx={{ position: "absolute", left: "74%", top: positionY - 75 }}
             id="addcomment"
             onClick={(e) => handleComment(e)}
           >
