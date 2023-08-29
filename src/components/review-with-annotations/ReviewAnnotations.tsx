@@ -7,7 +7,7 @@ import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
 import { Button, Card, CardContent, Tooltip, Fab } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import { AnnotationContext } from "../../App";
 
 const MenuBar = ({ editor }) => {
@@ -84,11 +84,15 @@ const ReviewAnnotations = () => {
 
   const handleComment = async (e) => {
     e.stopPropagation();
+
+    // setIsHighlighted(false);
+    setIsNewComment(true);
+
     dispatchAnnotation({
       type: "UPDATE_TO_SHOW_COMMENT_BOX",
       payload: true,
     });
-    setIsNewComment(true);
+
     editor
       .chain()
       .focus()
@@ -134,8 +138,6 @@ const ReviewAnnotations = () => {
       } else {
         lastHightlighted.current = null;
       }
-      if (document.getElementById("tooltip"))
-        document.getElementById("tooltip").style.display = "none";
 
       // if (lastHighlightedBorder)
       // togglehighlightComment(lastHighlightedBorder, false, false);
@@ -202,6 +204,37 @@ const ReviewAnnotations = () => {
             Oh devs just want to have
           </p>
           <p>
+            The phone rings in the middle of the night<br>
+            My father yells, "What you gonna do with your life?"<br>
+            Oh daddy dear, you know you’re still number one<br>
+            But <s>girls</s>devs, they wanna have fun<br>
+            Oh devs just want to have
+          </p><p>
+            The phone rings in the middle of the night<br>
+            My father yells, "What you gonna do with your life?"<br>
+            Oh daddy dear, you know you’re still number one<br>
+            But <s>girls</s>devs, they wanna have fun<br>
+            Oh devs just want to have
+          </p><p>
+            The phone rings in the middle of the night<br>
+            My father yells, "What you gonna do with your life?"<br>
+            Oh daddy dear, you know you’re still number one<br>
+            But <s>girls</s>devs, they wanna have fun<br>
+            Oh devs just want to have
+          </p><p>
+            The phone rings in the middle of the night<br>
+            My father yells, "What you gonna do with your life?"<br>
+            Oh daddy dear, you know you’re still number one<br>
+            But <s>girls</s>devs, they wanna have fun<br>
+            Oh devs just want to have
+          </p><p>
+            The phone rings in the middle of the night<br>
+            My father yells, "What you gonna do with your life?"<br>
+            Oh daddy dear, you know you’re still number one<br>
+            But <s>girls</s>devs, they wanna have fun<br>
+            Oh devs just want to have
+          </p>
+          <p>
             That’s all they really want<br>
             Some fun<br>
             When the working day is done<br>
@@ -237,6 +270,16 @@ const ReviewAnnotations = () => {
   const handleHighlightedText = (e) => {
     e.stopPropagation();
     setIsHighlighted(false);
+    dispatchAnnotation({
+      type: "UPDATE_TO_SHOW_COMMENT_BOX",
+      payload: false,
+    });
+    if (!isAddedComment && lastHightlighted.current) {
+      lastHightlighted.current.unsetHighlight().run();
+      lastHightlighted.current = null;
+    } else {
+      lastHightlighted.current = null;
+    }
   };
 
   return (
@@ -249,15 +292,16 @@ const ReviewAnnotations = () => {
           justifyContent: "space-between",
           position: "relative",
           width: "100%",
-          // height: "100vh",
+          height: "100vh",
         }}
       >
-        <Card sx={{ width: "75%" }}>
+        <Card
+          sx={{ width: "75%", overflowY: "scroll", scrollbarWidth: "none" }}
+        >
           <CardContent>
             <div>
               <MenuBar editor={editor} />
               <EditorContent
-                style={{ overflowY: "auto" }}
                 onClick={(e) => handleContentEvents(e)}
                 contentEditable={false}
                 editor={editor}
@@ -285,14 +329,11 @@ const ReviewAnnotations = () => {
             id="addcomment"
             onClick={(e) => handleComment(e)}
           >
-            <Fab
-              size="medium"
-              color="primary"
-              aria-label="add"
-            >
+            <Fab size="medium" color="primary" aria-label="add">
               <AddIcon />
             </Fab>
-          </Tooltip>)}
+          </Tooltip>
+        )}
       </div>
       <BackdropLoader isOpen={loader} />
     </>
