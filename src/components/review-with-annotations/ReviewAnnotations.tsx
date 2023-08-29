@@ -6,7 +6,8 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
-import { Button, Card, CardContent } from "@mui/material";
+import { Button, Card, CardContent, Tooltip, Fab } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import { AnnotationContext } from "../../App";
 
 const MenuBar = ({ editor }) => {
@@ -253,16 +254,6 @@ const ReviewAnnotations = () => {
       >
         <Card sx={{ width: "75%" }}>
           <CardContent>
-            {isHighlighted && (
-              <Button
-                id="addcomment"
-                onClick={(e) => handleComment(e)}
-                sx={{ marginBottom: "5px" }}
-                variant="outlined"
-              >
-                Add Comment
-              </Button>
-            )}
             <div>
               <MenuBar editor={editor} />
               <EditorContent
@@ -285,6 +276,22 @@ const ReviewAnnotations = () => {
             );
           })}
         </div>
+        {isHighlighted && (
+          <Tooltip
+            title="Add comment"
+            arrow
+            sx={{ position: "absolute", left: "74%", top: "25%" }}
+            id="addcomment"
+            onClick={(e) => handleComment(e)}
+          >
+            <Fab
+              size="medium"
+              color="primary"
+              aria-label="add"
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>)}
       </div>
       <BackdropLoader isOpen={loader} />
     </>
