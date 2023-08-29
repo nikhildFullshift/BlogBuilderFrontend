@@ -246,17 +246,17 @@ const ReviewAnnotations = () => {
       >
         <Card sx={{ width: "75%" }}>
           <CardContent>
+            {isHighlighted && (
+              <Button
+                id="addcomment"
+                onClick={(e) => handleComment(e)}
+                sx={{ marginBottom: "5px" }}
+                variant="outlined"
+              >
+                Add Comment
+              </Button>
+            )}
             <div>
-              {isHighlighted && (
-                <Button
-                  id="addcomment"
-                  onClick={(e) => handleComment(e)}
-                  sx={{ marginBottom: "5px" }}
-                  variant="outlined"
-                >
-                  Add Comment
-                </Button>
-              )}
               <MenuBar editor={editor} />
               <EditorContent
                 onClick={(e) => handleContentEvents(e)}
