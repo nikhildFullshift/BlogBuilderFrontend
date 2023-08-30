@@ -108,12 +108,9 @@ const ReviewAnnotations = () => {
 
       setIsHighlighted(false);
       //to avoid highlight if no comment was added
-      if (!isAddedComment && lastHightlighted.current) {
-        lastHightlighted.current.unsetHighlight().run();
-        lastHightlighted.current = null;
-      } else {
-        lastHightlighted.current = null;
-      }
+
+      lastHightlighted.current?.unsetHighlight().run();
+      lastHightlighted.current = null;
 
       // if (lastHighlightedBorder)
       // togglehighlightComment(lastHighlightedBorder, false, false);
