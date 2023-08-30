@@ -2,31 +2,13 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
-import { Button, Card, CardContent, Tooltip, Fab } from "@mui/material";
+import { Card, CardContent, Tooltip, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { AnnotationContext } from "../../App";
-
-const MenuBar = ({ editor }) => {
-  if (!editor) {
-    return null;
-  }
-
-  return (
-    <>
-      <Button
-        id="addcomment"
-        onClick={() => editor.chain().focus().unsetAllMarks().run()}
-        variant="outlined"
-      >
-        Clear All Annotations
-      </Button>
-    </>
-  );
-};
 
 const ReviewAnnotations = () => {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
@@ -105,12 +87,6 @@ const ReviewAnnotations = () => {
     lastHightlighted.current = editor.chain().focus();
     eventHandleAndCommentBox(id, true);
   };
-
-  // document.addEventListener(
-  //   "click",
-  //   ,
-  //   { once: true }
-  // );
 
   const handleContentEvents = (e) => {
     e.stopPropagation();
@@ -275,12 +251,8 @@ const ReviewAnnotations = () => {
       payload: false,
     });
 
-    if (!isAddedComment && lastHightlighted.current) {
-      lastHightlighted.current.unsetHighlight().run();
-      lastHightlighted.current = null;
-    } else {
-      lastHightlighted.current = null;
-    }
+    lastHightlighted.current?.unsetHighlight().run();
+    lastHightlighted.current = null;
   };
 
   return (
@@ -301,7 +273,6 @@ const ReviewAnnotations = () => {
         >
           <CardContent>
             <div>
-              <MenuBar editor={editor} />
               <EditorContent
                 onClick={(e) => handleContentEvents(e)}
                 contentEditable={false}
