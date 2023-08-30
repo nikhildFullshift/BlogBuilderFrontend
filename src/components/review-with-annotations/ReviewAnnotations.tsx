@@ -31,7 +31,8 @@ const ReviewAnnotations = () => {
     for (let item of elements) {
       if (Number(item.id) === id || unSetAllBorder) {
         if (toaddBorder && lastHighlightedBorder == id) {
-          setLastHighlightedBorder(id);
+          item.classList.remove("addBorder");
+          setLastHighlightedBorder(-1);
         } else if (toaddBorder && lastHighlightedBorder != id) {
           highlightCommentOnClick(lastHighlightedBorder, false, false);
           item.classList.add("addBorder");
