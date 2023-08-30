@@ -283,20 +283,15 @@ const ReviewAnnotations = () => {
           justifyContent: "space-between",
           position: "relative",
           width: "100%",
-          height: "100vh",
         }}
       >
-        <Card
-          sx={{ width: "75%", overflowY: "scroll", scrollbarWidth: "none" }}
-        >
-          <CardContent>
-            <div>
-              <EditorContent
-                onClick={(e) => handleContentEvents(e)}
-                contentEditable={false}
-                editor={editor}
-              />
-            </div>
+        <Card sx={{ width: "75%" }}>
+          <CardContent className="versionContent">
+            <EditorContent
+              onClick={(e) => handleContentEvents(e)}
+              contentEditable={false}
+              editor={editor}
+            />
           </CardContent>
         </Card>
         <div style={{ width: "25%" }}>

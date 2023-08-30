@@ -12,7 +12,7 @@
   background-color: white;
 }
 
-::-webkit-scrollbar {
+div.versionContent::-webkit-scrollbar {
   display: none;
 }
 .tooltip-parent {
