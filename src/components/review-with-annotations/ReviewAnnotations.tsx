@@ -108,9 +108,19 @@ const ReviewAnnotations = () => {
 
       setIsHighlighted(false);
       //to avoid highlight if no comment was added
-
-      lastHightlighted.current?.unsetHighlight().run();
-      lastHightlighted.current = null;
+      if (!isAddedComment) {
+        lastHightlighted.current?.unsetHighlight().run();
+        lastHightlighted.current = null;
+      } else {
+        dispatchAnnotation({
+          type: "COMMENT_ADDED",
+          payload: false,
+        });
+        if (!isAddedComment) {
+          lastHightlighted.current?.unsetHighlight().run();
+        }
+        lastHightlighted.current = null;
+      }
 
       // if (lastHighlightedBorder)
       // togglehighlightComment(lastHighlightedBorder, false, false);
@@ -248,8 +258,19 @@ const ReviewAnnotations = () => {
       payload: false,
     });
 
-    lastHightlighted.current?.unsetHighlight().run();
-    lastHightlighted.current = null;
+    if (!isAddedComment && lastHightlighted.current) {
+      lastHightlighted.current.unsetHighlight().run();
+      lastHightlighted.current = null;
+    } else {
+      dispatchAnnotation({
+        type: "COMMENT_ADDED",
+        payload: false,
+      });
+      if (!isAddedComment) {
+        lastHightlighted.current?.unsetHighlight().run();
+      }
+      lastHightlighted.current = null;
+    }
   };
 
   return (
@@ -294,7 +315,7 @@ const ReviewAnnotations = () => {
           <Tooltip
             title="Add comment"
             arrow
-            sx={{ position: "absolute", left: "74%", top: positionY - 50 }}
+            sx={{ position: "absolute", left: "74%", top: positionY - 75 }}
             id="addcomment"
             onClick={(e) => handleComment(e)}
           >
