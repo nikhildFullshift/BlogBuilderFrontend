@@ -22,38 +22,18 @@ const ReviewAnnotations = () => {
 
   const lastHightlighted = useRef(null);
 
-  const eventHandleAndCommentBox = async (id, isNewComment) => {
-    if (document.getElementById(`tooltip`)) {
-      document.getElementById(`tooltip`).remove();
-    }
-
-    document.getElementById(`comment${id}`)?.addEventListener(
-      "click",
-      (event) => {
-        event.stopPropagation();
-      },
-      { once: true }
-    );
-  };
-
-  const togglehighlightComment = async (
+  const highlightCommentOnClick = async (
     id: number,
     toaddBorder: boolean,
-    toAddComment: boolean
+    unSetAllBorder: boolean
   ) => {
     const elements = document.getElementsByClassName("tooltip-parent");
     for (let item of elements) {
-      if (Number(item.id) === id) {
+      if (Number(item.id) === id || unSetAllBorder) {
         if (toaddBorder && lastHighlightedBorder == id) {
           setLastHighlightedBorder(id);
-          if (toAddComment) {
-            eventHandleAndCommentBox(id, false);
-          }
         } else if (toaddBorder && lastHighlightedBorder != id) {
-          // togglehighlightComment(lastHighlightedBorder, false, toAddComment);
-          if (toAddComment) {
-            eventHandleAndCommentBox(id, false);
-          }
+          highlightCommentOnClick(lastHighlightedBorder, false, false);
           item.classList.add("addBorder");
           setLastHighlightedBorder(id);
         } else {
@@ -85,7 +65,6 @@ const ReviewAnnotations = () => {
       .run();
 
     lastHightlighted.current = editor.chain().focus();
-    eventHandleAndCommentBox(id, true);
   };
 
   const handleContentEvents = (e) => {
@@ -107,6 +86,7 @@ const ReviewAnnotations = () => {
       });
 
       setIsHighlighted(false);
+      highlightCommentOnClick(null, false, true);
       //to avoid highlight if no comment was added
       if (!isAddedComment) {
         lastHightlighted.current?.unsetHighlight().run();
@@ -269,6 +249,7 @@ const ReviewAnnotations = () => {
       if (!isAddedComment) {
         lastHightlighted.current?.unsetHighlight().run();
       }
+      highlightCommentOnClick(null, false, true);
       lastHightlighted.current = null;
     }
   };
@@ -298,6 +279,7 @@ const ReviewAnnotations = () => {
           {comments.map((item: any) => {
             return (
               <CommentCard
+                highlightCommentOnClick={highlightCommentOnClick}
                 commentId={item.id}
                 key={item.id}
                 textValue={item.value}

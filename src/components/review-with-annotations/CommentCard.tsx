@@ -73,7 +73,8 @@ const CommentForm = (props: any) => {
 export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { positionY } = annotationState;
-  const { isNewComment, textValue, y, commentId } = props;
+  const { isNewComment, textValue, y, commentId, highlightCommentOnClick } =
+    props;
   const elementRef = useRef(null);
 
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
@@ -130,6 +131,11 @@ export default function CommentCard(props: any) {
     dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
   };
 
+  const handleSelectionOnCard = (e) => {
+    e.stopPropagation();
+    highlightCommentOnClick(commentId, true);
+  };
+
   useLayoutEffect(() => {
     if (!isNewComment) {
       handleMargin(annotationState);
@@ -138,7 +144,7 @@ export default function CommentCard(props: any) {
 
   return (
     <Card
-      onClick={(e) => e.stopPropagation()}
+      onClick={(e) => handleSelectionOnCard(e)}
       ref={elementRef}
       id={`${isNewComment ? "" : `comment${commentId}`}`}
       sx={{
@@ -150,7 +156,7 @@ export default function CommentCard(props: any) {
         borderRadius: `${!isNewComment ? "10px" : ""}`,
         zIndex: `${isNewComment ? 10 : 0}`,
       }}
-      // square={true}
+      className="commentDiv"
       elevation={0}
     >
       <CardHeader
