@@ -297,7 +297,7 @@ const ReviewAnnotations = () => {
           <Tooltip
             title="Add comment"
             arrow
-            sx={{ position: "absolute", left: "74%", top: positionY - 75 }}
+            sx={{ position: "absolute", left: "74%", top: positionY - 50 }}
             id="addcomment"
             onClick={(e) => handleComment(e)}
           >
