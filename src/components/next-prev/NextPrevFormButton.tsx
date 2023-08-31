@@ -32,17 +32,14 @@ function NextPrevFormButton(props: any) {
       <Button disabled={state?.activeStep === 0} onClick={() => handleSteps(0)}>
         Prev
       </Button>
-      {/* {state.activeStep === 0 ? (
+      {state.activeStep === 0 ? (
         <Button onClick={() => handleSteps(1)}>Next</Button>
       ) : (
         <DraftSubmit
           saveOnClick={(step) => handleSteps(step)}
           sendPlaceHolder="Send To Review"
         />
-      )} */}
-      <Button onClick={() => handleSteps(1)}>
-        {state.activeStep === 0 ? "Next" : "Send To Review"}
-      </Button>
+      )}
     </Container>
   );
 }
