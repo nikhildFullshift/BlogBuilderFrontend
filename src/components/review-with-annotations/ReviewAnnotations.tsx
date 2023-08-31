@@ -71,10 +71,14 @@ const ReviewAnnotations = () => {
 
   const handleContentEvents = (e) => {
     e.stopPropagation();
-
     const selection = window.getSelection();
 
     if (selection.type === "Range") {
+      lastHightlighted.current = editor.chain().focus();
+      //store the childNodes in state
+      // if(selection.anchorNode.parentElement.innerHTML.includes("mark")){
+      //   setChildNodes(selection.anchorNode.pa)
+      // }
       dispatchAnnotation({
         type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
         payload: e.pageY,
@@ -85,23 +89,19 @@ const ReviewAnnotations = () => {
       });
       setIsHighlighted(true);
     } else {
+      setIsHighlighted(false);
       setIsNewComment(false);
       dispatchAnnotation({
         type: "UPDATE_TO_SHOW_COMMENT_BOX",
         payload: false,
       });
 
-      setIsHighlighted(false);
       highlightCommentOnClick(null, false, true);
       //to avoid highlight if no comment was added
       if (!isAddedComment) {
         lastHightlighted.current?.unsetHighlight().run();
         lastHightlighted.current = null;
       } else {
-        dispatchAnnotation({
-          type: "COMMENT_ADDED",
-          payload: false,
-        });
         if (!isAddedComment) {
           lastHightlighted.current?.unsetHighlight().run();
         }
@@ -138,7 +138,7 @@ const ReviewAnnotations = () => {
         },
       };
     },
-  });
+  }).configure({ multicolor: true });
 
   const editor = useEditor({
     editable: false,
@@ -221,7 +221,6 @@ const ReviewAnnotations = () => {
 
   const handleHighlightedText = (e) => {
     e.stopPropagation();
-    setIsHighlighted(false);
     dispatchAnnotation({
       type: "UPDATE_TO_SHOW_COMMENT_BOX",
       payload: false,
@@ -262,7 +261,7 @@ const ReviewAnnotations = () => {
             />
           </CardContent>
         </Card>
-        <div style={{ width: "25%" }}>
+        <div style={{ width: "25%" }} onClick={(e) => handleContentEvents(e)}>
           {comments.map((item: any) => {
             return (
               <CommentCard
