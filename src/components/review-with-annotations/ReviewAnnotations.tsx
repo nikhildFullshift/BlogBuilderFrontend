@@ -79,6 +79,10 @@ const ReviewAnnotations = () => {
         type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",
         payload: e.pageY,
       });
+      dispatchAnnotation({
+        type: "COMMENT_ADDED",
+        payload: false,
+      });
       setIsHighlighted(true);
     } else {
       setIsNewComment(false);
@@ -227,10 +231,6 @@ const ReviewAnnotations = () => {
       lastHightlighted.current.unsetHighlight().run();
       lastHightlighted.current = null;
     } else {
-      dispatchAnnotation({
-        type: "COMMENT_ADDED",
-        payload: false,
-      });
       if (!isAddedComment) {
         lastHightlighted.current?.unsetHighlight().run();
       }

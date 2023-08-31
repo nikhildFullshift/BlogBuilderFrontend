@@ -133,6 +133,9 @@ export default function CommentCard(props: any) {
 
   const handleSelectionOnCard = (e) => {
     e.stopPropagation();
+    if (isNewComment) {
+      return;
+    }
     highlightCommentOnClick(commentId, true);
   };
 
