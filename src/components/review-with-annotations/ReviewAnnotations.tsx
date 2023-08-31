@@ -6,7 +6,7 @@ import { useContext, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
-import { Card, CardContent, Tooltip, Fab } from "@mui/material";
+import { Card, CardContent, Tooltip, Fab, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { AnnotationContext } from "../../App";
 import DraftSubmit from "../draft-and-submit/DraftSubmit";
@@ -252,7 +252,8 @@ const ReviewAnnotations = () => {
         }}
       >
         <Card sx={{ width: "75%" }}>
-          <DraftSubmit />
+          <DraftSubmit margin="20px auto" sendPlaceHolder="Send To Author" />
+          <Divider />
           <CardContent className="versionContent">
             <EditorContent
               onClick={(e) => handleContentEvents(e)}
