@@ -9,6 +9,7 @@ import CommentCard from "./CommentCard";
 import { Card, CardContent, Tooltip, Fab } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { AnnotationContext } from "../../App";
+import DraftSubmit from "../draft-and-submit/DraftSubmit";
 
 const ReviewAnnotations = () => {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
@@ -155,55 +156,55 @@ const ReviewAnnotations = () => {
             Devs Just Want to Have Fun by Cyndi Lauper
           </h3>
           <p>
-            I come home in the morning light<br>
-            My mother says, “When you gonna live your life right?”<br>
-            Oh mother dear we’re not the fortunate ones<br>
-            And devs, they wanna have fun<br>
+            I come home in the morning light
+            My mother says, “When you gonna live your life right?”
+            Oh mother dear we’re not the fortunate ones
+            And devs, they wanna have fun
             Oh devs just want to have fun</p>
           <p>
-            The phone rings in the middle of the night<br>
-            My father yells, "What you gonna do with your life?"<br>
-            Oh daddy dear, you know you’re still number one<br>
-            But <s>girls</s>devs, they wanna have fun<br>
+            The phone rings in the middle of the night
+            My father yells, "What you gonna do with your life?"
+            Oh daddy dear, you know you’re still number one
+            But <s>girls</s>devs, they wanna have fun
             Oh devs just want to have
           </p>
           <p>
-            The phone rings in the middle of the night<br>
-            My father yells, "What you gonna do with your life?"<br>
-            Oh daddy dear, you know you’re still number one<br>
-            But <s>girls</s>devs, they wanna have fun<br>
+            The phone rings in the middle of the night
+            My father yells, "What you gonna do with your life?"
+            Oh daddy dear, you know you’re still number one
+            But <s>girls</s>devs, they wanna have fun
             Oh devs just want to have
           </p><p>
-            The phone rings in the middle of the night<br>
-            My father yells, "What you gonna do with your life?"<br>
-            Oh daddy dear, you know you’re still number one<br>
-            But <s>girls</s>devs, they wanna have fun<br>
+            The phone rings in the middle of the night
+            My father yells, "What you gonna do with your life?"
+            Oh daddy dear, you know you’re still number one
+            But <s>girls</s>devs, they wanna have fun
             Oh devs just want to have
           </p><p>
-            The phone rings in the middle of the night<br>
-            My father yells, "What you gonna do with your life?"<br>
-            Oh daddy dear, you know you’re still number one<br>
-            But <s>girls</s>devs, they wanna have fun<br>
+            The phone rings in the middle of the night
+            My father yells, "What you gonna do with your life?"
+            Oh daddy dear, you know you’re still number one
+            But <s>girls</s>devs, they wanna have fun
             Oh devs just want to have
           </p><p>
-            The phone rings in the middle of the night<br>
-            My father yells, "What you gonna do with your life?"<br>
-            Oh daddy dear, you know you’re still number one<br>
-            But <s>girls</s>devs, they wanna have fun<br>
+            The phone rings in the middle of the night
+            My father yells, "What you gonna do with your life?"
+            Oh daddy dear, you know you’re still number one
+            But <s>girls</s>devs, they wanna have fun
             Oh devs just want to have
           </p><p>
-            The phone rings in the middle of the night<br>
-            My father yells, "What you gonna do with your life?"<br>
-            Oh daddy dear, you know you’re still number one<br>
-            But <s>girls</s>devs, they wanna have fun<br>
+            The phone rings in the middle of the night
+            My father yells, "What you gonna do with your life?"
+            Oh daddy dear, you know you’re still number one
+            But <s>girls</s>devs, they wanna have fun
             Oh devs just want to have
           </p>
           <p>
-            That’s all they really want<br>
-            Some fun<br>
-            When the working day is done<br>
-            Oh devs, they wanna have fun<br>
-            Oh devs just wanna have fun<br>
+            That’s all they really want
+            Some fun
+            When the working day is done
+            Oh devs, they wanna have fun
+            Oh devs just wanna have fun
             (devs, they wanna, wanna have fun, devs wanna have)
           </p>`);
       setTimeout(() => {
@@ -213,23 +214,6 @@ const ReviewAnnotations = () => {
   }
 
   if (!editor) return null;
-
-  const handleFocus = (e, id) => {
-    e.stopPropagation();
-    // setComments(
-    //   comments.map((item) => {
-    //     if (item.id == id) {
-    //       return {
-    //         ...item,
-    //         isFocused: item.isFocused ? false : true,
-    //       };
-    //     } else {
-    //       return { ...item, isFocused: false };
-    //     }
-    //   })
-    // );
-    // togglehighlightComment(id, true, false);
-  };
 
   const handleHighlightedText = (e) => {
     e.stopPropagation();
@@ -268,6 +252,7 @@ const ReviewAnnotations = () => {
         }}
       >
         <Card sx={{ width: "75%" }}>
+          <DraftSubmit />
           <CardContent className="versionContent">
             <EditorContent
               onClick={(e) => handleContentEvents(e)}
