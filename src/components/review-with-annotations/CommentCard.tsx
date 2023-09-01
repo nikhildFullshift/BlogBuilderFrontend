@@ -157,14 +157,21 @@ export default function CommentCard(props: any) {
         differenceAfterTransition =
           tobeTransitionedComment.offsetTop - comments[i].positionY;
       }
-      const calculatedmargin = calculateNetmargin(
-        comments[i].marginY - differenceAfterTransition
-      );
 
-      comments[i] = {
-        ...comments[i],
-        marginY: calculatedmargin,
-      };
+      if (i === 0) {
+        comments[i] = {
+          ...comments[i],
+          marginY: comments[i].marginY - differenceAfterTransition,
+        };
+      } else {
+        const calculatedmargin = calculateNetmargin(
+          comments[i].marginY - differenceAfterTransition
+        );
+        comments[i] = {
+          ...comments[i],
+          marginY: calculatedmargin,
+        };
+      }
     }
 
     dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
