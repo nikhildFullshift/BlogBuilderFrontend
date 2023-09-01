@@ -20,6 +20,7 @@ const ReviewAnnotations = () => {
   const [isNewComment, setIsNewComment] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [loader, setLoader] = useState(false);
+  // const [commentToBeRemoved, setCommentToBeRemoved] = useState();
 
   const lastHightlighted = useRef(null);
 
@@ -74,10 +75,10 @@ const ReviewAnnotations = () => {
     const selection = window.getSelection();
 
     if (selection.type === "Range") {
-      lastHightlighted.current = editor.chain().focus();
-      //store the childNodes in state
-      // if(selection.anchorNode.parentElement.innerHTML.includes("mark")){
-      //   setChildNodes(selection.anchorNode.pa)
+      // // store the childNodes in state
+      // if (selection.anchorNode.parentElement.innerHTML.includes("mark")) {
+      //   // setCommentToBeRemoved(selection.anchorNode.parentElement);
+      //   console.log("True");
       // }
       dispatchAnnotation({
         type: "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT",

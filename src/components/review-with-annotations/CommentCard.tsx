@@ -25,6 +25,11 @@ const CommentForm = (props: any) => {
       payload: true,
     });
 
+    // dispatchAnnotation({
+    //   type: "setlastHighlited",
+    //   payload: null,
+    // });
+
     if (isNewComment) {
       dispatchAnnotation({
         type: "UPDATE_TO_SHOW_COMMENT_BOX",
@@ -76,6 +81,7 @@ export default function CommentCard(props: any) {
   const { isNewComment, textValue, y, commentId, highlightCommentOnClick } =
     props;
   const elementRef = useRef(null);
+  const [isSelectedComment, setIsSelectedComment] = useState(false);
 
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
     //update the postionY for each comment with this result in margin property
@@ -131,19 +137,60 @@ export default function CommentCard(props: any) {
     dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
   };
 
+  const handleMarginOnCommentSelection = (commentId) => {
+    let { comments } = annotationState;
+    handleMargin(annotationState);
+
+    let tobeTransitionedComment = comments
+      .map((item, index) => {
+        return { ...item, index };
+      })
+      .filter((item) => item.id === commentId)[0];
+
+    if (tobeTransitionedComment.positionY === tobeTransitionedComment.marginY) {
+      return;
+    }
+
+    let differenceAfterTransition;
+    for (let i = tobeTransitionedComment.index; i >= 0; i--) {
+      if (tobeTransitionedComment.id === comments[i].id) {
+        differenceAfterTransition =
+          tobeTransitionedComment.offsetTop - comments[i].positionY;
+      }
+      const calculatedmargin = calculateNetmargin(
+        comments[i].marginY - differenceAfterTransition
+      );
+
+      comments[i] = {
+        ...comments[i],
+        marginY: calculatedmargin,
+      };
+    }
+
+    dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
+    setIsSelectedComment(false);
+  };
+
   const handleSelectionOnCard = (e) => {
     e.stopPropagation();
     if (isNewComment) {
       return;
     }
     highlightCommentOnClick(commentId, true);
+    setIsSelectedComment(true);
+    handleMarginOnCommentSelection(commentId);
   };
 
   useLayoutEffect(() => {
-    if (!isNewComment) {
+    if (isSelectedComment) {
+      handleMarginOnCommentSelection(commentId);
+      return;
+    }
+
+    if (!isNewComment && !isSelectedComment) {
       handleMargin(annotationState);
     }
-  }, [annotationState.comments]);
+  }, [annotationState.comments, isSelectedComment]);
 
   return (
     <Card
