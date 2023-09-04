@@ -212,6 +212,7 @@ export default function CommentCard(props: any) {
         background: "#edf2fa",
         borderRadius: `${!isNewComment ? "10px" : ""}`,
         zIndex: `${isNewComment ? 10 : 0}`,
+        transition: "all 0.5s ease 0s",
       }}
       className="commentDiv"
       elevation={0}
