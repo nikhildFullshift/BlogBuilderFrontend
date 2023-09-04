@@ -1,9 +1,9 @@
 export interface BlogContextProps {
   state: {
     activeStep: 0;
-    title: "";
-    description: "";
-    result: { title: ""; description: "" };
+    title: string;
+    description: string;
+    result: { title: string; description: string };
     comments: [];
   };
   dispatch: ({ type, payload }) => void;
@@ -16,6 +16,7 @@ export interface AnnotationContextProps {
     isSelected: false;
     isAddedComment: false;
     positionY: number;
+    editCommentId: number;
   };
   dispatchAnnotation: ({ type, payload }) => void;
 }

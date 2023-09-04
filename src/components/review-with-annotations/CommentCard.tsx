@@ -1,4 +1,3 @@
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
@@ -9,7 +8,7 @@ import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { AnnotationContext } from "../../App";
-import { Button, Container, TextField } from "@mui/material";
+import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
 
 const CommentForm = (props: any) => {
   const { isNewComment } = props;
@@ -82,6 +81,14 @@ export default function CommentCard(props: any) {
     props;
   const elementRef = useRef(null);
   const [isSelectedComment, setIsSelectedComment] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
     //update the postionY for each comment with this result in margin property
@@ -113,11 +120,7 @@ export default function CommentCard(props: any) {
       }
 
       const prevHeight = comments[index - 1].height;
-      console.log(
-        "🚀 ~ file: annotationReducer.ts:38 ~ updatedComments ",
-        index,
-        comments[index].positionY
-      );
+
       const differenceOfHeightOfPrevAndCurrentComment =
         comments[index].positionY - offsetTop - prevHeight;
 
@@ -134,7 +137,10 @@ export default function CommentCard(props: any) {
       offsetTop = calculatedmargin + offsetTop + prevHeight;
     }
 
-    dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
+    dispatchAnnotation({
+      type: "COMMENTS_STATE_UPDATE_DIRECTLY",
+      payload: comments,
+    });
   };
 
   const handleMarginOnCommentSelection = (commentId) => {
@@ -174,7 +180,10 @@ export default function CommentCard(props: any) {
       }
     }
 
-    dispatchAnnotation({ type: "COMMENTS_STATE_UPDATE", payload: comments });
+    dispatchAnnotation({
+      type: "COMMENTS_STATE_UPDATE_DIRECTLY",
+      payload: comments,
+    });
     setIsSelectedComment(false);
   };
 
@@ -198,6 +207,10 @@ export default function CommentCard(props: any) {
       handleMargin(annotationState);
     }
   }, [annotationState.comments, isSelectedComment]);
+
+  const handleEdit = (e, commentId) => {
+    dispatchAnnotation({ type: "UPDATE_EDIT_COMMENT_ID", payload: commentId });
+  };
 
   return (
     <Card
@@ -226,7 +239,23 @@ export default function CommentCard(props: any) {
         }
         action={
           <IconButton aria-label="settings">
-            <MoreVertIcon />
+            <div onClick={handleClick}>
+              <MoreVertIcon />
+            </div>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
+              }}
+            >
+              <MenuItem onClick={(e) => handleEdit(e, commentId)}>
+                Edit
+              </MenuItem>
+              <MenuItem onClick={handleClose}>Delete</MenuItem>
+            </Menu>
           </IconButton>
         }
         title="Varun"

@@ -4,11 +4,14 @@ export const initialAnnotationState = {
   isSelected: false,
   positionY: 0,
   isAddedComment: false,
+  editCommentId: 0,
 };
 
 export const annotation_reducer = (state: any, action: any) => {
   if (action.type === "UPDATE_ID") {
     return { ...state, id: state.id + action.payload };
+  } else if (action.type === "UPDATE_EDIT_COMMENT_ID") {
+    return { ...state, editCommentId: action.payload };
   } else if (action.type === "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT") {
     return { ...state, positionY: action.payload };
   } else if (action.type === "COMMENT_ADDED") {
@@ -38,7 +41,7 @@ export const annotation_reducer = (state: any, action: any) => {
       return item1.positionY - item2.positionY;
     });
     return newState;
-  } else if (action.type == "COMMENTS_STATE_UPDATE") {
+  } else if (action.type == "COMMENTS_STATE_UPDATE_DIRECTLY") {
     return { ...state, comments: action.payload };
   } else if (action.type == "CLEAR") {
     return initialAnnotationState;
