@@ -34,6 +34,13 @@ export const annotation_reducer = (state: any, action: any) => {
     });
 
     return { ...state, comments: updateComments };
+  } else if (action.type === "DELETE_COMMENTS") {
+    const id = action.payload;
+    const filteredComments = state.comments.filter((item) => item.id !== id);
+    return {
+      ...state,
+      comments: filteredComments,
+    };
   } else if (action.type === "ADD_COMMENTS") {
     const { id, value, positionY } = action.payload;
     const newState = {

@@ -1,4 +1,5 @@
 import { useEditor, EditorContent } from "@tiptap/react";
+import { findChildren } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
@@ -239,6 +240,21 @@ const ReviewAnnotations = () => {
     }
   };
 
+  const toggleHighlight = (commentId) => {
+    editor.commands.forEach([1, 2, 3], (id, { tr, commands }) => {
+      const item = findChildren(tr.doc, (node) => {
+        return node?.marks.length > 0 && node.marks[0].attrs?.id === commentId;
+      })?.[0];
+
+      if (!item) {
+        return true;
+      }
+      console.log("🚀 ~ file: ReviewAnnotations.tsx:248 ~ item ~ item:", item);
+
+      return commands.unsetMark(item.node.marks[0].type);
+    });
+  };
+
   return (
     <>
       {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
@@ -272,6 +288,7 @@ const ReviewAnnotations = () => {
                 textValue={item.value}
                 y={item.marginY}
                 isEditable={item.id === editCommentId}
+                toggleHighlight={toggleHighlight}
               />
             );
           })}

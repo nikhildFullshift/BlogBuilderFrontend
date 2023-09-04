@@ -104,6 +104,7 @@ export default function CommentCard(props: any) {
     commentId,
     highlightCommentOnClick,
     isEditable,
+    toggleHighlight,
   } = props;
   const elementRef = useRef(null);
   const [isSelectedComment, setIsSelectedComment] = useState(false);
@@ -235,12 +236,20 @@ export default function CommentCard(props: any) {
     }
   }, [annotationState.comments, isSelectedComment]);
 
-  const handleEdit = (e, commentId) => {
+  const handleEdit = (event, commentId) => {
+    event.stopPropagation();
     dispatchAnnotation({ type: "UPDATE_EDIT_COMMENT_ID", payload: commentId });
     dispatchAnnotation({
       type: "UPDATE_EDIT_COMMENT_VALUE",
       payload: textValue,
     });
+    handleClose();
+  };
+
+  const handleDelete = (event, commentId) => {
+    event.stopPropagation();
+    toggleHighlight(commentId);
+    dispatchAnnotation({ type: "DELETE_COMMENTS", payload: commentId });
     handleClose();
   };
 
@@ -270,10 +279,11 @@ export default function CommentCard(props: any) {
           </Avatar>
         }
         action={
-          <IconButton aria-label="settings">
-            <div onClick={handleClick}>
+          <>
+            <IconButton onClick={handleClick} aria-label="settings">
               <MoreVertIcon />
-            </div>
+            </IconButton>
+
             <Menu
               id="basic-menu"
               anchorEl={anchorEl}
@@ -286,9 +296,11 @@ export default function CommentCard(props: any) {
               <MenuItem onClick={(e) => handleEdit(e, commentId)}>
                 Edit
               </MenuItem>
-              <MenuItem onClick={handleClose}>Delete</MenuItem>
+              <MenuItem onClick={(e) => handleDelete(e, commentId)}>
+                Delete
+              </MenuItem>
             </Menu>
-          </IconButton>
+          </>
         }
         title="Varun"
         subheader="Aug 23, 2023"
@@ -297,7 +309,11 @@ export default function CommentCard(props: any) {
         {isNewComment || isEditable ? (
           <CommentForm isNewComment={isNewComment} />
         ) : (
-          <Typography variant="body1" color="text.secondary">
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ wordWrap: "break-word" }}
+          >
             {textValue}
           </Typography>
         )}
