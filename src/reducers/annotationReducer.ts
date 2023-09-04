@@ -12,6 +12,8 @@ export const annotation_reducer = (state: any, action: any) => {
     return { ...state, id: state.id + action.payload };
   } else if (action.type === "UPDATE_EDIT_COMMENT_ID") {
     return { ...state, editCommentId: action.payload };
+  } else if (action.type === "UPDATE_EDIT_COMMENT_VALUE") {
+    return { ...state, editCommentValue: action.payload };
   } else if (action.type === "UPDATE_Y_AXIS_OF_SELECTED_ELEMENT") {
     return { ...state, positionY: action.payload };
   } else if (action.type === "COMMENT_ADDED") {
@@ -20,17 +22,18 @@ export const annotation_reducer = (state: any, action: any) => {
     return { ...state, isSelected: action.payload };
   } else if (action.type === "UPDATE_COMMENTS") {
     const { id, value } = action.payload;
-    const filterComments = state.comments.map((item) => {
-      if (item.id == id) {
+    const updateComments = state.comments.map((item) => {
+      if (item.id === id) {
         return {
-          id,
-          comment: value,
+          ...item,
+          value: value,
         };
       } else {
         return item;
       }
     });
-    return { ...state, comment: filterComments };
+
+    return { ...state, comments: updateComments };
   } else if (action.type === "ADD_COMMENTS") {
     const { id, value, positionY } = action.payload;
     const newState = {

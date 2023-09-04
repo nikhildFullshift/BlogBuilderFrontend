@@ -12,10 +12,15 @@ import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
 
 const CommentForm = (props: any) => {
   const { isNewComment } = props;
-  const [commentValue, setCommentValue] = useState("");
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
 
-  const { id: commentId, positionY } = annotationState;
+  const {
+    id: commentId,
+    positionY,
+    editCommentValue,
+    editCommentId,
+  } = annotationState;
+  const [commentValue, setCommentValue] = useState(editCommentValue || "");
 
   const addComment = (event) => {
     event.stopPropagation();
@@ -23,11 +28,6 @@ const CommentForm = (props: any) => {
       type: "COMMENT_ADDED",
       payload: true,
     });
-
-    // dispatchAnnotation({
-    //   type: "setlastHighlited",
-    //   payload: null,
-    // });
 
     if (isNewComment) {
       dispatchAnnotation({
@@ -43,9 +43,17 @@ const CommentForm = (props: any) => {
       dispatchAnnotation({
         type: "UPDATE_COMMENTS",
         payload: {
-          id: commentId,
+          id: editCommentId,
           value: commentValue,
         },
+      });
+      dispatchAnnotation({
+        type: "UPDATE_EDIT_COMMENT_ID",
+        payload: 0,
+      });
+      dispatchAnnotation({
+        type: "UPDATE_EDIT_COMMENT_VALUE",
+        payload: "",
       });
     }
   };
@@ -56,7 +64,9 @@ const CommentForm = (props: any) => {
         id="standard-basic"
         label="Comment"
         variant="standard"
+        value={commentValue}
         fullWidth
+        multiline
         onClick={(e) => e.stopPropagation()}
         onChange={(e) => setCommentValue(e.target.value)}
       />
@@ -68,7 +78,17 @@ const CommentForm = (props: any) => {
         >
           Comment
         </Button>
-        <Button variant="outlined">Cancel</Button>
+        <Button
+          variant="outlined"
+          onClick={() => {
+            dispatchAnnotation({
+              type: "UPDATE_EDIT_COMMENT_ID",
+              payload: 0,
+            });
+          }}
+        >
+          Cancel
+        </Button>
       </Container>
     </>
   );
@@ -77,13 +97,20 @@ const CommentForm = (props: any) => {
 export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { positionY } = annotationState;
-  const { isNewComment, textValue, y, commentId, highlightCommentOnClick } =
-    props;
+  const {
+    isNewComment,
+    textValue,
+    y,
+    commentId,
+    highlightCommentOnClick,
+    isEditable,
+  } = props;
   const elementRef = useRef(null);
   const [isSelectedComment, setIsSelectedComment] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -210,6 +237,11 @@ export default function CommentCard(props: any) {
 
   const handleEdit = (e, commentId) => {
     dispatchAnnotation({ type: "UPDATE_EDIT_COMMENT_ID", payload: commentId });
+    dispatchAnnotation({
+      type: "UPDATE_EDIT_COMMENT_VALUE",
+      payload: textValue,
+    });
+    handleClose();
   };
 
   return (
@@ -262,7 +294,7 @@ export default function CommentCard(props: any) {
         subheader="Aug 23, 2023"
       />
       <CardContent sx={{ padding: "5px 15px 10px" }}>
-        {isNewComment ? (
+        {isNewComment || isEditable ? (
           <CommentForm isNewComment={isNewComment} />
         ) : (
           <Typography variant="body1" color="text.secondary">

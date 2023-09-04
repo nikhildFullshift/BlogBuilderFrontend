@@ -13,7 +13,7 @@ import DraftSubmit from "../draft-and-submit/DraftSubmit";
 
 const ReviewAnnotations = () => {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
-  const { comments, id, positionY, isSelected, isAddedComment } =
+  const { comments, id, positionY, isSelected, isAddedComment, editCommentId } =
     annotationState;
 
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
@@ -271,6 +271,7 @@ const ReviewAnnotations = () => {
                 key={item.id}
                 textValue={item.value}
                 y={item.marginY}
+                isEditable={item.id === editCommentId}
               />
             );
           })}
