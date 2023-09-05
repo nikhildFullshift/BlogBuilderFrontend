@@ -11,6 +11,12 @@ import { Card, CardContent, Tooltip, Fab, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { AnnotationContext } from "../../App";
 import DraftSubmit from "../draft-and-submit/DraftSubmit";
+import Bold from "@tiptap/extension-bold";
+import Strike from "@tiptap/extension-strike";
+import Code from "@tiptap/extension-code";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
+import Text from "@tiptap/extension-text";
 
 const ReviewAnnotations = () => {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
@@ -146,10 +152,15 @@ const ReviewAnnotations = () => {
     editable: false,
     extensions: [
       StarterKit,
-      TextAlign.configure({
-        types: ["heading", "paragraph", "strong"],
-      }),
+      Text,
       CustomHighlight,
+      Bold,
+      Strike,
+      Code,
+      Underline,
+      Link.configure({
+        openOnClick: false,
+      }),
     ],
   });
 
@@ -241,17 +252,26 @@ const ReviewAnnotations = () => {
   };
 
   const toggleHighlight = (commentId) => {
-    editor.commands.forEach([1, 2, 3], (_id, { tr, chain }) => {
-      const item = findChildren(tr.doc, (node) => {
-        return node?.marks.length > 0 && node.marks[0].attrs?.id === commentId;
-      })?.[0];
+    editor.commands.forEach(
+      Array.from({ length: id - 1 }, (_, i) => i + 1),
+      (_id, { tr, chain }) => {
+        const item = findChildren(tr.doc, (node: any) => {
+          return (
+            node?.marks.length > 0 &&
+            node?.marks.find((item) => item.attrs?.id === commentId)
+          );
+        });
 
-      if (!item) {
+        if (!item) {
+          return true;
+        }
+
+        item.forEach((eachItem) =>
+          chain().setNodeSelection(eachItem.pos).unsetAllMarks().run()
+        );
         return true;
       }
-
-      return chain().setNodeSelection(item.pos).unsetAllMarks().run();
-    });
+    );
   };
 
   return (
