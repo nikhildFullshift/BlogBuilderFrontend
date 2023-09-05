@@ -241,7 +241,7 @@ const ReviewAnnotations = () => {
   };
 
   const toggleHighlight = (commentId) => {
-    editor.commands.forEach([1, 2, 3], (id, { tr, commands }) => {
+    editor.commands.forEach([1, 2, 3], (_id, { tr, chain }) => {
       const item = findChildren(tr.doc, (node) => {
         return node?.marks.length > 0 && node.marks[0].attrs?.id === commentId;
       })?.[0];
@@ -249,9 +249,8 @@ const ReviewAnnotations = () => {
       if (!item) {
         return true;
       }
-      console.log("🚀 ~ file: ReviewAnnotations.tsx:248 ~ item ~ item:", item);
 
-      return commands.unsetMark(item.node.marks[0].type);
+      return chain().setNodeSelection(item.pos).unsetAllMarks().run();
     });
   };
 
