@@ -1,7 +1,6 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import { findChildren } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
-import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
 import { useContext, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
@@ -77,7 +76,7 @@ const ReviewAnnotations = () => {
     lastHightlighted.current = editor.chain().focus();
   };
 
-  const handleContentEvents = (e) => {
+  const handleContentEvents = (e, toHandleClickHighlight) => {
     e.stopPropagation();
     const selection = window.getSelection();
 
@@ -104,7 +103,9 @@ const ReviewAnnotations = () => {
         payload: false,
       });
 
-      highlightCommentOnClick(null, false, true);
+      if (toHandleClickHighlight) {
+        focusCommentOnClickOfHighlight();
+      }
       //to avoid highlight if no comment was added
       if (!isAddedComment) {
         lastHightlighted.current?.unsetHighlight().run();
@@ -251,6 +252,127 @@ const ReviewAnnotations = () => {
     }
   };
 
+  const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
+    //update the postionY for each comment with this result in margin property
+    // new Position Y/margin will be previous elements Y + result of this.
+    const fixedMargin = 10;
+
+    if (differenceOfHeightOfPrevAndCurrentComment >= fixedMargin) {
+      //when current comment Y is greater than Prevcomment + its height
+      return differenceOfHeightOfPrevAndCurrentComment;
+    } else {
+      return fixedMargin;
+    }
+  };
+
+  const handleMargin = (annotationState) => {
+    const { comments } = annotationState;
+
+    let offsetTop;
+    for (let index = 0; index < comments.length; index++) {
+      if (index === 0) {
+        offsetTop = comments[index].positionY;
+        comments[index] = {
+          ...comments[index],
+          marginY: comments[index].positionY,
+          offsetTop: comments[index].positionY,
+        };
+        continue;
+      }
+
+      const prevHeight = comments[index - 1].height;
+
+      const differenceOfHeightOfPrevAndCurrentComment =
+        comments[index].positionY - offsetTop - prevHeight;
+
+      const calculatedmargin = calculateNetmargin(
+        differenceOfHeightOfPrevAndCurrentComment
+      );
+
+      comments[index] = {
+        ...comments[index],
+        marginY: calculatedmargin,
+        offsetTop: calculatedmargin + offsetTop + prevHeight,
+      };
+      offsetTop = calculatedmargin + offsetTop + prevHeight;
+    }
+
+    dispatchAnnotation({
+      type: "COMMENTS_STATE_UPDATE_DIRECTLY",
+      payload: comments,
+    });
+  };
+
+  const handleMarginOnCommentSelection = (commentId) => {
+    let { comments } = annotationState;
+    handleMargin(annotationState);
+
+    let tobeTransitionedComment = comments
+      .map((item, index) => {
+        return { ...item, index };
+      })
+      .filter((item) => item.id === commentId)[0];
+
+    if (!tobeTransitionedComment) return;
+
+    if (tobeTransitionedComment.positionY === tobeTransitionedComment.marginY) {
+      return;
+    }
+
+    let differenceAfterTransition;
+    for (let i = tobeTransitionedComment.index; i >= 0; i--) {
+      if (tobeTransitionedComment.id === comments[i].id) {
+        differenceAfterTransition =
+          tobeTransitionedComment.offsetTop - comments[i].positionY;
+      }
+
+      if (i === 0) {
+        comments[i] = {
+          ...comments[i],
+          marginY: comments[i].marginY - differenceAfterTransition,
+        };
+      } else {
+        const calculatedmargin = calculateNetmargin(
+          comments[i].marginY - differenceAfterTransition
+        );
+        comments[i] = {
+          ...comments[i],
+          marginY: calculatedmargin,
+        };
+      }
+    }
+
+    dispatchAnnotation({
+      type: "COMMENTS_STATE_UPDATE_DIRECTLY",
+      payload: comments,
+    });
+  };
+
+  const focusCommentOnClickOfHighlight = () => {
+    const { state } = editor;
+
+    const selectedOffset = state.selection.$head.parentOffset;
+
+    const totalChild = state.selection.$head.parent.childCount;
+    let count = 0,
+      index;
+    for (index = 0; index < totalChild; index++) {
+      if (
+        selectedOffset >= count &&
+        selectedOffset <=
+          count + state.selection.$head.parent.child(index).text.length
+      ) {
+        break;
+      }
+      count += state.selection.$head.parent.child(index).text.length;
+    }
+
+    const highlightedCommentId =
+      state.selection.$head.parent.child(index).marks[0]?.attrs?.id || null;
+    handleMarginOnCommentSelection(highlightedCommentId);
+    highlightCommentOnClick(highlightedCommentId, true, true);
+  };
+
   const toggleHighlight = (commentId) => {
     editor.commands.forEach(
       Array.from({ length: id - 1 }, (_, i) => i + 1),
@@ -291,13 +413,16 @@ const ReviewAnnotations = () => {
           <Divider />
           <CardContent className="versionContent">
             <EditorContent
-              onClick={(e) => handleContentEvents(e)}
+              onClick={(e) => handleContentEvents(e, true)}
               contentEditable={false}
               editor={editor}
             />
           </CardContent>
         </Card>
-        <div style={{ width: "25%" }} onClick={(e) => handleContentEvents(e)}>
+        <div
+          style={{ width: "25%" }}
+          onClick={(e) => handleContentEvents(e, false)}
+        >
           {comments.map((item: any) => {
             return (
               <CommentCard
