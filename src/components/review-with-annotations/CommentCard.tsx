@@ -10,8 +10,10 @@ import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { AnnotationContext } from "../../App";
 import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
 
+const API_URL = "http://localhost:3000";
+
 const CommentForm = (props: any) => {
-  const { isNewComment } = props;
+  const { isNewComment, annotationId } = props;
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
 
   const {
@@ -19,6 +21,7 @@ const CommentForm = (props: any) => {
     positionY,
     editCommentValue,
     editCommentId,
+    versionId,
   } = annotationState;
   const [commentValue, setCommentValue] = useState(editCommentValue || "");
 
@@ -39,6 +42,19 @@ const CommentForm = (props: any) => {
         payload: { id: commentId, value: commentValue, positionY },
       });
       dispatchAnnotation({ type: "UPDATE_ID", payload: 1 });
+      fetch(`${API_URL}/annotation/create/${versionId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          highlightMarkId: commentId,
+          description: commentValue,
+          positionY,
+        }),
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     } else {
       dispatchAnnotation({
         type: "UPDATE_COMMENTS",
@@ -55,6 +71,18 @@ const CommentForm = (props: any) => {
         type: "UPDATE_EDIT_COMMENT_VALUE",
         payload: "",
       });
+
+      fetch(`${API_URL}/annotation/update/${annotationId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          description: commentValue,
+        }),
+      })
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     }
   };
 
@@ -102,6 +130,7 @@ export default function CommentCard(props: any) {
     textValue,
     y,
     commentId,
+    annotationId,
     highlightCommentOnClick,
     isEditable,
     toggleHighlight,
@@ -246,10 +275,13 @@ export default function CommentCard(props: any) {
     handleClose();
   };
 
-  const handleDelete = (event, commentId) => {
+  const handleDelete = (event, commentId, annotationId) => {
     event.stopPropagation();
     toggleHighlight(commentId);
     dispatchAnnotation({ type: "DELETE_COMMENTS", payload: commentId });
+    fetch(`${API_URL}/annotation/delete/${annotationId}`, {
+      method: "DELETE",
+    });
     handleClose();
   };
 
@@ -296,7 +328,9 @@ export default function CommentCard(props: any) {
               <MenuItem onClick={(e) => handleEdit(e, commentId)}>
                 Edit
               </MenuItem>
-              <MenuItem onClick={(e) => handleDelete(e, commentId)}>
+              <MenuItem
+                onClick={(e) => handleDelete(e, commentId, annotationId)}
+              >
                 Delete
               </MenuItem>
             </Menu>
@@ -307,7 +341,10 @@ export default function CommentCard(props: any) {
       />
       <CardContent sx={{ padding: "5px 15px 10px" }}>
         {isNewComment || isEditable ? (
-          <CommentForm isNewComment={isNewComment} />
+          <CommentForm
+            isNewComment={isNewComment}
+            annotationId={annotationId}
+          />
         ) : (
           <Typography
             variant="body1"

@@ -45,7 +45,7 @@ const router = createBrowserRouter([
     element: <BlogListing />,
   },
   {
-    path: "/blog/review/:version",
+    path: "/blog/:blogId/review/:versionId",
     element: <ReviewAnnotations />,
   },
 ]);

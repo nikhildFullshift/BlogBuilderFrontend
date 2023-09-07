@@ -2,7 +2,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { findChildren } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "./ReviewAnnotations.css";
 import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
@@ -16,19 +16,99 @@ import Code from "@tiptap/extension-code";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Text from "@tiptap/extension-text";
+import { useParams } from "react-router-dom";
+
+const API_URL = "http://localhost:3000";
 
 const ReviewAnnotations = () => {
-  const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
-  const { comments, id, positionY, isSelected, isAddedComment, editCommentId } =
-    annotationState;
-
+  const lastHightlighted = useRef(null);
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
   const [isNewComment, setIsNewComment] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [loader, setLoader] = useState(false);
-  // const [commentToBeRemoved, setCommentToBeRemoved] = useState();
+  const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const { comments, id, positionY, isSelected, isAddedComment, editCommentId } =
+    annotationState;
 
-  const lastHightlighted = useRef(null);
+  const { versionId } = useParams();
+
+  const CustomHighlight = Highlight.extend({
+    addAttributes() {
+      return {
+        id: {
+          default: null,
+          // Take the attribute values
+          renderHTML: (attributes) => {
+            // … and return an object with HTML attributes.
+            return {
+              id: attributes.id,
+            };
+          },
+        },
+        class: {
+          default: null,
+          // Take the attribute values
+          renderHTML: (attributes) => {
+            // … and return an object with HTML attributes.
+            return {
+              class: attributes.class,
+            };
+          },
+        },
+      };
+    },
+  }).configure({ multicolor: true });
+
+  const editor = useEditor({
+    editable: false,
+    extensions: [
+      StarterKit,
+      Text,
+      CustomHighlight,
+      Bold,
+      Strike,
+      Code,
+      Underline,
+      Link.configure({
+        openOnClick: false,
+      }),
+    ],
+  });
+
+  useEffect(() => {
+    //here call the background api to get html data of version
+    if (editor?.isEmpty) {
+      setLoader(true);
+      fetch(`${API_URL}/version/${versionId}/blog/8`)
+        .then((res) => res.json())
+        .then((result) => {
+          editor.commands.setContent(result.description);
+          setLoader(false);
+          dispatchAnnotation({ type: "UPDATE_VERSION_ID", payload: result.id });
+        })
+        .catch((err) => console.log(err));
+
+      fetch(`${API_URL}/annotation/${versionId}`)
+        .then((res) => res.json())
+        .then((result) => {
+          const parsedResult = result.map((item) => {
+            return {
+              annotationId: item.id,
+              id: item.highlight_mark_id,
+              positionY: item.position_y,
+              value: item.description,
+            };
+          });
+          dispatchAnnotation({
+            type: "COMMENTS_STATE_UPDATE_DIRECTLY",
+            payload: parsedResult,
+          });
+          setLoader(false);
+          dispatchAnnotation({ type: "UPDATE_VERSION_ID", payload: result.id });
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [editor]);
 
   const highlightCommentOnClick = async (
     id: number,
@@ -121,117 +201,6 @@ const ReviewAnnotations = () => {
       // togglehighlightComment(lastHighlightedBorder, false, false);
     }
   };
-
-  const CustomHighlight = Highlight.extend({
-    addAttributes() {
-      return {
-        id: {
-          default: null,
-          // Take the attribute values
-          renderHTML: (attributes) => {
-            // … and return an object with HTML attributes.
-            return {
-              id: attributes.id,
-            };
-          },
-        },
-        class: {
-          default: null,
-          // Take the attribute values
-          renderHTML: (attributes) => {
-            // … and return an object with HTML attributes.
-            return {
-              class: attributes.class,
-            };
-          },
-        },
-      };
-    },
-  }).configure({ multicolor: true });
-
-  const editor = useEditor({
-    editable: false,
-    extensions: [
-      StarterKit,
-      Text,
-      CustomHighlight,
-      Bold,
-      Strike,
-      Code,
-      Underline,
-      Link.configure({
-        openOnClick: false,
-      }),
-    ],
-  });
-
-  if (editor?.isEmpty) {
-    //here call the background api to get html data of version
-    setTimeout(() => {
-      setLoader(true);
-      editor.commands.setContent(`<p>Hello World! 🌎️</p>
-        <h3>
-            Devs Just Want to Have Fun by Cyndi Lauper
-          </h3>
-          <p>
-            I come home in the morning light
-            My mother says, “When you gonna live your life right?”
-            Oh mother dear we’re not the fortunate ones
-            And devs, they wanna have fun
-            Oh devs just want to have fun</p>
-          <p>
-            The phone rings in the middle of the night
-            My father yells, "What you gonna do with your life?"
-            Oh daddy dear, you know you’re still number one
-            But <s>girls</s>devs, they wanna have fun
-            Oh devs just want to have
-          </p>
-          <p>
-            The phone rings in the middle of the night
-            My father yells, "What you gonna do with your life?"
-            Oh daddy dear, you know you’re still number one
-            But <s>girls</s>devs, they wanna have fun
-            Oh devs just want to have
-          </p><p>
-            The phone rings in the middle of the night
-            My father yells, "What you gonna do with your life?"
-            Oh daddy dear, you know you’re still number one
-            But <s>girls</s>devs, they wanna have fun
-            Oh devs just want to have
-          </p><p>
-            The phone rings in the middle of the night
-            My father yells, "What you gonna do with your life?"
-            Oh daddy dear, you know you’re still number one
-            But <s>girls</s>devs, they wanna have fun
-            Oh devs just want to have
-          </p><p>
-            The phone rings in the middle of the night
-            My father yells, "What you gonna do with your life?"
-            Oh daddy dear, you know you’re still number one
-            But <s>girls</s>devs, they wanna have fun
-            Oh devs just want to have
-          </p><p>
-            The phone rings in the middle of the night
-            My father yells, "What you gonna do with your life?"
-            Oh daddy dear, you know you’re still number one
-            But <s>girls</s>devs, they wanna have fun
-            Oh devs just want to have
-          </p>
-          <p>
-            That’s all they really want
-            Some fun
-            When the working day is done
-            Oh devs, they wanna have fun
-            Oh devs just wanna have fun
-            (devs, they wanna, wanna have fun, devs wanna have)
-          </p>`);
-      setTimeout(() => {
-        setLoader(false);
-      }, 1000);
-    }, 1000);
-  }
-
-  if (!editor) return null;
 
   const handleHighlightedText = (e) => {
     e.stopPropagation();
@@ -427,6 +396,7 @@ const ReviewAnnotations = () => {
             return (
               <CommentCard
                 highlightCommentOnClick={highlightCommentOnClick}
+                annotationId={item.annotationId}
                 commentId={item.id}
                 key={item.id}
                 textValue={item.value}

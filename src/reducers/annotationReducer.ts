@@ -5,6 +5,7 @@ export const initialAnnotationState = {
   positionY: 0,
   isAddedComment: false,
   editCommentId: 0,
+  versionId: 0,
 };
 
 export const annotation_reducer = (state: any, action: any) => {
@@ -20,6 +21,8 @@ export const annotation_reducer = (state: any, action: any) => {
     return { ...state, isAddedComment: action.payload };
   } else if (action.type === "UPDATE_TO_SHOW_COMMENT_BOX") {
     return { ...state, isSelected: action.payload };
+  } else if (action.type === "UPDATE_VERSION_ID") {
+    return { ...state, versionId: action.payload };
   } else if (action.type === "UPDATE_COMMENTS") {
     const { id, value } = action.payload;
     const updateComments = state.comments.map((item) => {

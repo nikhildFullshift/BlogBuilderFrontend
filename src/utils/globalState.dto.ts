@@ -18,6 +18,7 @@ export interface AnnotationContextProps {
     positionY: number;
     editCommentId: number;
     editCommentValue: string;
+    versionId: number;
   };
   dispatchAnnotation: ({ type, payload }) => void;
 }
