@@ -27,8 +27,15 @@ const ReviewAnnotations = () => {
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [loader, setLoader] = useState(false);
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
-  const { comments, id, positionY, isSelected, isAddedComment, editCommentId } =
-    annotationState;
+  const {
+    comments,
+    id,
+    positionY,
+    isSelected,
+    isAddedComment,
+    editCommentId,
+    toUpdateHTMLContent,
+  } = annotationState;
 
   const { versionId } = useParams();
 
@@ -74,6 +81,25 @@ const ReviewAnnotations = () => {
       }),
     ],
   });
+
+  useEffect(() => {
+    if (toUpdateHTMLContent) {
+      console.log("HERE", editor.getHTML());
+      fetch(`${API_URL}/version/update/${versionId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          description: editor.getHTML(),
+        }),
+      })
+        .then((res) =>
+          dispatchAnnotation({ type: "UPDATE_HTML_CONTENT", payload: false })
+        )
+        .catch((err) => console.log(err));
+    }
+  }, [toUpdateHTMLContent]);
 
   useEffect(() => {
     //here call the background api to get html data of version
@@ -202,25 +228,6 @@ const ReviewAnnotations = () => {
     }
   };
 
-  const handleHighlightedText = (e) => {
-    e.stopPropagation();
-    dispatchAnnotation({
-      type: "UPDATE_TO_SHOW_COMMENT_BOX",
-      payload: false,
-    });
-
-    if (!isAddedComment && lastHightlighted.current) {
-      lastHightlighted.current.unsetHighlight().run();
-      lastHightlighted.current = null;
-    } else {
-      if (!isAddedComment) {
-        lastHightlighted.current?.unsetHighlight().run();
-      }
-      highlightCommentOnClick(null, false, true);
-      lastHightlighted.current = null;
-    }
-  };
-
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
     //update the postionY for each comment with this result in margin property
     // new Position Y/margin will be previous elements Y + result of this.
@@ -339,7 +346,7 @@ const ReviewAnnotations = () => {
     const highlightedCommentId =
       state.selection.$head.parent.child(index).marks[0]?.attrs?.id || null;
     handleMarginOnCommentSelection(highlightedCommentId);
-    highlightCommentOnClick(highlightedCommentId, true, true);
+    highlightCommentOnClick(highlightedCommentId, true, false);
   };
 
   const toggleHighlight = (commentId) => {
@@ -369,7 +376,6 @@ const ReviewAnnotations = () => {
     <>
       {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
       <div
-        onClick={(e) => handleHighlightedText(e)}
         style={{
           display: "flex",
           justifyContent: "space-between",

@@ -61,6 +61,7 @@ const CommentForm = (props: any) => {
           });
         })
         .catch((err) => console.log(err));
+      dispatchAnnotation({ type: "UPDATE_HTML_CONTENT", payload: true });
     } else {
       dispatchAnnotation({
         type: "UPDATE_COMMENTS",
@@ -287,7 +288,9 @@ export default function CommentCard(props: any) {
     dispatchAnnotation({ type: "DELETE_COMMENTS", payload: commentId });
     fetch(`${API_URL}/annotation/delete/${annotationId}`, {
       method: "DELETE",
-    });
+    }).catch((err) => console.log(err));
+
+    dispatchAnnotation({ type: "UPDATE_HTML_CONTENT", payload: true });
     handleClose();
   };
 

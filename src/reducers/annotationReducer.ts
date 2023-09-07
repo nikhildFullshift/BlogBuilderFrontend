@@ -6,11 +6,14 @@ export const initialAnnotationState = {
   isAddedComment: false,
   editCommentId: 0,
   versionId: 0,
+  toUpdateHTMLContent: false,
 };
 
 export const annotation_reducer = (state: any, action: any) => {
   if (action.type === "UPDATE_ID") {
     return { ...state, id: state.id + action.payload };
+  } else if (action.type === "UPDATE_HTML_CONTENT") {
+    return { ...state, toUpdateHTMLContent: action.payload };
   } else if (action.type === "UPDATE_EDIT_COMMENT_ID") {
     return { ...state, editCommentId: action.payload };
   } else if (action.type === "UPDATE_EDIT_COMMENT_VALUE") {
