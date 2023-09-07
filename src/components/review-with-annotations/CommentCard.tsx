@@ -53,7 +53,13 @@ const CommentForm = (props: any) => {
           positionY,
         }),
       })
-        .then((res) => console.log(res))
+        .then((res) => res.json())
+        .then((result) => {
+          dispatchAnnotation({
+            type: "UPDATE_ANNOTATION_ID",
+            payload: { annotationId: result.annotationId, commentId },
+          });
+        })
         .catch((err) => console.log(err));
     } else {
       dispatchAnnotation({

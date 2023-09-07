@@ -23,6 +23,16 @@ export const annotation_reducer = (state: any, action: any) => {
     return { ...state, isSelected: action.payload };
   } else if (action.type === "UPDATE_VERSION_ID") {
     return { ...state, versionId: action.payload };
+  } else if (action.type === "UPDATE_ANNOTATION_ID") {
+    const { annotationId, commentId } = action.payload;
+    const updatedComments = state.comments.map((item) => {
+      if (item.id === commentId) {
+        return { ...item, annotationId };
+      } else {
+        return item;
+      }
+    });
+    return { ...state, comments: updatedComments };
   } else if (action.type === "UPDATE_COMMENTS") {
     const { id, value } = action.payload;
     const updateComments = state.comments.map((item) => {
