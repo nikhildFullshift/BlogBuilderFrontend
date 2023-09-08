@@ -9,19 +9,20 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { AnnotationContext } from "../../App";
 import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
+import { useParams } from "react-router-dom";
 
 const API_URL = "http://localhost:3000";
 
 const CommentForm = (props: any) => {
   const { isNewComment, annotationId } = props;
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const { versionId } = useParams();
 
   const {
     id: commentId,
     positionY,
     editCommentValue,
     editCommentId,
-    versionId,
   } = annotationState;
   const [commentValue, setCommentValue] = useState(editCommentValue || "");
 
@@ -55,6 +56,11 @@ const CommentForm = (props: any) => {
       })
         .then((res) => res.json())
         .then((result) => {
+          console.log(
+            "🚀 ~ file: CommentCard.tsx:58 ~ .then ~ result:",
+            result
+          );
+
           dispatchAnnotation({
             type: "UPDATE_ANNOTATION_ID",
             payload: { annotationId: result.annotationId, commentId },
@@ -299,6 +305,11 @@ export default function CommentCard(props: any) {
   };
 
   const handleDelete = (event, commentId, annotationId) => {
+    console.log(
+      "🚀 ~ file: CommentCard.tsx:308 ~ handleDelete ~ commentId, annotationId:",
+      commentId,
+      annotationId
+    );
     event.stopPropagation();
     toggleHighlight(commentId);
     dispatchAnnotation({ type: "DELETE_COMMENTS", payload: commentId });

@@ -84,7 +84,6 @@ const ReviewAnnotations = () => {
 
   useEffect(() => {
     if (toUpdateHTMLContent) {
-      console.log("HERE", editor.getHTML());
       fetch(`${API_URL}/version/update/${versionId}`, {
         method: "PUT",
         headers: {
@@ -350,25 +349,20 @@ const ReviewAnnotations = () => {
   };
 
   const toggleHighlight = (commentId) => {
-    editor.commands.forEach(
-      Array.from({ length: id - 1 }, (_, i) => i + 1),
-      (_id, { tr, chain }) => {
-        const item = findChildren(tr.doc, (node: any) => {
-          return (
-            node?.marks.length > 0 &&
-            node?.marks.find((item) => item.attrs?.id === commentId)
-          );
-        });
+    const { tr } = editor.state;
+    const item = findChildren(tr.doc, (node: any) => {
+      return (
+        node?.marks.length > 0 &&
+        node?.marks.find((item) => item.attrs?.id == commentId)
+      );
+    });
 
-        if (!item) {
-          return true;
-        }
+    if (!item) {
+      return;
+    }
 
-        item.forEach((eachItem) =>
-          chain().setNodeSelection(eachItem.pos).unsetAllMarks().run()
-        );
-        return true;
-      }
+    item.forEach((eachItem) =>
+      editor.chain().setNodeSelection(eachItem.pos).unsetAllMarks().run()
     );
   };
 
