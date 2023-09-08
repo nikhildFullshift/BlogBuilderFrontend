@@ -131,6 +131,7 @@ const CommentForm = (props: any) => {
 
 export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const [styles, setStyles] = useState(null);
   const { positionY } = annotationState;
   const {
     isNewComment,
@@ -152,6 +153,20 @@ export default function CommentCard(props: any) {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const changeStyle = () => {
+    if (styles) {
+      setStyles(null);
+      return;
+    }
+    setStyles({
+      ...styles,
+      zIndex: 10,
+      position: "absolute",
+      right: "-53px",
+      scale: "1.1",
+    });
   };
 
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
@@ -259,6 +274,7 @@ export default function CommentCard(props: any) {
     highlightCommentOnClick(commentId, true);
     setIsSelectedComment(true);
     handleMarginOnCommentSelection(commentId);
+    changeStyle();
   };
 
   useLayoutEffect(() => {
@@ -300,6 +316,7 @@ export default function CommentCard(props: any) {
       ref={elementRef}
       id={`${isNewComment ? "" : `comment${commentId}`}`}
       sx={{
+        ...styles,
         width: "340px",
         marginTop: `${isNewComment ? positionY : y}px`,
         marginLeft: `${isNewComment ? "50%" : "2%"}`,
