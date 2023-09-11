@@ -104,7 +104,7 @@ const ReviewAnnotations = () => {
     //here call the background api to get html data of version
     if (editor?.isEmpty) {
       setLoader(true);
-      fetch(`${API_URL}/version/${versionId}/blog/8`)
+      fetch(`${API_URL}/version/${versionId}`)
         .then((res) => res.json())
         .then((result) => {
           editor.commands.setContent(result.description);
@@ -335,7 +335,7 @@ const ReviewAnnotations = () => {
       if (
         selectedOffset >= count &&
         selectedOffset <=
-          count + state.selection.$head.parent.child(index).text.length
+        count + state.selection.$head.parent.child(index).text.length
       ) {
         break;
       }

@@ -86,7 +86,7 @@ const CommentForm = (props: any) => {
       });
 
       fetch(`${API_URL}/annotation/update/${annotationId}`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
