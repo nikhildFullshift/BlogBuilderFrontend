@@ -172,6 +172,8 @@ export default function CommentCard(props: any) {
       position: "absolute",
       right: "-53px",
       scale: "1.1",
+      border: "1px",
+      boxShadow: "1px 1px 7px",
     });
   };
 
