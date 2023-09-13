@@ -6,11 +6,19 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import { useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+// import RestoreIcon from '@mui/icons-material/Restore';
+import RestorePageIcon from '@mui/icons-material/RestorePage';
+import PublicIcon from '@mui/icons-material/Public';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.primary.dark,
     color: theme.palette.common.white,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -163,7 +171,7 @@ export default function CustomizedTables() {
             <StyledTableCell align="left">Date Approved</StyledTableCell>
             <StyledTableCell align="left">Date Published</StyledTableCell>
             <StyledTableCell align="left">Status</StyledTableCell>
-            <StyledTableCell align="left">Action</StyledTableCell>
+            <StyledTableCell align="left">Actions</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -182,7 +190,13 @@ export default function CustomizedTables() {
               <StyledTableCell align="left">{row.dateApproved}</StyledTableCell>
               <StyledTableCell align="left">{row.datePublished}</StyledTableCell>
               <StyledTableCell align="left">{row.status}</StyledTableCell>
-              <StyledTableCell align="left"><Link to='#'>Edit | Delete</Link></StyledTableCell>
+              <StyledTableCell align="left">
+                <Link to='#'><VisibilityIcon titleAccess='view' fontSize='medium' /></Link> &nbsp;
+                <Link to='#'><PublicIcon titleAccess='view on web' fontSize='medium' /></Link> &nbsp;
+                <Link to='#'><EditIcon titleAccess='edit' fontSize='medium' /></Link> &nbsp;
+                <Link to='#'><DeleteIcon titleAccess='delete' fontSize='medium' /></Link> &nbsp;
+                <Link to='#'><RestorePageIcon titleAccess='recover blog' fontSize='medium' /></Link> &nbsp;
+              </StyledTableCell>
             </StyledTableRow>
           ))}
           {emptyRows > 0 && (
