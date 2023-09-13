@@ -155,15 +155,15 @@ export default function CustomizedTables() {
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
         <TableHead>
           <TableRow>
-            <StyledTableCell>Blog Title</StyledTableCell>
-            <StyledTableCell align="right">Industry</StyledTableCell>
-            <StyledTableCell align="right">Author</StyledTableCell>
-            <StyledTableCell align="right">Approver</StyledTableCell>
-            <StyledTableCell align="right">Date Created</StyledTableCell>
-            <StyledTableCell align="right">Date Approved</StyledTableCell>
-            <StyledTableCell align="right">Date Published</StyledTableCell>
-            <StyledTableCell align="right">Status</StyledTableCell>
-            <StyledTableCell align="right">Action</StyledTableCell>
+            <StyledTableCell align='left'>Blog Title</StyledTableCell>
+            <StyledTableCell align="left">Industry</StyledTableCell>
+            <StyledTableCell align="left">Author</StyledTableCell>
+            <StyledTableCell align="left">Approver</StyledTableCell>
+            <StyledTableCell align="left">Date Created</StyledTableCell>
+            <StyledTableCell align="left">Date Approved</StyledTableCell>
+            <StyledTableCell align="left">Date Published</StyledTableCell>
+            <StyledTableCell align="left">Status</StyledTableCell>
+            <StyledTableCell align="left">Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -175,14 +175,14 @@ export default function CustomizedTables() {
               <StyledTableCell component="th" scope="row">
                 {row.title}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.industry}</StyledTableCell>
-              <StyledTableCell align="right">{row.author}</StyledTableCell>
-              <StyledTableCell align="right">{row.approver}</StyledTableCell>
-              <StyledTableCell align="right">{row.dateCreated}</StyledTableCell>
-              <StyledTableCell align="right">{row.dateApproved}</StyledTableCell>
-              <StyledTableCell align="right">{row.datePublished}</StyledTableCell>
-              <StyledTableCell align="right">{row.status}</StyledTableCell>
-              <StyledTableCell align="right"><Link to='#'>Edit | Delete</Link></StyledTableCell>
+              <StyledTableCell align="left">{row.industry}</StyledTableCell>
+              <StyledTableCell align="left">{row.author}</StyledTableCell>
+              <StyledTableCell align="left">{row.approver}</StyledTableCell>
+              <StyledTableCell align="left">{row.dateCreated}</StyledTableCell>
+              <StyledTableCell align="left">{row.dateApproved}</StyledTableCell>
+              <StyledTableCell align="left">{row.datePublished}</StyledTableCell>
+              <StyledTableCell align="left">{row.status}</StyledTableCell>
+              <StyledTableCell align="left"><Link to='#'>Edit | Delete</Link></StyledTableCell>
             </StyledTableRow>
           ))}
           {emptyRows > 0 && (
