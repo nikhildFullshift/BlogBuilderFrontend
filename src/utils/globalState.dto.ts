@@ -5,6 +5,8 @@ export interface BlogContextProps {
     description: string;
     result: { title: string; description: string };
     comments: [];
+    role: string;
+    userId: number;
   };
   dispatch: ({ type, payload }) => void;
 }
@@ -20,6 +22,16 @@ export interface AnnotationContextProps {
     editCommentValue: string;
     versionId: number;
     toUpdateHTMLContent: boolean;
+    selectedComment: number;
   };
   dispatchAnnotation: ({ type, payload }) => void;
+}
+
+export enum blogStatus {
+  draft,
+  pending, // blog submitted for review
+  reviewed,
+  published_kb, // blog published to knowledge base
+  published_web,
+  deleted,
 }

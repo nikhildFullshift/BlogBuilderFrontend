@@ -6,8 +6,14 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useContext, useLayoutEffect, useRef, useState } from "react";
-import { AnnotationContext } from "../../App";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { AnnotationContext, Blogcontext } from "../../App";
 import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
 import { useParams } from "react-router-dom";
 
@@ -56,11 +62,6 @@ const CommentForm = (props: any) => {
       })
         .then((res) => res.json())
         .then((result) => {
-          console.log(
-            "🚀 ~ file: CommentCard.tsx:58 ~ .then ~ result:",
-            result
-          );
-
           dispatchAnnotation({
             type: "UPDATE_ANNOTATION_ID",
             payload: { annotationId: result.annotationId, commentId },
@@ -137,8 +138,10 @@ const CommentForm = (props: any) => {
 
 export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const { state } = useContext(Blogcontext);
+  const { role } = state;
   const [styles, setStyles] = useState(null);
-  const { positionY } = annotationState;
+  const { positionY, selectedComment } = annotationState;
   const {
     isNewComment,
     textValue,
@@ -162,10 +165,6 @@ export default function CommentCard(props: any) {
   };
 
   const changeStyle = () => {
-    if (styles) {
-      setStyles(null);
-      return;
-    }
     setStyles({
       ...styles,
       zIndex: 10,
@@ -271,8 +270,16 @@ export default function CommentCard(props: any) {
       type: "COMMENTS_STATE_UPDATE_DIRECTLY",
       payload: comments,
     });
-    setIsSelectedComment(false);
+    // setIsSelectedComment(false);
   };
+
+  useEffect(() => {
+    if (isSelectedComment) {
+      changeStyle();
+    } else {
+      setStyles(null);
+    }
+  }, [isSelectedComment]);
 
   const handleSelectionOnCard = (e) => {
     e.stopPropagation();
@@ -280,9 +287,9 @@ export default function CommentCard(props: any) {
       return;
     }
     highlightCommentOnClick(commentId, true);
-    setIsSelectedComment(true);
+    setIsSelectedComment(commentId !== selectedComment);
     handleMarginOnCommentSelection(commentId);
-    changeStyle();
+    dispatchAnnotation({ type: "UPDATE_SELECTED_COMMENT", payload: commentId });
   };
 
   useLayoutEffect(() => {
@@ -307,11 +314,6 @@ export default function CommentCard(props: any) {
   };
 
   const handleDelete = (event, commentId, annotationId) => {
-    console.log(
-      "🚀 ~ file: CommentCard.tsx:308 ~ handleDelete ~ commentId, annotationId:",
-      commentId,
-      annotationId
-    );
     event.stopPropagation();
     toggleHighlight(commentId);
     dispatchAnnotation({ type: "DELETE_COMMENTS", payload: commentId });
@@ -355,24 +357,26 @@ export default function CommentCard(props: any) {
               <MoreVertIcon />
             </IconButton>
 
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-            >
-              <MenuItem onClick={(e) => handleEdit(e, commentId)}>
-                Edit
-              </MenuItem>
-              <MenuItem
-                onClick={(e) => handleDelete(e, commentId, annotationId)}
+            {role !== "USER" && (
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  "aria-labelledby": "basic-button",
+                }}
               >
-                Delete
-              </MenuItem>
-            </Menu>
+                <MenuItem onClick={(e) => handleEdit(e, commentId)}>
+                  Edit
+                </MenuItem>
+                <MenuItem
+                  onClick={(e) => handleDelete(e, commentId, annotationId)}
+                >
+                  Delete
+                </MenuItem>
+              </Menu>
+            )}
           </>
         }
         title="Varun"

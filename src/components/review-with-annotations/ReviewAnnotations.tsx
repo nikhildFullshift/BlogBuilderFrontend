@@ -8,7 +8,7 @@ import BackdropLoader from "../loader/BackdropLoader";
 import CommentCard from "./CommentCard";
 import { Card, CardContent, Tooltip, Fab, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { AnnotationContext } from "../../App";
+import { AnnotationContext, Blogcontext } from "../../App";
 import DraftSubmit from "../draft-and-submit/DraftSubmit";
 import Bold from "@tiptap/extension-bold";
 import Strike from "@tiptap/extension-strike";
@@ -16,17 +16,20 @@ import Code from "@tiptap/extension-code";
 import Underline from "@tiptap/extension-underline";
 import Link from "@tiptap/extension-link";
 import Text from "@tiptap/extension-text";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { blogStatus } from "../../utils/globalState.dto";
 
 const API_URL = "http://localhost:3000";
 
 const ReviewAnnotations = () => {
   const lastHightlighted = useRef(null);
+  const navigate = useNavigate();
   const [lastHighlightedBorder, setLastHighlightedBorder] = useState(-1);
   const [isNewComment, setIsNewComment] = useState(false);
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [loader, setLoader] = useState(false);
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
+  const { state, dispatch } = useContext(Blogcontext);
   const {
     comments,
     id,
@@ -36,6 +39,7 @@ const ReviewAnnotations = () => {
     editCommentId,
     toUpdateHTMLContent,
   } = annotationState;
+  const { role, userId } = state;
 
   const { versionId } = useParams();
 
@@ -107,6 +111,10 @@ const ReviewAnnotations = () => {
       fetch(`${API_URL}/version/${versionId}`)
         .then((res) => res.json())
         .then((result) => {
+          if (role !== "USER" && result.status > blogStatus.pending) {
+            navigate("/blog/list");
+          }
+
           editor.commands.setContent(result.description);
           setLoader(false);
           dispatchAnnotation({ type: "UPDATE_VERSION_ID", payload: result.id });
@@ -335,7 +343,7 @@ const ReviewAnnotations = () => {
       if (
         selectedOffset >= count &&
         selectedOffset <=
-        count + state.selection.$head.parent.child(index).text.length
+          count + state.selection.$head.parent.child(index).text.length
       ) {
         break;
       }
@@ -366,10 +374,31 @@ const ReviewAnnotations = () => {
     );
   };
 
+  const saveOnClick = async (toUpdateState) => {
+    if (toUpdateState) {
+      fetch(`${API_URL}/version/update/${versionId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: blogStatus.reviewed,
+        }),
+      })
+        .then((res) => {
+          navigate("/blog/list");
+        })
+        .catch((err) => console.log(err));
+    } else {
+      dispatchAnnotation({ type: "UPDATE_HTML_CONTENT", payload: true });
+    }
+  };
+
   return (
     <>
       {isSelected && <CommentCard isNewComment={isNewComment} y={positionY} />}
       <div
+        className={role === "USER" ? "unselectable" : ""}
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -378,7 +407,11 @@ const ReviewAnnotations = () => {
         }}
       >
         <Card sx={{ width: "75%" }}>
-          <DraftSubmit margin="20px auto" sendPlaceHolder="Send To Author" />
+          <DraftSubmit
+            margin="20px auto"
+            sendPlaceHolder="Send To Author"
+            saveOnClick={saveOnClick}
+          />
           <Divider />
           <CardContent className="versionContent">
             <EditorContent

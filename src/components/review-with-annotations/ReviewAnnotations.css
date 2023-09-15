@@ -6,7 +6,8 @@
   border: 1px solid black;
 }
 
-.commentDiv {
+.commentDiv,
+.unselectable {
   user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -16,4 +17,13 @@
 
 .commentDiv:hover {
   cursor: pointer;
+}
+
+.zoomEffect {
+  z-index: 10;
+  position: "absolute";
+  right: "-53px";
+  scale: "1.1";
+  border: "1px";
+  box-shadow: "1px 1px 7px";
 }

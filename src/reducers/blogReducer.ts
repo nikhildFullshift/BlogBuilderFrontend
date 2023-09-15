@@ -3,6 +3,8 @@ export const initalState = {
   title: "",
   description: "",
   result: { title: "", description: "" },
+  role: "",
+  userId: 0,
 };
 
 export const blog_reducer = (state: any, action: any) => {
@@ -15,6 +17,9 @@ export const blog_reducer = (state: any, action: any) => {
     return { ...state, activeStep: action.payload };
   } else if (action.type == "CLEAR") {
     return initalState;
+  } else if (action.type === "UPDATE_USER_DETAILS") {
+    const { role, userId } = action.payload;
+    return { ...state, role, userId };
   }
   return state;
 };

@@ -244,6 +244,18 @@ export default function CustomizedTables() {
                           &nbsp;
                         </>
                       );
+                    } else if (action === "Suggestions") {
+                      return (
+                        <>
+                          <Link to="#">
+                            <VisibilityIcon
+                              titleAccess={action}
+                              fontSize="medium"
+                            />
+                          </Link>
+                          &nbsp;
+                        </>
+                      );
                     } else if (
                       action === "View in Kb" ||
                       action === "View in Web"
@@ -262,7 +274,10 @@ export default function CustomizedTables() {
                     } else if (action === "Review") {
                       return (
                         <>
-                          <Link to={`/blog/review/${row.version_id}`}>
+                          <Link
+                            to={`/blog/review/${row.version_id}`}
+                            target="_blank"
+                          >
                             <EditIcon titleAccess="edit" fontSize="medium" />
                           </Link>
                           &nbsp;

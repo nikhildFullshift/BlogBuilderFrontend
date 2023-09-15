@@ -7,7 +7,7 @@ import BlogSearchList from "./components/BlogSearchList";
 import FormCreateBlog from "./components/FormCreateBlog";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ViewBlog from "./components/view-blog/ViewBlog";
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import { blog_reducer, initalState } from "./reducers/blogReducer";
 import {
   AnnotationContextProps,
@@ -56,6 +56,14 @@ function App() {
     annotation_reducer,
     initialAnnotationState
   );
+
+  useEffect(() => {
+    //fetch USER DETAILS here
+    dispatch({
+      type: "UPDATE_USER_DETAILS",
+      payload: { role: "USER", userId: 1 },
+    });
+  }, []);
   return (
     <Blogcontext.Provider value={{ state, dispatch }}>
       <AnnotationContext.Provider
