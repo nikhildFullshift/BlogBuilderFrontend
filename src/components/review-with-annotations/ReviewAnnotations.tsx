@@ -29,7 +29,7 @@ const ReviewAnnotations = () => {
   const [isHighlighted, setIsHighlighted] = useState(false);
   const [loader, setLoader] = useState(false);
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
-  const { state, dispatch } = useContext(Blogcontext);
+  const { state } = useContext(Blogcontext);
   const {
     comments,
     id,
@@ -38,9 +38,8 @@ const ReviewAnnotations = () => {
     isAddedComment,
     editCommentId,
     toUpdateHTMLContent,
-    selectedComment,
   } = annotationState;
-  const { role, userId } = state;
+  const { role } = state;
 
   const { versionId } = useParams();
 

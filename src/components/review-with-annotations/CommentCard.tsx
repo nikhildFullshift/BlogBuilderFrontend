@@ -6,13 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import { blue } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useLayoutEffect, useRef, useState } from "react";
 import { AnnotationContext, Blogcontext } from "../../App";
 import { Button, Container, Menu, MenuItem, TextField } from "@mui/material";
 import { useParams } from "react-router-dom";
@@ -140,7 +134,6 @@ export default function CommentCard(props: any) {
   const { annotationState, dispatchAnnotation } = useContext(AnnotationContext);
   const { state } = useContext(Blogcontext);
   const { role } = state;
-  const [styles, setStyles] = useState(null);
   const { positionY, selectedComment } = annotationState;
   const {
     isNewComment,
@@ -153,7 +146,6 @@ export default function CommentCard(props: any) {
     toggleHighlight,
   } = props;
   const elementRef = useRef(null);
-  const [prevSelectedComment, setPreviousSelectedComment] = useState(0);
   const [isSelectedComment, setIsSelectedComment] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
