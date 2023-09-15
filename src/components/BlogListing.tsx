@@ -12,6 +12,8 @@ import {
   TableContainer,
   TableBody,
   TableCell,
+  Typography,
+  Divider,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
@@ -161,53 +163,58 @@ export default function CustomizedTables() {
   }, []);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="left">Blog Title</StyledTableCell>
-            <StyledTableCell align="left">Industry</StyledTableCell>
-            <StyledTableCell align="left">Author</StyledTableCell>
-            <StyledTableCell align="left">Approver</StyledTableCell>
-            <StyledTableCell align="left">Date Created</StyledTableCell>
-            <StyledTableCell align="left">Date Approved</StyledTableCell>
-            <StyledTableCell align="left">Date Published</StyledTableCell>
-            <StyledTableCell align="left">Status</StyledTableCell>
-            <StyledTableCell align="left">Actions</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row, index) => (
-            <StyledTableRow key={index}>
-              <StyledTableCell component="th" scope="row">
-                {row.title}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {row.industry ? row.industry : "Software"}
-              </StyledTableCell>
-              <StyledTableCell align="left">{row.author_id}</StyledTableCell>
-              <StyledTableCell align="left">
-                {row.reviewer_user_id}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {moment(row.created_at).format("DD-MM-YYYY")}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {moment(row.updated_at).format("DD-MM-YYYY")}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {row.published_at
-                  ? moment(row.published_at).format("DD-MM-YYYY")
-                  : "Not Published"}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {row.statusMessage}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {/* <Link to="#">
+    <>
+      <Typography variant="h4" marginTop={"50px"}>
+        Dashboard
+      </Typography>
+      <Divider sx={{ marginBottom: "50px" }} />
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="left">Blog Title</StyledTableCell>
+              <StyledTableCell align="left">Industry</StyledTableCell>
+              <StyledTableCell align="left">Author</StyledTableCell>
+              <StyledTableCell align="left">Approver</StyledTableCell>
+              <StyledTableCell align="left">Date Created</StyledTableCell>
+              <StyledTableCell align="left">Date Approved</StyledTableCell>
+              <StyledTableCell align="left">Date Published</StyledTableCell>
+              <StyledTableCell align="left">Status</StyledTableCell>
+              <StyledTableCell align="left">Actions</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(rowsPerPage > 0
+              ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : rows
+            ).map((row, index) => (
+              <StyledTableRow key={index}>
+                <StyledTableCell component="th" scope="row">
+                  {row.title}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.industry ? row.industry : "Software"}
+                </StyledTableCell>
+                <StyledTableCell align="left">{row.author_id}</StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.reviewer_user_id}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {moment(row.created_at).format("DD-MM-YYYY")}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {moment(row.updated_at).format("DD-MM-YYYY")}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.published_at
+                    ? moment(row.published_at).format("DD-MM-YYYY")
+                    : "Not Published"}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {row.statusMessage}
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {/* <Link to="#">
                   <VisibilityIcon titleAccess="view" fontSize="medium" />
                 </Link>
                 &nbsp;
@@ -227,72 +234,73 @@ export default function CustomizedTables() {
                 </Link>
                 &nbsp; */}
 
-                {row.actions?.map((action) => {
-                  if (action === "Edit") {
-                    return (
-                      <>
-                        <Link to="#">
-                          <EditIcon titleAccess="edit" fontSize="medium" />
-                        </Link>
-                        &nbsp;
-                      </>
-                    );
-                  } else if (
-                    action === "View in Kb" ||
-                    action === "View in Web"
-                  ) {
-                    return (
-                      <>
-                        <Link to="#">
-                          <PublicIcon
-                            titleAccess="view on Kb"
-                            fontSize="medium"
-                          />
-                        </Link>
-                        &nbsp;
-                      </>
-                    );
-                  } else if (action === "Review") {
-                    return (
-                      <>
-                        <Link to="#">
-                          <EditIcon titleAccess="edit" fontSize="medium" />
-                        </Link>
-                        &nbsp;
-                      </>
-                    );
-                  }
-                })}
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
+                  {row.actions?.map((action) => {
+                    if (action === "Edit") {
+                      return (
+                        <>
+                          <Link to="#">
+                            <EditIcon titleAccess="edit" fontSize="medium" />
+                          </Link>
+                          &nbsp;
+                        </>
+                      );
+                    } else if (
+                      action === "View in Kb" ||
+                      action === "View in Web"
+                    ) {
+                      return (
+                        <>
+                          <Link to="#">
+                            <PublicIcon
+                              titleAccess="view on Kb"
+                              fontSize="medium"
+                            />
+                          </Link>
+                          &nbsp;
+                        </>
+                      );
+                    } else if (action === "Review") {
+                      return (
+                        <>
+                          <Link to={`/blog/review/${row.version_id}`}>
+                            <EditIcon titleAccess="edit" fontSize="medium" />
+                          </Link>
+                          &nbsp;
+                        </>
+                      );
+                    }
+                  })}
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
+                // colSpan={3}
+                count={rows.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-              // colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  "aria-label": "rows per page",
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
