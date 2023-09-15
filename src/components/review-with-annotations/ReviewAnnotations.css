@@ -21,9 +21,8 @@
 
 .zoomEffect {
   z-index: 10;
-  position: "absolute";
-  right: "-53px";
-  scale: "1.1";
-  border: "1px";
-  box-shadow: "1px 1px 7px";
+  right: -53px;
+  scale: 1.1;
+  border: 1px;
+  box-shadow: 1px 1px 7px;
 }

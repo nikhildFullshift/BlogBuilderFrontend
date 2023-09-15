@@ -38,6 +38,7 @@ const ReviewAnnotations = () => {
     isAddedComment,
     editCommentId,
     toUpdateHTMLContent,
+    selectedComment,
   } = annotationState;
   const { role, userId } = state;
 

@@ -153,6 +153,7 @@ export default function CommentCard(props: any) {
     toggleHighlight,
   } = props;
   const elementRef = useRef(null);
+  const [prevSelectedComment, setPreviousSelectedComment] = useState(0);
   const [isSelectedComment, setIsSelectedComment] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -162,18 +163,6 @@ export default function CommentCard(props: any) {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const changeStyle = () => {
-    setStyles({
-      ...styles,
-      zIndex: 10,
-      position: "absolute",
-      right: "-53px",
-      scale: "1.1",
-      border: "1px",
-      boxShadow: "1px 1px 7px",
-    });
   };
 
   const calculateNetmargin = (differenceOfHeightOfPrevAndCurrentComment) => {
@@ -270,26 +259,21 @@ export default function CommentCard(props: any) {
       type: "COMMENTS_STATE_UPDATE_DIRECTLY",
       payload: comments,
     });
-    // setIsSelectedComment(false);
+    setIsSelectedComment(false);
   };
-
-  useEffect(() => {
-    if (isSelectedComment) {
-      changeStyle();
-    } else {
-      setStyles(null);
-    }
-  }, [isSelectedComment]);
 
   const handleSelectionOnCard = (e) => {
     e.stopPropagation();
     if (isNewComment) {
       return;
     }
-    highlightCommentOnClick(commentId, true);
+    dispatchAnnotation({
+      type: "UPDATE_SELECTED_COMMENT",
+      payload: commentId === selectedComment ? -1 : commentId,
+    });
     setIsSelectedComment(commentId !== selectedComment);
+    highlightCommentOnClick(commentId, true);
     handleMarginOnCommentSelection(commentId);
-    dispatchAnnotation({ type: "UPDATE_SELECTED_COMMENT", payload: commentId });
   };
 
   useLayoutEffect(() => {
@@ -331,7 +315,6 @@ export default function CommentCard(props: any) {
       ref={elementRef}
       id={`${isNewComment ? "" : `comment${commentId}`}`}
       sx={{
-        ...styles,
         width: "340px",
         marginTop: `${isNewComment ? positionY : y}px`,
         marginLeft: `${isNewComment ? "50%" : "2%"}`,
@@ -341,7 +324,9 @@ export default function CommentCard(props: any) {
         zIndex: `${isNewComment ? 10 : 0}`,
         transition: "all 0.5s ease 0s",
       }}
-      className="commentDiv"
+      className={`commentDiv ${
+        commentId === selectedComment ? "zoomEffect" : ""
+      }`}
       elevation={0}
     >
       <CardHeader
