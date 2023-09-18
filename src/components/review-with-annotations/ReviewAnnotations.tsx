@@ -94,7 +94,7 @@ const ReviewAnnotations = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          description: editor.getHTML(),
+          htmlFormat: editor.getHTML(),
         }),
       })
         .then((res) =>
@@ -115,7 +115,7 @@ const ReviewAnnotations = () => {
             navigate("/blog/list");
           }
 
-          editor.commands.setContent(result.description);
+          editor.commands.setContent(result.htmlFormat);
           setLoader(false);
           dispatchAnnotation({ type: "UPDATE_VERSION_ID", payload: result.id });
         })
@@ -138,6 +138,10 @@ const ReviewAnnotations = () => {
           });
           setLoader(false);
           dispatchAnnotation({ type: "UPDATE_VERSION_ID", payload: result.id });
+          dispatchAnnotation({
+            type: "UPDATE_ID",
+            payload: result.length,
+          });
         })
         .catch((err) => console.log(err));
     }

@@ -214,32 +214,26 @@ export default function CustomizedTables() {
                   {row.statusMessage}
                 </StyledTableCell>
                 <StyledTableCell align="left">
-                  {/* <Link to="#">
-                  <VisibilityIcon titleAccess="view" fontSize="medium" />
-                </Link>
-                &nbsp;
-                <Link to="#">
-                  <PublicIcon titleAccess="view on web" fontSize="medium" />
-                </Link>
-                &nbsp;
-                <Link to="#">
-                  <DeleteIcon titleAccess="delete" fontSize="medium" />
-                </Link>
-                &nbsp;
-                <Link to="#">
-                  <RestorePageIcon
-                    titleAccess="recover blog"
-                    fontSize="medium"
-                  />
-                </Link>
-                &nbsp; */}
-
                   {row.actions?.map((action) => {
                     if (action === "Edit") {
                       return (
                         <>
-                          <Link to="#">
+                          <Link
+                            to={`/blog/create/${row.blog_id}/versionId/${row.version_id}`}
+                          >
                             <EditIcon titleAccess="edit" fontSize="medium" />
+                          </Link>
+                          &nbsp;
+                        </>
+                      );
+                    } else if (action === "Edit Draft") {
+                      return (
+                        <>
+                          <Link to={`/blog/create/${row.blog_id}`}>
+                            <EditIcon
+                              titleAccess="edit draft"
+                              fontSize="medium"
+                            />
                           </Link>
                           &nbsp;
                         </>
@@ -247,7 +241,10 @@ export default function CustomizedTables() {
                     } else if (action === "Suggestions") {
                       return (
                         <>
-                          <Link to="#">
+                          <Link
+                            to={`/blog/review/${row.version_id}`}
+                            target="_blank"
+                          >
                             <VisibilityIcon
                               titleAccess={action}
                               fontSize="medium"

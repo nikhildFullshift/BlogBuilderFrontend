@@ -19,6 +19,7 @@ import {
   annotation_reducer,
   initialAnnotationState,
 } from "./reducers/annotationReducer";
+import EditReview from "./components/edit-review/EditReview";
 
 export const Blogcontext = createContext({} as BlogContextProps);
 export const AnnotationContext = createContext({} as AnnotationContextProps);
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/blog/create",
     element: <FormCreateBlog />,
+  },
+  {
+    path: "/blog/create/:blogId/versionId?/:versionId?",
+    element: <EditReview />,
   },
   {
     path: "/blog/view/:id",
@@ -61,7 +66,7 @@ function App() {
     //fetch USER DETAILS here
     dispatch({
       type: "UPDATE_USER_DETAILS",
-      payload: { role: "USER", userId: 1 },
+      payload: { role: "LEAD", userId: 123 },
     });
   }, []);
   return (

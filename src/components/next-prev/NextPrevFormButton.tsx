@@ -2,14 +2,21 @@ import { Button, Container } from "@mui/material";
 import { useContext } from "react";
 import { Blogcontext } from "../../App";
 import DraftSubmit from "../draft-and-submit/DraftSubmit";
+import { useParams } from "react-router-dom";
 
 function NextPrevFormButton(props: any) {
   const { handleSubmit } = props;
   const { state, dispatch } = useContext(Blogcontext);
-  const handleSteps = async (step: number) => {
+  const { blogId } = useParams();
+
+  const handleSteps = async (step: number, saveToDraft: boolean) => {
     try {
+      if (saveToDraft) {
+        await handleSubmit(true);
+        return;
+      }
       if (step > 0) {
-        await handleSubmit();
+        await handleSubmit(false);
       }
       dispatch({
         type: "UPDATE_ACTIVE_STEP",
@@ -29,14 +36,19 @@ function NextPrevFormButton(props: any) {
         fontWeight: "medium",
       }}
     >
-      <Button disabled={state?.activeStep === 0} onClick={() => handleSteps(0)}>
-        Prev
-      </Button>
-      {state.activeStep === 0 ? (
-        <Button onClick={() => handleSteps(1)}>Next</Button>
+      {blogId && (
+        <Button
+          disabled={state?.activeStep === 0}
+          onClick={() => handleSteps(0, false)}
+        >
+          Prev
+        </Button>
+      )}
+      {state.activeStep === 0 && !blogId ? (
+        <Button onClick={() => handleSteps(1, false)}>Next</Button>
       ) : (
         <DraftSubmit
-          saveOnClick={(step) => handleSteps(step)}
+          saveOnClick={(step, saveToDraft) => handleSteps(step, saveToDraft)}
           sendPlaceHolder="Send To Review"
         />
       )}

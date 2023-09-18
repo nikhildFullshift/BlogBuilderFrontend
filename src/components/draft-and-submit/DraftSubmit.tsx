@@ -12,13 +12,13 @@ function DraftSubmit(props: any) {
         backgroundColor: "transparent",
       }}
     >
-      <Button variant="outlined" onClick={() => saveOnClick()}>
+      <Button variant="outlined" onClick={() => saveOnClick(null, true)}>
         Move to Draft
       </Button>
       <Button
         variant="contained"
         sx={{ marginLeft: "10px", float: "right" }}
-        onClick={() => saveOnClick(1)}
+        onClick={() => saveOnClick(1, false)}
       >
         {sendPlaceHolder}
       </Button>
