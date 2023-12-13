@@ -28,14 +28,7 @@ function NextPrevFormButton(props: any) {
   };
 
   return (
-    <Container
-      sx={{
-        display: "flex",
-        justifyContent: "space-between",
-        marginTop: "2rem",
-        fontWeight: "medium",
-      }}
-    >
+    <div className="next-prev-form-button-wrapper">
       {blogId && (
         <Button
           disabled={state?.activeStep === 0}
@@ -45,14 +38,17 @@ function NextPrevFormButton(props: any) {
         </Button>
       )}
       {state.activeStep === 0 && !blogId ? (
-        <Button onClick={() => handleSteps(1, false)}>Next</Button>
+        <>
+          <div className="next-prev-form-title">Create Blog</div>
+          <Button sx={{textTransform:"none"}} onClick={() => handleSteps(1, false)} className="next-button">Next</Button>
+        </>
       ) : (
         <DraftSubmit
           saveOnClick={(step, saveToDraft) => handleSteps(step, saveToDraft)}
           sendPlaceHolder="Send To Review"
         />
       )}
-    </Container>
+    </div>
   );
 }
 

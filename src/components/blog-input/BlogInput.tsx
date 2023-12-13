@@ -1,6 +1,6 @@
-import { Container } from "@mui/material";
+import { Alert, Container, Snackbar } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Blogcontext } from "../../App";
 import { FormInputDropdown } from "../form-components/FormInputDropdown";
 import { FormInputText } from "../form-components/FormInputText";
@@ -63,6 +63,7 @@ function BlogInput(props: any) {
   const [inputFields, setInputFields] = useState([]);
   const { state, dispatch } = useContext(Blogcontext);
   const [loader, setLoader] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleLoaderClose = () => {
     setLoader(false);
@@ -96,6 +97,7 @@ function BlogInput(props: any) {
       },
     });
     if (!titleInputTextValue || !codeSnippetTextArea) {
+      setOpen(true);
       throw new Error("Title/CodeSnippet is mandatory to fill");
     }
     handleLoaderOpen();
@@ -145,7 +147,7 @@ function BlogInput(props: any) {
           "🚀 ~ file: FormCreateBlog.tsx:139 ~ getData ~ actualData:",
           actualData
         );
-        setInputFields(actualData?.result);
+        setInputFields(actualData?.updatedResult);
       } catch (err) {
         // setError(err.message);
         setInputFields([]);
@@ -159,24 +161,14 @@ function BlogInput(props: any) {
 
   return (
     <>
+    <Snackbar open={open} autoHideDuration={6000} onClose={()=>{setOpen(false)}}>
+      <Alert onClose={()=>{setOpen(false)}} severity="error" sx={{ width: '100%' }}>
+      Title/CodeSnippet is mandatory to fill
+      </Alert>
+    </Snackbar>
       <NextPrevFormButton handleSubmit={handleSubmit(onSubmit)} />
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-        }}
-      >
-        <Container
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "45rem",
-            justifyContent: "space-around",
-            flex: 1,
-            maxWidth: "100%",
-          }}
-        >
+      <Container className="create-blog-wrapper">
+        <div className="create-blog-wrapper-left" >
           <FormInputText
             name="titleInputTextValue"
             control={control}
@@ -209,25 +201,10 @@ function BlogInput(props: any) {
                 break;
             }
           })}
-          {/* <FormInputMultiCheckbox
-            control={control}
-            setValue={setValue}
-            name={"optionsCheckBoxValue"}
-            label={"Checkbox Input"}
-          /> */}
-        </Container>
-        <Container sx={{ flex: 3, maxWidth: "100%" }}>
-          {/* <FormTextArea
-            style={{ marginTop: "2.1rem", width: "100%" }}
-            label="Code Snippet"
-            name="codeSnippetTextArea"
-            placeholder="Enter code snippet here"
-            control={control}
-            maxRows={25}
-            minRows={25}
-          /> */}
+        </div>
+        <div className="create-blog-wrapper-right">
           <FormInputDropdown
-            styles={{ width: "30%" }}
+            styles={{ width: "30%"}}
             name="language"
             control={control}
             label="Select language"
@@ -238,7 +215,7 @@ function BlogInput(props: any) {
             control={control}
             language={language}
           />
-        </Container>
+        </div>
       </Container>
 
       <BackdropLoader isOpen={loader} />

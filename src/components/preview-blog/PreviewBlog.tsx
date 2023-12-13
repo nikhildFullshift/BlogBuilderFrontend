@@ -7,6 +7,7 @@ import { FormTag } from "../form-components/FormTag";
 import { FormTextArea } from "../form-components/FormTextArea";
 import NextPrevFormButton from "../next-prev/NextPrevFormButton";
 import { useNavigate } from "react-router-dom";
+import Axios from "../../middleware/axiosConfig"
 
 const API_URL = "http://localhost:3000";
 
@@ -55,13 +56,16 @@ function PreviewBlog() {
   const { handleSubmit, control, setValue } = methods;
   const { state } = useContext(Blogcontext);
 
-  const { userId } = state;
+  const { userId } = JSON.parse(localStorage.getItem('role'));
   const navigate = useNavigate();
 
-  async function saveBlog(url: string, config: RequestInit): Promise<any> {
+  async function saveBlog(url: string, body: Object): Promise<any> {
     // TODO: remove any and write proper response structure
-    const response = await fetch(url, config);
-    return await response.json();
+    let response = Axios.post(url, body).then((result:any) => {
+        return result.data;
+      }
+    )
+    return response;
   }
 
   const handleSendToReview = async (data: IFormInput, saveAsDraft) => {
@@ -71,23 +75,16 @@ function PreviewBlog() {
         throw new Error("Title/Content cannot be empty");
       }
       const parsedTags = tags.map((item: any) => item.text);
-      const body = JSON.stringify({
+      const body = {
         title: blogTitleInput,
         description: mdEditorContent,
         tags: parsedTags,
         saveAsDraft,
         author_id: userId,
-      });
+      };
 
       let response;
-        const config = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: body,
-        };
-        response = await saveBlog(`${API_URL}/blog/create`, config);
+        response = await saveBlog(`${API_URL}/blog/create`, body);
         navigate("/blog/list");
       return response;
     } catch (error) {
@@ -96,7 +93,6 @@ function PreviewBlog() {
   };
 
   useEffect(() => {
-    console.log(state)
     setValue("blogTitleInput", state.result.title);
     setValue("mdEditorContent", state.result.description);
   },[])

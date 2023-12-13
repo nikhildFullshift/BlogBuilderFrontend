@@ -1,5 +1,6 @@
 import { styled, useTheme } from "@mui/material/styles";
 import { tableCellClasses } from "@mui/material/TableCell";
+import Axios from "../middleware/axiosConfig"
 import {
   Table,
   TableHead,
@@ -156,17 +157,19 @@ export default function CustomizedTables() {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/blog/`)
-      .then((res) => res.json())
-      .then((result) => setRows(result))
+    Axios.get(`${API_URL}/blog/`)
+      .then((result) => setRows(result.data))
       .catch((err) => console.log(err));
   }, []);
 
   return (
     <>
-      <Typography variant="h4" marginTop={"50px"}>
-        Dashboard
-      </Typography>
+      <div className="dashboard-header">
+        <Typography variant="h4" >
+          Dashboard
+        </Typography>
+        <Link to={`/blog/create`} target="_blank" className="add-button">+ add</Link>
+      </div>
       <Divider sx={{ marginBottom: "50px" }} />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -275,7 +278,8 @@ export default function CustomizedTables() {
                             to={`/blog/review/${row.version_id}`}
                             target="_blank"
                           >
-                            <EditIcon titleAccess="edit" fontSize="medium" />
+                            View
+                            {/* <EditIcon titleAccess="review" fontSize="medium" /> */}
                           </Link>
                           &nbsp;
                         </>

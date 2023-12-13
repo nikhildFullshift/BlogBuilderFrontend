@@ -52,6 +52,7 @@ export const FormTextArea = ({
             maxRows={maxRows}
             minRows={minRows}
             margin="normal"
+            className="blog-input"
           />
         );
       }}

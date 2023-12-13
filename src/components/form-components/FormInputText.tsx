@@ -32,6 +32,7 @@ export const FormInputText = ({
           fullWidth
           label={label}
           variant="outlined"
+          className="blog-input"
         />
       )}
     />

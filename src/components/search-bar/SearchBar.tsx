@@ -16,9 +16,9 @@ export default function SearchBar() {
   };
 
   return (
-    <div className={SearchBarStyle["search-bar-container"]}>
+    <div className={"search-bar-container"}>
       <h1>GPS Blog Builder</h1>
-      <Container maxWidth="md" sx={{ mt: 0, paddingLeft: "2rem" }}>
+      <Container maxWidth="md" sx={{ mt: "20px" }}>
         <TextField
           id="search"
           type="search"
@@ -26,6 +26,8 @@ export default function SearchBar() {
           value={searchTerm}
           onChange={handleChange}
           onKeyUp={handleChange}
+          color="success"
+          variant="filled"
           sx={{ width: "34rem" }}
           InputProps={{
             endAdornment: (

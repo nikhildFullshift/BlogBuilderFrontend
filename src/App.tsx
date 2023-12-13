@@ -7,7 +7,7 @@ import BlogSearchList from "./components/BlogSearchList";
 import FormCreateBlog from "./components/FormCreateBlog";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ViewBlog from "./components/view-blog/ViewBlog";
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import { blog_reducer, initalState } from "./reducers/blogReducer";
 import {
   AnnotationContextProps,
@@ -20,6 +20,8 @@ import {
   initialAnnotationState,
 } from "./reducers/annotationReducer";
 import EditReview from "./components/edit-review/EditReview";
+import NavBar from "./components/nav-bar/NavBar";
+import Footer from "./components/footer/Footer";
 
 export const Blogcontext = createContext({} as BlogContextProps);
 export const AnnotationContext = createContext({} as AnnotationContextProps);
@@ -61,6 +63,7 @@ function App() {
     annotation_reducer,
     initialAnnotationState
   );
+  const [dark, setDark] = useState(null);
 
   useEffect(() => {
     //fetch USER DETAILS here
@@ -68,13 +71,26 @@ function App() {
       type: "UPDATE_USER_DETAILS",
       payload: { role: "LEAD", userId: 123 },
     });
+    //fetch color theme
+    if(localStorage.getItem("theme") === "light"){
+      setDark(false);
+    }
+    else {
+      setDark(true);
+      localStorage.setItem("theme", "dark");
+    }
   }, []);
   return (
     <Blogcontext.Provider value={{ state, dispatch }}>
       <AnnotationContext.Provider
         value={{ annotationState, dispatchAnnotation }}
       >
-        <RouterProvider router={router} />
+        <div className={dark?"dark-theme":"light-theme" }>
+        <NavBar dark={dark} setDark={setDark} />
+        <div className="content-wrapper" >
+          <RouterProvider router={router} />
+        </div>
+        <Footer /></div>
       </AnnotationContext.Provider>
     </Blogcontext.Provider>
   );
