@@ -76,7 +76,7 @@ function ReviewModal({
   }, [open]);
   return (
     <Modal
-      title="Review Blog"
+      title={user.role === "LEAD" ? "Review Blog" : "Suggestions"}
       destroyOnClose
       maskClosable={false}
       open={open}

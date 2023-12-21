@@ -1,8 +1,31 @@
-# React + Vite
+# Blog Builder Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend repository for the Blog Builder project, developed using Vite and React.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Follow these steps to set up the frontend development environment:
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://gitlab.mindfire.co.in/gps-blog-builder/blog-builder-frontend.git
+   ```
+
+2. **Navigate to the Frontend Directory:**
+
+   ```bash
+   cd blog-builder-frontend
+   ```
+
+3. **Install Dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+4. **Run the Development Server:**
+
+   ```bash
+   npm run dev
+   ```
