@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { theme as themeProvider, ConfigProvider } from "antd";
 import HomeNav from "../../components/HomeNav";
 import SearchBar from "../../components/SearchBar";
 import { suggestionsData } from "../../constants/constant";
@@ -14,6 +15,7 @@ function Home({ theme, setTheme }) {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const { darkAlgorithm, defaultAlgorithm } = themeProvider;
   const onSearch = (data) => {
     if (data === "") {
       return;
@@ -49,19 +51,35 @@ function Home({ theme, setTheme }) {
   }, []);
   return (
     <>
-      <FloatButton
-        icon={<FontAwesomeIcon icon={faAdd} />}
-        className="floating-add-button"
-        tooltip={<div className="float-description">Post new blog</div>}
-        shape="circle"
-        style={{
-          right: 40,
-          bottom: 100,
+      <ConfigProvider
+        theme={{
+          token:
+            theme === "dark"
+              ? {
+                  colorBgContainer: "#1c2d3b",
+                  colorBorderSecondary: "#14212d",
+                  colorBgElevated: "#1c2d3b",
+                }
+              : {
+                  colorBgContainer: "#fff",
+                },
+          algorithm: theme === "dark" ? darkAlgorithm : defaultAlgorithm,
         }}
-        onClick={() => {
-          window.location.href = "/dashboard";
-        }}
-      />
+      >
+        <FloatButton
+          icon={<FontAwesomeIcon icon={faAdd} />}
+          className="floating-add-button"
+          tooltip={"Post new blog"}
+          shape="circle"
+          style={{
+            right: 40,
+            bottom: 100,
+          }}
+          onClick={() => {
+            window.location.href = "/dashboard";
+          }}
+        />
+      </ConfigProvider>
       <HomeNav theme={theme} setTheme={setTheme} />
       <div className="home-body">
         <div className="search-bar-wrapper">

@@ -7,6 +7,8 @@
   --shadow-color: rgb(102, 102, 102);
   --image-bg: #113011;
   --tooltip-bg: #000;
+  --button-color: #4e0068;
+  --button-hover-color: #4e0068b8;
 }
 .light-theme {
   --primary-color: #000;
@@ -17,6 +19,8 @@
   --shadow-color: rgb(109, 109, 109);
   --image-bg: #7eb17e;
   --tooltip-bg: #fff;
+  --button-color: rgb(8, 0, 255);
+  --button-hover-color: rgb(24, 20, 129);
 }
 
 ::-webkit-scrollbar {
@@ -33,7 +37,9 @@
 
 
 /* Home Page */
-
+.float-description {
+  color: var(--primary-color) !important;
+}
 .home-nav {
   display: flex;
   justify-content: space-between;
@@ -158,10 +164,26 @@
   flex-direction: column;
   gap: 20px;
 }
-.blog-card-text h3 {
+.blog-card-title h3 {
   font-size: 16px;
   font-weight: 400;
   margin: 0;
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+}
+.blog-card-title {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+}
+.blog-card-title Button {
+  padding: 0 !important;
+  color: var(--button-color);
+}
+.blog-card-title button:hover {
+  color: var(--button-hover-color) !important;
 }
 .blog-card-tags {
   display: flex;
@@ -379,6 +401,12 @@
 .recent-button-wrapper {
   margin-top: 20px;
   text-align: center;
+}
+.title-column {
+  text-overflow: ellipsis;
+  text-wrap: nowrap;
+  overflow: hidden;
+  width: 100%;
 }
 
 

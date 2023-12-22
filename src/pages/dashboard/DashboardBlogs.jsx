@@ -28,6 +28,7 @@ function DashboardBlogs({ currentTheme }) {
       title: "Author ID",
       dataIndex: "author_id",
       key: "author_id",
+      width: "100px",
     },
     {
       title: "Created",
@@ -117,7 +118,16 @@ function DashboardBlogs({ currentTheme }) {
                       </Button>
                     );
                   case "View in Kb":
-                    return <Button>View</Button>;
+                    return (
+                      <Button
+                        type="link"
+                        onClick={() => {
+                          window.open("/blog/" + blog_id, "_blank");
+                        }}
+                      >
+                        View
+                      </Button>
+                    );
                 }
               })}
             </Space>

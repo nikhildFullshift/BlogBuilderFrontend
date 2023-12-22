@@ -25,18 +25,19 @@ function ReviewModal({
     setTarget(null);
     setData({});
   };
-  const updateVersion = () => {
+  const updateVersion = (statusId) => {
     setButtonLoading(true);
     let payload = Object.assign({}, data);
     payload.htmlFormat = description;
-    console.log(description);
-    console.log(payload);
     payload.updated_at = new Date();
-    payload.status = 2;
+    payload.status = statusId;
     BlogService.updateVersion(data.id, payload)
       .then((res) => {
         notification.success({
-          message: "Review added successfully",
+          message:
+            statusId === 2
+              ? "Review added successfully"
+              : "Blog Published successfully",
         });
         closeModal();
         setButtonLoading(false);
@@ -100,7 +101,7 @@ function ReviewModal({
                     key="submit"
                     loading={buttonLoading}
                     onClick={() => {
-                      updateVersion();
+                      updateVersion(2);
                     }}
                   >
                     Submit Review
@@ -110,9 +111,9 @@ function ReviewModal({
                     key="publish"
                     type="primary"
                     loading={buttonLoading}
-                    // onClick={() => {
-                    //   updateVersion();
-                    // }}
+                    onClick={() => {
+                      updateVersion(3);
+                    }}
                   >
                     Publish
                   </Button>
