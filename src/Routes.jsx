@@ -10,6 +10,7 @@ import Home from "./pages/home-page/Home";
 import PageNotFound from "./pages/page-not-found/PageNotFound";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ReviewPage from "./components/test";
+import ViewBlog from "./pages/view-blog-page/ViewBlog";
 
 function Routes() {
   const [theme, setTheme] = useState();
@@ -30,6 +31,11 @@ function Routes() {
             exact
             path="/"
             element={<Home theme={theme} setTheme={setTheme} />}
+          />
+          <Route
+            exact
+            path="/blog/:id"
+            element={<ViewBlog theme={theme} setTheme={setTheme} />}
           />
           <Route
             exact
