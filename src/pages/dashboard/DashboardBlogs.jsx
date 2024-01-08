@@ -4,6 +4,8 @@ import { Button, Space, Table } from "antd";
 import { theme, ConfigProvider } from "antd";
 import ReviewModal from "../../components/ReviewModal";
 import ModifyBlog from "../../components/ModifyBlog";
+import { roles } from "../../constants/constant";
+import moment from "moment";
 
 function DashboardBlogs({ currentTheme }) {
   const [blogs, setBlogs] = useState([]);
@@ -25,43 +27,56 @@ function DashboardBlogs({ currentTheme }) {
       width: "30%",
     },
     {
-      title: "Author ID",
+      title: "Author",
       dataIndex: "author_id",
       key: "author_id",
       width: "100px",
+      align: "center",
+      render: (author_id) => {
+        const user = roles.filter(({ userId }) => userId === author_id);
+        return user[0].name;
+      },
     },
     {
       title: "Created",
       dataIndex: "created_at",
       key: "created_at",
       render: (date) => (
-        <div className="created-column">{new Date(date).toDateString()}</div>
+        <div className="created-column">
+          {moment(date).format("DD/MM/yyyy")}
+        </div>
       ),
       defaultSortOrder: "descend",
       sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at),
+      align: "center",
     },
     {
-      title: "Published",
+      title: "Published On",
       dataIndex: "published_at",
       key: "published_at",
       render: (date) =>
         date ? (
-          <div className="created-column">{new Date(date).toDateString()}</div>
+          <div className="created-column">
+            {moment(date).format("DD/MM/yyyy")}
+          </div>
         ) : (
           "Not yet published"
         ),
       sorter: (a, b) => new Date(a.published_at) - new Date(b.published_at),
+      align: "center",
     },
     {
       title: "Status",
       dataIndex: "statusMessage",
       key: "statusMessage",
+      align: "center",
     },
     {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
       width: "20%",
+      align: "center",
       render: (__, { actions, blog_id }) => {
         if (actions && actions.length !== 0) {
           return (

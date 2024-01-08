@@ -9,7 +9,6 @@ import { Layout } from "antd";
 import Home from "./pages/home-page/Home";
 import PageNotFound from "./pages/page-not-found/PageNotFound";
 import Dashboard from "./pages/dashboard/Dashboard";
-import ReviewPage from "./components/test";
 import ViewBlog from "./pages/view-blog-page/ViewBlog";
 
 function Routes() {
@@ -42,7 +41,6 @@ function Routes() {
             path="/dashboard"
             element={<Dashboard theme={theme} setTheme={setTheme} />}
           />
-          <Route exact path="/test" element={<ReviewPage />} />
           <Route exact path="/pageNotFound" element={<PageNotFound />} />
           <Route path="*" element={<Navigate to="/pageNotFound" />} />
         </Switch>

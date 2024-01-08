@@ -50,6 +50,7 @@
 .home-nav-logo {
   font-size: 24px;
   color: var(--primary-color);
+  cursor: pointer;
 }
 .home-body {
   min-height: 83vh;
@@ -478,23 +479,59 @@
   width: 150px;
   border: 1px solid var(--primary-color);
 }
-.highlighted {
-  padding: 10px !important;
-  border: 1px solid #666 !important;
+.review-card {
+  display: flex;
+  background: #d5d5d524;
+  padding: 12px;
+  border-radius: 12px;
 }
-
-.review-text {
-  border: 1px solid #666;
-  padding: 24px;
+.editor-card-wrapper {
+  flex: 5;
+  max-height: 65vh;
+  overflow-y: auto;
 }
-.recent-comment {
-  position: relative;
+.comment-card-wrapper {
+  flex: 2;
+  margin-left: 12px;
+  max-height: 65vh;
+  overflow-y: auto;
+  background: #d5d5d524;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.comment-add-button {
-  position: absolute;
+.comment-card {
+  margin: 0 5px;
+  transition: all 0.2s ease-in-out;
 }
-.comment-item {
-  position: absolute;
+.comment-tite {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  background: #d5d5d524;
+  padding: 10px;
+  border-radius: 12px;
+}
+.add-comment-card .ant-card-body{
+  padding: 12px !important;
+}
+.add-comment-card .ant-card-body .ant-form-item:nth-child(2) {
+  margin-bottom: 0 !important;
+}
+.comment-card-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.comment-card-title {
+  font-size: 14px;
+  font-weight: 400;
+}
+.comment-time {
+  font-size: 12px;
+  font-weight: 300;
 }
 
 /* View Blog  */

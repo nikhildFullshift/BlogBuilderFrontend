@@ -13,12 +13,12 @@ function DashboardHeader({ selectedKey, setSelectedKey }) {
             <span>My Dashboard</span>
           </div>
           <div className="dashboard-header-right">
-            <Button
+            {/* <Button
               icon={<FontAwesomeIcon icon={faPen} />}
               onClick={() => setSelectedKey("create")}
             >
               WRITE A POST
-            </Button>
+            </Button> */}
           </div>
         </div>
       );

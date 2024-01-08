@@ -106,6 +106,11 @@ function Dashboard({ theme, setTheme }) {
               }}
               items={[
                 {
+                  key: "create",
+                  icon: <FontAwesomeIcon icon={faAdd} />,
+                  label: "Create New Post",
+                },
+                {
                   key: "home",
                   icon: <FontAwesomeIcon icon={faHome} />,
                   label: "Home",
@@ -114,11 +119,6 @@ function Dashboard({ theme, setTheme }) {
                   key: "blogs",
                   icon: <FontAwesomeIcon icon={faNewspaper} />,
                   label: "Blogs",
-                },
-                {
-                  key: "create",
-                  icon: <FontAwesomeIcon icon={faAdd} />,
-                  label: "Create New Post",
                 },
               ]}
             />

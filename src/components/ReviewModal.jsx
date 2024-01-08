@@ -1,11 +1,27 @@
-import { Button, Card, Modal, notification } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BlogService from "../services/blogService";
-import { Editor } from "@tinymce/tinymce-react";
+import {
+  Button,
+  Card,
+  ConfigProvider,
+  Form,
+  Input,
+  Modal,
+  Result,
+  notification,
+} from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { faClose, faInbox } from "@fortawesome/free-solid-svg-icons";
+import { EditorContent, findChildren, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Underline from "@tiptap/extension-underline";
+import Link from "@tiptap/extension-link";
+import Highlight from "@tiptap/extension-highlight";
+import { v4 as uuidv4 } from "uuid";
+import CommentCard from "./CommentCard";
+import AnnotationService from "../services/annotationService";
 
-function ReviewModal({
+function ReviewBlog({
   target,
   setTarget,
   setRefresh,
@@ -14,21 +30,59 @@ function ReviewModal({
   setOpen,
   currentTheme,
 }) {
+  const lastHightlighted = useRef(null);
+  const [form] = Form.useForm();
+  const commentInputRef = useRef();
   const [loading, setLoading] = useState(true);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [data, setData] = useState({});
   const [user, setUser] = useState({});
-  const [description, setDescription] = useState("");
-  const closeModal = () => {
-    setOpen(false);
-    setLoading(true);
-    setTarget(null);
-    setData({});
-  };
+  const [isHighlighted, setIsHighlighted] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [positionY, setPositionY] = useState(0);
+  const [selectedCommentId, setSelectedCommentId] = useState(null);
+  const CustomHighlight = Highlight.extend({
+    addAttributes() {
+      return {
+        id: {
+          default: null,
+          // Take the attribute values
+          renderHTML: (attributes) => {
+            // … and return an object with HTML attributes.
+            return {
+              id: attributes.id,
+            };
+          },
+        },
+        class: {
+          default: null,
+          // Take the attribute values
+          renderHTML: (attributes) => {
+            // … and return an object with HTML attributes.
+            return {
+              class: attributes.class,
+            };
+          },
+        },
+      };
+    },
+  }).configure({ multicolor: true });
+
+  const editor = useEditor({
+    editable: false,
+    extensions: [
+      StarterKit,
+      CustomHighlight,
+      Underline,
+      Link.configure({
+        openOnClick: false,
+      }),
+    ],
+  });
   const updateVersion = (statusId) => {
     setButtonLoading(true);
     let payload = Object.assign({}, data);
-    payload.htmlFormat = description;
+    payload.htmlFormat = editor.getHTML();
     payload.updated_at = new Date();
     payload.status = statusId;
     BlogService.updateVersion(data.id, payload)
@@ -53,6 +107,129 @@ function ReviewModal({
       });
   };
 
+  const closeModal = () => {
+    lastHightlighted.current = null;
+    setOpen(false);
+    setComments([]);
+    setSelectedCommentId(null);
+    form.resetFields();
+    setIsHighlighted(false);
+    setLoading(true);
+    setTarget(null);
+    setData({});
+  };
+
+  const handleContentEvents = (e, toHandleClickHighlight) => {
+    const selection = window.getSelection();
+    if (selection.type === "Range") {
+      setSelectedCommentId(null);
+      setPositionY(e.pageY);
+      setIsHighlighted(true);
+      form.resetFields();
+    } else {
+      setIsHighlighted(false);
+      focusCommentOnClickOfHighlight();
+    }
+  };
+  useEffect(() => {
+    if (isHighlighted) {
+      commentInputRef.current.focus();
+    }
+  }, [isHighlighted]);
+  const focusCommentOnClickOfHighlight = () => {
+    const { state } = editor;
+
+    const selectedOffset = state.selection.$head.parentOffset;
+
+    const totalChild = state.selection.$head.parent.childCount;
+    let count = 0,
+      index;
+    for (index = 0; index < totalChild; index++) {
+      if (
+        selectedOffset >= count &&
+        selectedOffset <=
+          count + state.selection.$head.parent.child(index).text.length
+      ) {
+        break;
+      }
+      count += state.selection.$head.parent.child(index).text.length;
+    }
+
+    const highlightedCommentId =
+      state.selection.$head.parent.child(index).marks[0]?.attrs?.id || null;
+    setSelectedCommentId(highlightedCommentId);
+    if (highlightedCommentId) {
+      document.getElementById("card-" + highlightedCommentId).scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
+  const handleComment = (e) => {
+    const id = uuidv4();
+    let payload = {
+      highlightMarkId: id,
+      description: e.comment,
+      positionY: positionY,
+      authorId: user.userId,
+    };
+    AnnotationService.createAnnotation(data.id, payload).then(() => {
+      editor
+        .chain()
+        .focus()
+        .toggleHighlight({
+          id,
+          class: "tooltip-parent",
+        })
+        .run();
+      lastHightlighted.current = editor.chain().focus();
+      let blog = Object.assign({}, data);
+      blog.htmlFormat = editor.getHTML();
+      BlogService.updateVersion(data.id, blog);
+      AnnotationService.getAnnotations(data.id).then((res) => {
+        setComments(res.data);
+        form.resetFields();
+        setIsHighlighted(false);
+      });
+    });
+  };
+
+  const toggleHighlight = (commentId) => {
+    const { tr } = editor.state;
+    const item = findChildren(tr.doc, (node) => {
+      return (
+        node?.marks.length > 0 &&
+        node?.marks.find((item) => item.attrs?.id === commentId)
+      );
+    });
+
+    if (item) {
+      item.forEach((eachItem) => {
+        tr.removeMark(
+          eachItem.pos,
+          eachItem.pos + eachItem.node.nodeSize,
+          editor.schema.marks.highlight
+        );
+      });
+      editor.view.dispatch(tr);
+    }
+  };
+
+  const deleteComment = (commentId, highlight_mark_id) => {
+    AnnotationService.deleteAnnotation(commentId).then(() => {
+      toggleHighlight(highlight_mark_id);
+      let blog = Object.assign({}, data);
+      blog.htmlFormat = editor.getHTML();
+      BlogService.updateVersion(data.id, blog);
+      AnnotationService.getAnnotations(data.id).then((res) => {
+        setComments(res.data);
+        form.resetFields();
+        setIsHighlighted(false);
+      });
+    });
+  };
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("role"));
     if (user) {
@@ -62,7 +239,12 @@ function ReviewModal({
       BlogService.getLatestVersion(target)
         .then((res) => {
           setData(res.data);
-          setDescription(res.data.htmlFormat);
+          editor.commands.setContent(res.data.htmlFormat);
+          AnnotationService.getAnnotations(res.data.id).then((res2) => {
+            setComments(res2.data);
+            form.resetFields();
+            setIsHighlighted(false);
+          });
           setLoading(false);
         })
         .catch((err) => {
@@ -95,7 +277,10 @@ function ReviewModal({
               >
                 Return
               </Button>,
-              user.role === "LEAD" ? (
+              user.role === "LEAD" &&
+              data &&
+              data.status &&
+              data.status !== 2 ? (
                 <>
                   <Button
                     key="submit"
@@ -131,32 +316,87 @@ function ReviewModal({
         <>
           <h1>{data.title}</h1>
           <div className="review-card">
-            <Editor
-              apiKey="o0g1vx6mxtdx1uaftg65g7we4jfddhl33ecxotnfvvq9nstr"
-              init={{
-                plugins: "tinycomments",
-                readonly: true,
-                height: 400,
-                menubar: false,
-                statusbar: false,
-                toolbar: false,
-                content_style:
-                  currentTheme === "dark"
-                    ? "body { background-color:#222f3e ; color: #fff;  }"
-                    : "body { background-color:#f5f5f5 ; color: #000;  }",
-                tinycomments_mode: "embedded",
-                tinycomments_default_mode: "embedded",
-                tinycomments_author: user.name,
-                skin: currentTheme === "dark" ? "oxide-dark" : "oxide",
-                sidebar_show: "showcomments",
-              }}
-              value={description}
-              disabled={buttonLoading}
-              onEditorChange={(e) => {
-                console.log(e);
-                setDescription(e);
-              }}
-            />
+            <div className="editor-card-wrapper">
+              <EditorContent
+                onClick={(e) => handleContentEvents(e, true)}
+                contentEditable={false}
+                editor={editor}
+                onChange={(e) => {
+                  console.log(e);
+                }}
+              />
+            </div>
+            <div className="comment-card-wrapper">
+              <div className="comment-tite">Suggestions</div>
+              {!isHighlighted && comments.length === 0 && (
+                <ConfigProvider
+                  theme={{
+                    components: {
+                      Result: {
+                        titleFontSize: 16,
+                      },
+                    },
+                  }}
+                >
+                  <Result
+                    icon={<FontAwesomeIcon icon={faInbox} fontSize={40} />}
+                    title="No Suggestions added Yet !!"
+                  />
+                </ConfigProvider>
+              )}
+              {isHighlighted && (
+                <Card
+                  className="add-comment-card"
+                  style={{ borderColor: "green" }}
+                >
+                  <Form
+                    form={form}
+                    onFinish={handleComment}
+                    layout="vertical"
+                    requiredMark={false}
+                  >
+                    <Form.Item
+                      name="comment"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Suggestions can not be empty !!",
+                        },
+                      ]}
+                    >
+                      <Input.TextArea
+                        placeholder="Enter suggestions"
+                        ref={commentInputRef}
+                      />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button
+                        htmlType="submit"
+                        key="save-comment"
+                        disabled={buttonLoading}
+                      >
+                        Add
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </Card>
+              )}
+              {comments &&
+                comments.length !== 0 &&
+                comments.map((comment) => {
+                  return (
+                    <CommentCard
+                      user={user}
+                      key={comment.id}
+                      comment={comment}
+                      comments={comments}
+                      setComments={setComments}
+                      selectedCommentId={selectedCommentId}
+                      deleteComment={deleteComment}
+                    />
+                  );
+                })}
+            </div>
           </div>
         </>
       )}
@@ -164,4 +404,4 @@ function ReviewModal({
   );
 }
 
-export default ReviewModal;
+export default ReviewBlog;
