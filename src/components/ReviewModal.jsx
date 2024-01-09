@@ -5,13 +5,13 @@ import {
   Card,
   ConfigProvider,
   Form,
-  Input,
   Modal,
   Result,
   notification,
 } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClose, faInbox } from "@fortawesome/free-solid-svg-icons";
+import "react-quill/dist/quill.snow.css";
 import { EditorContent, findChildren, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -20,6 +20,7 @@ import Highlight from "@tiptap/extension-highlight";
 import { v4 as uuidv4 } from "uuid";
 import CommentCard from "./CommentCard";
 import AnnotationService from "../services/annotationService";
+import ReactQuill from "react-quill";
 
 function ReviewBlog({
   target,
@@ -41,6 +42,7 @@ function ReviewBlog({
   const [comments, setComments] = useState([]);
   const [positionY, setPositionY] = useState(0);
   const [selectedCommentId, setSelectedCommentId] = useState(null);
+  const [lastSelected, setLastSelected] = useState(null);
   const CustomHighlight = Highlight.extend({
     addAttributes() {
       return {
@@ -123,7 +125,10 @@ function ReviewBlog({
     const selection = window.getSelection();
     if (selection.type === "Range") {
       setSelectedCommentId(null);
-      setPositionY(e.pageY);
+      setPositionY(
+        e.pageY +
+          document.getElementsByClassName("editor-card-wrapper")[0].scrollTop
+      );
       setIsHighlighted(true);
       form.resetFields();
     } else {
@@ -161,11 +166,10 @@ function ReviewBlog({
     if (highlightedCommentId) {
       document.getElementById("card-" + highlightedCommentId).scrollIntoView({
         behavior: "smooth",
-        block: "start",
+        block: "center",
       });
     }
   };
-
   const handleComment = (e) => {
     const id = uuidv4();
     let payload = {
@@ -229,6 +233,31 @@ function ReviewBlog({
       });
     });
   };
+  const validateComment = (_, value) => {
+    if (
+      !value ||
+      value.trim() === "" ||
+      value.replace(/<[^>]*>/g, "").trim() === ""
+    ) {
+      return Promise.reject("Suggestions cannot be empty!");
+    }
+    return Promise.resolve();
+  };
+  useEffect(() => {
+    if (lastSelected && document.getElementById(lastSelected)) {
+      const elements = document.querySelectorAll(`[id="${lastSelected}"]`);
+      elements.forEach((element) => {
+        element.removeAttribute("style");
+      });
+    }
+    if (selectedCommentId && document.getElementById(selectedCommentId)) {
+      const elements = document.querySelectorAll(`[id="${selectedCommentId}"]`);
+      elements.forEach((element) => {
+        element.style.backgroundColor = "red";
+      });
+      setLastSelected(selectedCommentId);
+    }
+  }, [selectedCommentId]);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("role"));
@@ -309,6 +338,9 @@ function ReviewBlog({
       onCancel={closeModal}
       closeIcon={buttonLoading ? null : <FontAwesomeIcon icon={faClose} />}
       width={1200}
+      style={{
+        top: 18,
+      }}
     >
       {loading ? (
         <Card loading />
@@ -359,12 +391,15 @@ function ReviewBlog({
                       name="comment"
                       rules={[
                         {
-                          required: true,
-                          message: "Suggestions can not be empty !!",
+                          validator: validateComment,
                         },
                       ]}
                     >
-                      <Input.TextArea
+                      <ReactQuill
+                        theme="snow"
+                        modules={{
+                          toolbar: ["bold", "italic", "underline", "strike"],
+                        }}
                         placeholder="Enter suggestions"
                         ref={commentInputRef}
                       />
@@ -383,19 +418,22 @@ function ReviewBlog({
               )}
               {comments &&
                 comments.length !== 0 &&
-                comments.map((comment) => {
-                  return (
-                    <CommentCard
-                      user={user}
-                      key={comment.id}
-                      comment={comment}
-                      comments={comments}
-                      setComments={setComments}
-                      selectedCommentId={selectedCommentId}
-                      deleteComment={deleteComment}
-                    />
-                  );
-                })}
+                comments
+                  .sort((a, b) => a.position_y - b.position_y)
+                  .map((comment) => {
+                    return (
+                      <CommentCard
+                        user={user}
+                        key={comment.id}
+                        comment={comment}
+                        comments={comments}
+                        setComments={setComments}
+                        selectedCommentId={selectedCommentId}
+                        setSelectedCommentId={setSelectedCommentId}
+                        deleteComment={deleteComment}
+                      />
+                    );
+                  })}
             </div>
           </div>
         </>

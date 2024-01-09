@@ -5,11 +5,12 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Card, Dropdown, Form, Input } from "antd";
+import { Button, Card, Dropdown, Form } from "antd";
 import moment from "moment";
 import { useState } from "react";
 import { roles } from "../constants/constant";
 import AnnotationService from "../services/annotationService";
+import ReactQuill from "react-quill";
 
 function CommentCard({
   user,
@@ -17,6 +18,7 @@ function CommentCard({
   comments,
   setComments,
   selectedCommentId,
+  setSelectedCommentId,
   deleteComment,
 }) {
   const [editMode, setEditMode] = useState(false);
@@ -63,9 +65,26 @@ function CommentCard({
       key: "1",
     },
   ];
+  const validateComment = (_, value) => {
+    if (
+      !value ||
+      value.trim() === "" ||
+      value.replace(/<[^>]*>/g, "").trim() === ""
+    ) {
+      return Promise.reject("Suggestions cannot be empty!");
+    }
+    return Promise.resolve();
+  };
   return (
     <Card
       id={"card-" + comment.highlight_mark_id}
+      onClick={() => {
+        setSelectedCommentId(comment.highlight_mark_id);
+        document.getElementById(comment.highlight_mark_id).scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }}
       className="comment-card"
       style={
         selectedCommentId &&
@@ -125,12 +144,18 @@ function CommentCard({
             name="comment"
             rules={[
               {
-                required: true,
-                message: "Suggestions can not be empty !!",
+                validator: validateComment,
               },
             ]}
           >
-            <Input.TextArea placeholder="Enter suggestions" />
+            <ReactQuill
+              theme="snow"
+              modules={{
+                toolbar: ["bold", "italic", "underline", "strike"],
+              }}
+              placeholder="Enter suggestions"
+              preserveWhitespace={false}
+            />
           </Form.Item>
           <Form.Item>
             <Button
@@ -143,7 +168,10 @@ function CommentCard({
           </Form.Item>
         </Form>
       ) : (
-        <div className="comment-text">{comment.description}</div>
+        <div
+          className="comment-text"
+          dangerouslySetInnerHTML={{ __html: comment.description }}
+        />
       )}
     </Card>
   );

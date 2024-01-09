@@ -487,13 +487,13 @@
 }
 .editor-card-wrapper {
   flex: 5;
-  max-height: 65vh;
+  max-height: 64vh;
   overflow-y: auto;
 }
 .comment-card-wrapper {
   flex: 2;
   margin-left: 12px;
-  max-height: 65vh;
+  max-height: 61vh;
   overflow-y: auto;
   background: #d5d5d524;
   border-radius: 12px;
