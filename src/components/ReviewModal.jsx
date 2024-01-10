@@ -253,7 +253,7 @@ function ReviewBlog({
     if (selectedCommentId && document.getElementById(selectedCommentId)) {
       const elements = document.querySelectorAll(`[id="${selectedCommentId}"]`);
       elements.forEach((element) => {
-        element.style.backgroundColor = "red";
+        element.style.backgroundColor = "#ffc800";
       });
       setLastSelected(selectedCommentId);
     }
@@ -303,6 +303,7 @@ function ReviewBlog({
                 onClick={() => {
                   closeModal();
                 }}
+                danger
               >
                 Return
               </Button>,

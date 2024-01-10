@@ -6,6 +6,7 @@ import ReviewModal from "../../components/ReviewModal";
 import ModifyBlog from "../../components/ModifyBlog";
 import { roles } from "../../constants/constant";
 import moment from "moment";
+import PreviewBlog from "../../components/PreviewBlog";
 
 function DashboardBlogs({ currentTheme }) {
   const [blogs, setBlogs] = useState([]);
@@ -75,12 +76,12 @@ function DashboardBlogs({ currentTheme }) {
       title: "Actions",
       dataIndex: "actions",
       key: "actions",
-      width: "20%",
+      width: "25%",
       align: "center",
       render: (__, { actions, blog_id }) => {
         if (actions && actions.length !== 0) {
           return (
-            <Space>
+            <Space size={0}>
               {actions.map((action) => {
                 switch (action) {
                   case "Edit":
@@ -145,6 +146,9 @@ function DashboardBlogs({ currentTheme }) {
                     );
                 }
               })}
+              {actions.includes("View in Kb") ? null : (
+                <PreviewBlog blogId={blog_id} />
+              )}
             </Space>
           );
         }

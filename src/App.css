@@ -23,16 +23,14 @@
   --button-hover-color: rgb(24, 20, 129);
 }
 
-::-webkit-scrollbar {
+::-webkit-scrollbar, .ant-modal-body ::-webkit-scrollbar{
   width: 4px; /* Set the width of the scrollbar */
+  height: 4px;
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: var(--image-bg); /* Set the color of the thumb */
+::-webkit-scrollbar-thumb, .ant-modal-body ::-webkit-scrollbar-thumb {
+  background-color: green; /* Set the color of the thumb */
   border-radius: 2px; /* Set the border radius of the thumb */
-}
-::-webkit-scrollbar-track {
-  background-color: var(--body-color) !important; /* Set the color of the track */
 }
 
 
@@ -532,6 +530,34 @@
 .comment-time {
   font-size: 12px;
   font-weight: 300;
+}
+.preview-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.preview-blog-body {
+  overflow-y: auto;
+  background: #0000000f;
+  padding: 0 12px;
+  border-radius: 12px;
+}
+.preview-blog-body .view-blog-title {
+  margin-top: 15px;
+}
+.preview-blog-body .view-blog-divider {
+  border-block-start: 1px solid green;
+}
+.preview-blog-body .blog-tag {
+  border: 1px solid;
+}
+.code-block-wrapper {
+  position: relative;
+}
+.copy-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 /* View Blog  */

@@ -11,9 +11,10 @@ import {
 } from "antd";
 import ReactMarkdown from "react-markdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAdd, faUser, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import HomeNav from "../../components/HomeNav";
 import BlogService from "../../services/blogService";
+import CodeBlock from "../../components/CodeBlock";
 
 function ViewBlog({ theme, setTheme }) {
   const { id } = useParams();
@@ -111,7 +112,13 @@ function ViewBlog({ theme, setTheme }) {
                 )}
               </div>
               <div className="view-blog-description">
-                <ReactMarkdown>{blog.description}</ReactMarkdown>
+                <ReactMarkdown
+                  components={{
+                    code: CodeBlock,
+                  }}
+                >
+                  {blog.description}
+                </ReactMarkdown>
               </div>
             </>
           )}

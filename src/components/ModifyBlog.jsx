@@ -159,6 +159,7 @@ function ModifyBlog({
                       icon={<FontAwesomeIcon icon={faClose} />}
                       loading={buttonLoading}
                       onClick={onClose}
+                      danger
                     >
                       Return
                     </Button>
