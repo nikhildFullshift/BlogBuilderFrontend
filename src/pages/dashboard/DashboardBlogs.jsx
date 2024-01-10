@@ -79,7 +79,7 @@ function DashboardBlogs({ currentTheme }) {
       width: "25%",
       align: "center",
       render: (__, { actions, blog_id }) => {
-        if (actions && actions.length !== 0) {
+        if (actions) {
           return (
             <Space size={0}>
               {actions.map((action) => {
