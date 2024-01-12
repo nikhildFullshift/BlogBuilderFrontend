@@ -47,7 +47,13 @@ function Home({ theme, setTheme }) {
       });
   };
   useEffect(() => {
-    setSuggestions(suggestionsData);
+    BlogService.getPopularTags()
+      .then((res) => {
+        setSuggestions(res.data);
+      })
+      .catch(() => {
+        setSuggestions(suggestionsData);
+      });
   }, []);
   return (
     <>

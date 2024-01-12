@@ -35,6 +35,9 @@ const BlogService = {
   updateVersion: (versionId, postData) => {
     return Axios.put(versionUrl + "update/" + versionId, postData);
   },
+  getPopularTags: () => {
+    return Axios.put(blogUrl + "popular-tags");
+  },
 };
 
 export default BlogService;
