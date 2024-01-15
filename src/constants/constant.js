@@ -86,19 +86,36 @@ export const blogs = [
     },
   },
 ];
-
 export const roles = [
   {
     role: "USER",
     userId: 121,
-    label: "User",
+    label: "Soumen",
     name: "Soumen",
+  },
+  {
+    role: "USER",
+    userId: 124,
+    label: "Jitender",
+    name: "Jitender",
+  },
+  {
+    role: "USER",
+    userId: 125,
+    label: "Varun",
+    name: "Varun",
   },
   {
     role: "LEAD",
     userId: 123,
-    label: "Lead",
+    label: "Lead1",
     name: "Lakin",
+  },
+  {
+    role: "LEAD",
+    userId: 126,
+    label: "Lead2",
+    name: "John Doe",
   },
   {
     role: "ADMIN",
