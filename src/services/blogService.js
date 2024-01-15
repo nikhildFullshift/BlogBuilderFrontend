@@ -38,6 +38,9 @@ const BlogService = {
   getPopularTags: () => {
     return Axios.put(blogUrl + "popular-tags");
   },
+  getStats: () => {
+    return Axios.put(blogUrl + "stats/");
+  },
 };
 
 export default BlogService;

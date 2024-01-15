@@ -12,7 +12,7 @@ function RecentPost({ setSelectedKey }) {
     const timeoutId = setTimeout(() => {
       setRecentBlogs(blogs);
       setLoading(false);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timeoutId);
   }, []);
   return (

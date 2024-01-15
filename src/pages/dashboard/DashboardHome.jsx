@@ -5,23 +5,49 @@ import {
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Card, Statistic } from "antd";
+import { Card, Statistic, notification } from "antd";
 import React, { useState } from "react";
 import RecentPost from "../../components/RecentPost";
+import { useEffect } from "react";
+import BlogService from "../../services/blogService";
 
 function DashboardHome({ theme, setSelectedKey }) {
-  const [total, setTotal] = useState(10);
-  const [approved, setApproved] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [stats, setStats] = useState({
+    published_count: 0,
+    total_count: 0,
+    pending_count: 0,
+    reviewed_count: 0,
+    draft_count: 0,
+  });
+
+  useEffect(() => {
+    if (localStorage.getItem("role")) {
+      setUser(JSON.parse(localStorage.getItem("role")));
+    }
+    BlogService.getStats()
+      .then((res) => {
+        setStats(res.data[0]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        notification.error({
+          message: "Error while fetching dashboard statistics data !!",
+        });
+        setLoading(false);
+      });
+  }, []);
   return (
     <>
       <div className="dashboard-home-title">
         <h2>Knowledge Base</h2>
         <div className="home-count">
           <div>
-            <span>123</span>Total blog posts
+            <span>{stats.total_count}</span>Total blog posts
           </div>
           <div>
-            <span>0</span>Approved blog posts
+            <span>{stats.published_count}</span>Approved blog posts
           </div>
         </div>
       </div>
@@ -30,7 +56,8 @@ function DashboardHome({ theme, setSelectedKey }) {
           <Card bordered={false}>
             <Statistic
               title="Lifetime total posts"
-              value={123}
+              loading={loading}
+              value={stats.total_count}
               valueStyle={{
                 color: theme === "dark" ? "#fff" : "#000",
               }}
@@ -39,8 +66,9 @@ function DashboardHome({ theme, setSelectedKey }) {
           </Card>
           <Card bordered={false}>
             <Statistic
+              loading={loading}
               title="Active posts"
-              value={0}
+              value={stats.published_count}
               valueStyle={{
                 color: "green",
               }}
@@ -49,8 +77,9 @@ function DashboardHome({ theme, setSelectedKey }) {
           </Card>
           <Card bordered={false}>
             <Statistic
+              loading={loading}
               title="Pending for review"
-              value={84}
+              value={stats.pending_count}
               valueStyle={{
                 color: "#ff9900",
               }}
@@ -58,15 +87,27 @@ function DashboardHome({ theme, setSelectedKey }) {
             />
           </Card>
           <Card bordered={false}>
-            <Statistic
-              title="In draft"
-              value={39}
-              precision={2}
-              valueStyle={{
-                color: "blue",
-              }}
-              prefix={<FontAwesomeIcon icon={faPause} />}
-            />
+            {user && user.role === "LEAD" ? (
+              <Statistic
+                loading={loading}
+                title={"Reviewed"}
+                value={stats.reviewed_count}
+                valueStyle={{
+                  color: "blue",
+                }}
+                prefix={<FontAwesomeIcon icon={faPause} />}
+              />
+            ) : (
+              <Statistic
+                loading={loading}
+                title={"In draft"}
+                value={stats.draft_count}
+                valueStyle={{
+                  color: "blue",
+                }}
+                prefix={<FontAwesomeIcon icon={faPause} />}
+              />
+            )}
           </Card>
         </div>
         <Card bordered={false} className="dashboard-recent-posts">
