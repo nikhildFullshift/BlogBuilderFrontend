@@ -82,11 +82,12 @@ function ReportChart({ theme }) {
     pdf.addImage(chartImage, "PNG", 10, 10, 190, 40);
     pdf.autoTable({
       startY: 60,
-      head: [["Date", "Blog Created", "Blog Posted"]],
+      head: [["Date", "Blogs in draft", "Blogs in review", "Blog published"]],
       body: tableData.map((row) => [
         row.date,
-        row.blogCreated.toString(),
-        row.blogPosted.toString(),
+        row.blogDraft.toString(),
+        row.blogPending.toString(),
+        row.blogPublished.toString(),
       ]),
     });
     setTimeout(() => {
@@ -102,30 +103,44 @@ function ReportChart({ theme }) {
           labels: res.data.map((data) => data.date),
           datasets: [
             {
-              id: "1",
+              id: "0",
               fill: true,
-              label: "Blog Posted",
-              data: res.data.map((data) => data.blogPosted),
-              borderColor: "rgb(0, 128, 0)",
-              backgroundColor: (context) => {
-                return getGredient(
-                  context,
-                  "rgba(0, 128, 0, 0.8)",
-                  "rgba(0, 128, 0, 0.1)"
-                );
-              },
-            },
-            {
-              id: "2",
-              fill: true,
-              label: "Blog Created",
-              data: res.data.map((data) => data.blogCreated),
+              label: "Blogs in draft",
+              data: res.data.map((data) => data.blogDraft),
               borderColor: "rgb(53, 162, 235)",
               backgroundColor: (context) => {
                 return getGredient(
                   context,
                   "rgba(53, 162, 235, 0.8)",
                   "rgba(53, 162, 235, 0.1)"
+                );
+              },
+            },
+            {
+              id: "1",
+              fill: true,
+              label: "Blogs in review",
+              data: res.data.map((data) => data.blogPending),
+              borderColor: "rgba(255, 153, 0, 0.8)",
+              backgroundColor: (context) => {
+                return getGredient(
+                  context,
+                  "rgba(255, 153, 0, 0.5)",
+                  "rgba(255, 153, 0, 0.1)"
+                );
+              },
+            },
+            {
+              id: "2",
+              fill: true,
+              label: "Blogs published",
+              data: res.data.map((data) => data.blogPublished),
+              borderColor: "rgba(0, 128, 0, 0.8)",
+              backgroundColor: (context) => {
+                return getGredient(
+                  context,
+                  "rgba(0, 128, 0, 0.5)",
+                  "rgba(0, 128, 0, 0.1)"
                 );
               },
             },
