@@ -1,8 +1,9 @@
 import {
-  faBook,
   faCaretUp,
+  faCompassDrafting,
   faExclamationCircle,
-  faPause,
+  faNewspaper,
+  faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, Statistic, notification } from "antd";
@@ -60,8 +61,9 @@ function DashboardHome({ theme, setSelectedKey }) {
               value={stats.total_count}
               valueStyle={{
                 color: theme === "dark" ? "#fff" : "#000",
+                fontSize: "30px",
               }}
-              prefix={<FontAwesomeIcon icon={faBook} />}
+              prefix={<FontAwesomeIcon icon={faNewspaper} />}
             />
           </Card>
           <Card bordered={false}>
@@ -71,6 +73,7 @@ function DashboardHome({ theme, setSelectedKey }) {
               value={stats.published_count}
               valueStyle={{
                 color: "green",
+                fontSize: "30px",
               }}
               prefix={<FontAwesomeIcon icon={faCaretUp} />}
             />
@@ -82,6 +85,7 @@ function DashboardHome({ theme, setSelectedKey }) {
               value={stats.pending_count}
               valueStyle={{
                 color: "#ff9900",
+                fontSize: "30px",
               }}
               prefix={<FontAwesomeIcon icon={faExclamationCircle} />}
             />
@@ -94,8 +98,9 @@ function DashboardHome({ theme, setSelectedKey }) {
                 value={stats.reviewed_count}
                 valueStyle={{
                   color: "blue",
+                  fontSize: "30px",
                 }}
-                prefix={<FontAwesomeIcon icon={faPause} />}
+                prefix={<FontAwesomeIcon icon={faRotate} />}
               />
             ) : (
               <Statistic
@@ -104,8 +109,9 @@ function DashboardHome({ theme, setSelectedKey }) {
                 value={stats.draft_count}
                 valueStyle={{
                   color: "blue",
+                  fontSize: "30px",
                 }}
-                prefix={<FontAwesomeIcon icon={faPause} />}
+                prefix={<FontAwesomeIcon icon={faCompassDrafting} />}
               />
             )}
           </Card>

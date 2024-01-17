@@ -1,19 +1,25 @@
 import { faList, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Result, Skeleton } from "antd";
+import { Button, Result, Skeleton, notification } from "antd";
 import React, { useEffect, useState } from "react";
-import { blogs } from "../constants/constant";
+import BlogService from "../services/blogService";
 
 function RecentPost({ setSelectedKey }) {
   const [recentBlogs, setRecentBlogs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
-    setLoading(true);
-    const timeoutId = setTimeout(() => {
-      setRecentBlogs(blogs);
-      setLoading(false);
-    }, 1000);
-    return () => clearTimeout(timeoutId);
+    BlogService.getRecentPosts()
+      .then((res) => {
+        setRecentBlogs(res.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        notification.error({
+          message:
+            "Something went wrong while fetching recent post!! Please try again later..",
+        });
+        setLoading(false);
+      });
   }, []);
   return (
     <>
@@ -25,13 +31,13 @@ function RecentPost({ setSelectedKey }) {
               return (
                 <div
                   className="recent-post"
-                  key={blog._id}
+                  key={blog.id}
                   onClick={() => {
-                    window.open("/blog/" + blog._id, "_blank");
+                    window.open("/blog/" + blog.id, "_blank");
                   }}
                 >
-                  <h3>{blog._source.title}</h3>
-                  <p>{new Date(blog._source.created_at).toDateString()}</p>
+                  <h3>{blog.title}</h3>
+                  <p>{new Date(blog.created_at).toDateString()}</p>
                 </div>
               );
             })}
@@ -49,7 +55,7 @@ function RecentPost({ setSelectedKey }) {
             className="result"
             icon={false}
             title="No recent post"
-            subTitle="Sorry, you haven't posted anything yet.."
+            subTitle="Sorry, you don't have any published blog yet.."
             extra={
               <Button
                 icon={<FontAwesomeIcon icon={faPen} />}
