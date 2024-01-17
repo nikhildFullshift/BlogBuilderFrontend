@@ -337,9 +337,13 @@
   display: grid;
   grid-template-columns: 2fr 3fr;
   gap: 50px;
+  grid-template-areas: 
+    "dashboard-stat-card dashboard-recent-posts"
+    "dashboard-chart dashboard-chart";
 }
 .dashboard-stat-card {
   display: grid;
+  grid-area: dashboard-stat-card;
   gap: 24px;
   grid-template-columns: repeat(2,  1fr);
 }
@@ -355,9 +359,16 @@
 }
 
 .dashboard-recent-posts {
+  grid-area: dashboard-recent-posts;
   min-height: 350px;
   background: var(--bg-color) !important;
   border: 1px solid #ffffff;
+}
+.dashboard-chart {
+  grid-area: dashboard-chart;
+  background: var(--bg-color) !important;
+  border: 1px solid #ffffff;
+  margin-bottom: 50px;
 }
 .result .ant-result-title{
   color: var(--primary-color) !important;

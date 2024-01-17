@@ -11,6 +11,7 @@ import React, { useState } from "react";
 import RecentPost from "../../components/RecentPost";
 import { useEffect } from "react";
 import BlogService from "../../services/blogService";
+import ReportChart from "../../components/ReportChart";
 
 function DashboardHome({ theme, setSelectedKey }) {
   const [loading, setLoading] = useState(true);
@@ -118,6 +119,9 @@ function DashboardHome({ theme, setSelectedKey }) {
         </div>
         <Card bordered={false} className="dashboard-recent-posts">
           <RecentPost setSelectedKey={setSelectedKey} />
+        </Card>
+        <Card bordered={false} className="dashboard-chart">
+          <ReportChart theme={theme} />
         </Card>
       </div>
     </>

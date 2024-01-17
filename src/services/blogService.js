@@ -44,6 +44,9 @@ const BlogService = {
   getRecentPosts: () => {
     return Axios.put(blogUrl + "recent-posts/");
   },
+  getReport: () => {
+    return Axios.put(blogUrl + "report/");
+  },
 };
 
 export default BlogService;

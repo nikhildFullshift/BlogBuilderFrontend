@@ -26,6 +26,12 @@ export const roles = [
     name: "Varun",
   },
   {
+    role: "USER",
+    userId: 127,
+    label: "Ravi",
+    name: "Ravi",
+  },
+  {
     role: "LEAD",
     userId: 123,
     label: "Lead1",
