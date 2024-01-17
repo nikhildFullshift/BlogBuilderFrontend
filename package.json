@@ -29,6 +29,8 @@
     "axios": "^1.6.2",
     "chart.js": "^4.4.1",
     "clipboard": "^2.0.11",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.1",
     "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

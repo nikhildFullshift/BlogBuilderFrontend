@@ -370,6 +370,14 @@
   border: 1px solid #ffffff;
   margin-bottom: 50px;
 }
+.chart-report-wrapper {
+  position: relative;
+}
+.chart-report-wrapper Button {
+  position: absolute;
+  top: -10px;
+  right: 34px;
+}
 .result .ant-result-title{
   color: var(--primary-color) !important;
 }

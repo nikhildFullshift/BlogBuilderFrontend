@@ -1,17 +1,24 @@
 import { Chart as ChartJs } from "chart.js/auto";
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import "jspdf-autotable";
+import jsPDF from "jspdf";
 import BlogService from "../services/blogService";
-import { Skeleton, notification } from "antd";
+import { Button, Skeleton, Tooltip, notification } from "antd";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 function ReportChart({ theme }) {
   const [reportData, setReportData] = useState({
     labels: [],
     datasets: [],
   });
+  const [buttonLoading, setButtonLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const chartRef = useRef(null);
   const options = {
     scales: {
       x: {
@@ -65,9 +72,32 @@ function ReportChart({ theme }) {
 
     return gradient;
   };
+
+  const downloadReport = () => {
+    setButtonLoading(true);
+    const pdf = new jsPDF("p", "mm", "a4");
+    console.log(chartRef.current);
+    const chartCanvas = chartRef.current.canvas;
+    const chartImage = chartCanvas.toDataURL("image/png");
+    pdf.addImage(chartImage, "PNG", 10, 10, 190, 40);
+    pdf.autoTable({
+      startY: 60,
+      head: [["Date", "Blog Created", "Blog Posted"]],
+      body: tableData.map((row) => [
+        row.date,
+        row.blogCreated.toString(),
+        row.blogPosted.toString(),
+      ]),
+    });
+    setTimeout(() => {
+      pdf.save("report.pdf");
+      setButtonLoading(false);
+    }, 2000);
+  };
   useEffect(() => {
     BlogService.getReport()
       .then((res) => {
+        setTableData(res.data);
         setReportData({
           labels: res.data.map((data) => data.date),
           datasets: [
@@ -116,7 +146,29 @@ function ReportChart({ theme }) {
       {loading ? (
         <Skeleton active />
       ) : (
-        <Line data={reportData} height={60} options={options} />
+        <div className="chart-report-wrapper">
+          <Line
+            ref={chartRef}
+            data={reportData}
+            height={60}
+            options={options}
+          />
+          <Tooltip
+            title={buttonLoading ? null : "Download Report"}
+            placement="left"
+          >
+            <Button
+              onClick={() => {
+                downloadReport();
+              }}
+              loading={buttonLoading}
+              icon={<FontAwesomeIcon icon={faDownload} />}
+              shape={buttonLoading ? null : "circle"}
+            >
+              {buttonLoading ? "Downloading" : null}
+            </Button>
+          </Tooltip>
+        </div>
       )}
     </>
   );
