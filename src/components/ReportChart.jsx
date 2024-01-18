@@ -2,13 +2,17 @@ import { Chart as ChartJs } from "chart.js/auto";
 import React, { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Line } from "react-chartjs-2";
+import { Bar, Line } from "react-chartjs-2";
 import "jspdf-autotable";
 import jsPDF from "jspdf";
 import BlogService from "../services/blogService";
-import { Button, Skeleton, Tooltip, notification } from "antd";
+import { Button, Radio, Skeleton, Space, Tooltip, notification } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChartLine,
+  faChartSimple,
+  faDownload,
+} from "@fortawesome/free-solid-svg-icons";
 
 function ReportChart({ theme }) {
   const [reportData, setReportData] = useState({
@@ -17,6 +21,7 @@ function ReportChart({ theme }) {
   });
   const [buttonLoading, setButtonLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [bar, setBar] = useState("bar");
   const [loading, setLoading] = useState(true);
   const chartRef = useRef(null);
   const options = {
@@ -51,6 +56,10 @@ function ReportChart({ theme }) {
         position: "left",
       },
     },
+    radius: 5,
+    hitRadius: 30,
+    hoverRadius: 12,
+    responsive: true,
   };
   const getGredient = (context, c1, c2) => {
     const chart = context.chart;
@@ -105,6 +114,7 @@ function ReportChart({ theme }) {
             {
               id: "0",
               fill: true,
+              tension: 0.3,
               label: "Blogs in draft",
               data: res.data.map((data) => data.blogDraft),
               borderColor: "rgb(53, 162, 235)",
@@ -112,35 +122,37 @@ function ReportChart({ theme }) {
                 return getGredient(
                   context,
                   "rgba(53, 162, 235, 0.8)",
-                  "rgba(53, 162, 235, 0.1)"
+                  "rgba(53, 162, 235, 0.2)"
                 );
               },
             },
             {
               id: "1",
               fill: true,
+              tension: 0.3,
               label: "Blogs in review",
               data: res.data.map((data) => data.blogPending),
               borderColor: "rgba(255, 153, 0, 0.8)",
               backgroundColor: (context) => {
                 return getGredient(
                   context,
-                  "rgba(255, 153, 0, 0.5)",
-                  "rgba(255, 153, 0, 0.1)"
+                  "rgba(255, 153, 0, 0.8)",
+                  "rgba(255, 153, 0, 0.3)"
                 );
               },
             },
             {
               id: "2",
               fill: true,
+              tension: 0.3,
               label: "Blogs published",
               data: res.data.map((data) => data.blogPublished),
               borderColor: "rgba(0, 128, 0, 0.8)",
               backgroundColor: (context) => {
                 return getGredient(
                   context,
-                  "rgba(0, 128, 0, 0.5)",
-                  "rgba(0, 128, 0, 0.1)"
+                  "rgba(0, 128, 0, 0.8)",
+                  "rgba(0, 128, 0, 0.3)"
                 );
               },
             },
@@ -162,27 +174,50 @@ function ReportChart({ theme }) {
         <Skeleton active />
       ) : (
         <div className="chart-report-wrapper">
-          <Line
-            ref={chartRef}
-            data={reportData}
-            height={60}
-            options={options}
-          />
-          <Tooltip
-            title={buttonLoading ? null : "Download Report"}
-            placement="left"
-          >
-            <Button
-              onClick={() => {
-                downloadReport();
-              }}
-              loading={buttonLoading}
-              icon={<FontAwesomeIcon icon={faDownload} />}
-              shape={buttonLoading ? null : "circle"}
+          {bar === "bar" ? (
+            <Bar
+              ref={chartRef}
+              data={reportData}
+              height={60}
+              options={options}
+            />
+          ) : (
+            <Line
+              ref={chartRef}
+              data={reportData}
+              height={60}
+              options={options}
+            />
+          )}
+          <Space className="chart-top-action">
+            <Tooltip
+              title={buttonLoading ? null : "Download Report"}
+              placement="left"
             >
-              {buttonLoading ? "Downloading" : null}
-            </Button>
-          </Tooltip>
+              <Button
+                onClick={() => {
+                  downloadReport();
+                }}
+                loading={buttonLoading}
+                icon={<FontAwesomeIcon icon={faDownload} />}
+              />
+            </Tooltip>
+            <Radio.Group
+              value={bar}
+              buttonStyle="text"
+              onChange={(e) => {
+                setBar(e.target.value);
+              }}
+              disabled={buttonLoading}
+            >
+              <Radio.Button value="bar">
+                <FontAwesomeIcon icon={faChartSimple} />
+              </Radio.Button>
+              <Radio.Button value="chart">
+                <FontAwesomeIcon icon={faChartLine} />
+              </Radio.Button>
+            </Radio.Group>
+          </Space>
         </div>
       )}
     </>

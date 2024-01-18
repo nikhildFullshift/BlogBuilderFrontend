@@ -363,6 +363,7 @@
   min-height: 350px;
   background: var(--bg-color) !important;
   border: 1px solid #ffffff;
+  /* margin-bottom: 50px; */
 }
 .dashboard-chart {
   grid-area: dashboard-chart;
@@ -373,10 +374,10 @@
 .chart-report-wrapper {
   position: relative;
 }
-.chart-report-wrapper Button {
+.chart-report-wrapper .chart-top-action {
   position: absolute;
   top: -10px;
-  right: 34px;
+  right: 0;
 }
 .result .ant-result-title{
   color: var(--primary-color) !important;

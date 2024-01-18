@@ -71,6 +71,51 @@ function DashboardBlogs({ currentTheme }) {
       dataIndex: "statusMessage",
       key: "statusMessage",
       align: "center",
+      filters: [
+        {
+          text: "Pending for review",
+          value: "Pending for review",
+        },
+        {
+          text: "Reviewed",
+          value: 1,
+        },
+        {
+          text: "Published",
+          value: 2,
+        },
+        {
+          text: "In draft",
+          value: 3,
+        },
+      ],
+      onFilter: (value, record) => {
+        switch (value) {
+          case "Pending for review":
+            if (
+              record.actions.length === 0 ||
+              record.actions.includes("Review")
+            ) {
+              return record;
+            }
+            break;
+          case 1:
+            if (record.actions.includes("Suggestions")) {
+              return record;
+            }
+            break;
+          case 2:
+            if (record.actions.includes("View in Kb")) {
+              return record;
+            }
+            break;
+          case 3:
+            if (record.actions.includes("Edit Draft")) {
+              return record;
+            }
+            break;
+        }
+      },
     },
     {
       title: "Actions",

@@ -1,8 +1,8 @@
 import {
-  faCaretUp,
-  faCompassDrafting,
+  faBook,
   faExclamationCircle,
-  faNewspaper,
+  faFileCircleCheck,
+  faPenToSquare,
   faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -64,7 +64,7 @@ function DashboardHome({ theme, setSelectedKey }) {
                 color: theme === "dark" ? "#fff" : "#000",
                 fontSize: "30px",
               }}
-              prefix={<FontAwesomeIcon icon={faNewspaper} />}
+              prefix={<FontAwesomeIcon icon={faBook} />}
             />
           </Card>
           <Card bordered={false}>
@@ -76,7 +76,7 @@ function DashboardHome({ theme, setSelectedKey }) {
                 color: "green",
                 fontSize: "30px",
               }}
-              prefix={<FontAwesomeIcon icon={faCaretUp} />}
+              prefix={<FontAwesomeIcon icon={faFileCircleCheck} />}
             />
           </Card>
           <Card bordered={false}>
@@ -98,7 +98,7 @@ function DashboardHome({ theme, setSelectedKey }) {
                 title={"Reviewed"}
                 value={stats.reviewed_count}
                 valueStyle={{
-                  color: "blue",
+                  color: "#35a2eb",
                   fontSize: "30px",
                 }}
                 prefix={<FontAwesomeIcon icon={faRotate} />}
@@ -109,10 +109,10 @@ function DashboardHome({ theme, setSelectedKey }) {
                 title={"In draft"}
                 value={stats.draft_count}
                 valueStyle={{
-                  color: "blue",
+                  color: "#35a2eb",
                   fontSize: "30px",
                 }}
-                prefix={<FontAwesomeIcon icon={faCompassDrafting} />}
+                prefix={<FontAwesomeIcon icon={faPenToSquare} />}
               />
             )}
           </Card>
