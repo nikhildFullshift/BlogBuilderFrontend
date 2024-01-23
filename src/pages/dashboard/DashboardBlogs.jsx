@@ -8,7 +8,7 @@ import { roles } from "../../constants/constant";
 import moment from "moment";
 import PreviewBlog from "../../components/PreviewBlog";
 
-function DashboardBlogs({ currentTheme }) {
+function DashboardBlogs({ currentTheme, filtered, setFiltered }) {
   const [blogs, setBlogs] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -78,17 +78,18 @@ function DashboardBlogs({ currentTheme }) {
         },
         {
           text: "Reviewed",
-          value: 1,
+          value: "Reviewed",
         },
         {
           text: "Published",
-          value: 2,
+          value: "Published",
         },
         {
           text: "In draft",
-          value: 3,
+          value: "In draft",
         },
       ],
+      defaultFilteredValue: filtered,
       onFilter: (value, record) => {
         switch (value) {
           case "Pending for review":
@@ -99,17 +100,17 @@ function DashboardBlogs({ currentTheme }) {
               return record;
             }
             break;
-          case 1:
+          case "Reviewed":
             if (record.actions.includes("Suggestions")) {
               return record;
             }
             break;
-          case 2:
+          case "Published":
             if (record.actions.includes("View in Kb")) {
               return record;
             }
             break;
-          case 3:
+          case "In draft":
             if (record.actions.includes("Edit Draft")) {
               return record;
             }

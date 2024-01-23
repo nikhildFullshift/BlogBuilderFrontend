@@ -29,13 +29,26 @@ function Dashboard({ theme, setTheme }) {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const { darkAlgorithm, defaultAlgorithm } = themeProvider;
+  const [filtered, setFiltered] = useState([]);
 
   const getContent = () => {
     switch (selectedKey) {
       case "home":
-        return <DashboardHome theme={theme} setSelectedKey={setSelectedKey} />;
+        return (
+          <DashboardHome
+            theme={theme}
+            setSelectedKey={setSelectedKey}
+            setFiltered={setFiltered}
+          />
+        );
       case "blogs":
-        return <DashboardBlogs currentTheme={theme} />;
+        return (
+          <DashboardBlogs
+            currentTheme={theme}
+            filtered={filtered}
+            setFiltered={setFiltered}
+          />
+        );
       case "create":
         return (
           <DashboardCreateBlog
@@ -64,7 +77,6 @@ function Dashboard({ theme, setTheme }) {
       setUserName(roles[0].name);
     }
   }, []);
-
   return (
     <ConfigProvider
       theme={{
@@ -103,6 +115,7 @@ function Dashboard({ theme, setTheme }) {
               selectedKeys={selectedKey}
               onSelect={(e) => {
                 setSelectedKey(e.key);
+                setFiltered([]);
               }}
               items={[
                 {
@@ -159,11 +172,12 @@ function Dashboard({ theme, setTheme }) {
             />
           </div>
         </Sider>
-        <Layout className="dashboard-main">
+        <Layout className="dashboard-main" style={{ overflowX: "hidden" }}>
           <Header className="dashboard-header">
             <DashboardHeader
               selectedKey={selectedKey}
               setSelectedKey={setSelectedKey}
+              setFiltered={setFiltered}
             />
           </Header>
           <Content

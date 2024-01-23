@@ -1,9 +1,28 @@
-import { faHome, faNewspaper, faPen } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBell,
+  faHome,
+  faNewspaper,
+  faPen,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button } from "antd";
+import { Badge, Button, Popover } from "antd";
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import BlogService from "../services/blogService";
 
-function DashboardHeader({ selectedKey, setSelectedKey }) {
+function DashboardHeader({ selectedKey, setSelectedKey, setFiltered }) {
+  const [pending, setPending] = useState(0);
+  useEffect(() => {
+    if (localStorage.getItem("role")) {
+      const user = JSON.parse(localStorage.getItem("role"));
+      if (selectedKey === "home" && user && user.role && user.role === "LEAD") {
+        BlogService.getStats().then((res) => {
+          setPending(res.data[0].pending_count);
+        });
+      }
+    }
+  }, []);
   switch (selectedKey) {
     case "home":
       return (
@@ -13,12 +32,29 @@ function DashboardHeader({ selectedKey, setSelectedKey }) {
             <span>My Dashboard</span>
           </div>
           <div className="dashboard-header-right">
-            {/* <Button
-              icon={<FontAwesomeIcon icon={faPen} />}
-              onClick={() => setSelectedKey("create")}
-            >
-              WRITE A POST
-            </Button> */}
+            {pending > 0 && (
+              <Popover
+                placement="left"
+                content={
+                  pending +
+                  (pending > 1 ? " blogs are " : " blog is ") +
+                  "pending for review"
+                }
+                title={null}
+              >
+                <Badge count={pending} size="small">
+                  <FontAwesomeIcon
+                    icon={faBell}
+                    fontSize="20"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      setFiltered(["Pending for review"]);
+                      setSelectedKey("blogs");
+                    }}
+                  />
+                </Badge>
+              </Popover>
+            )}
           </div>
         </div>
       );

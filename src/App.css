@@ -333,6 +333,7 @@
   border-radius: 12px;
 }
 .dashboard-home-content {
+  position: relative;
   margin: 30px 0;
   display: grid;
   grid-template-columns: 2fr 3fr;
@@ -340,6 +341,30 @@
   grid-template-areas: 
     "dashboard-stat-card dashboard-recent-posts"
     "dashboard-chart dashboard-chart";
+}
+#cursor-bubble {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background: #0080001c;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  scale: 1;
+  transition: all 0.1s ease-out;
+  pointer-events: none;
+  z-index: 99999;
+  color: var(--primary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stat-card-home {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+.stat-card-home:hover {
+  scale: 1.02;
+  box-shadow: 0 0 5px var(--shadow-color);
 }
 .dashboard-stat-card {
   display: grid;
@@ -399,6 +424,7 @@
   border-radius: 12px;
   margin-top: 15px;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 .recent-post:hover {
   box-shadow: 0 0 5px var(--shadow-color);

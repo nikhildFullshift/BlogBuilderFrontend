@@ -13,6 +13,36 @@ import ViewBlog from "./pages/view-blog-page/ViewBlog";
 
 function Routes() {
   const [theme, setTheme] = useState();
+  if (document.querySelector("#root")) {
+    const pc = document.querySelector("#root");
+    const cursorBubble = document.getElementById("cursor-bubble");
+    pc.addEventListener("mouseenter", () => {
+      cursorBubble.style.scale = 1;
+    });
+
+    pc.addEventListener("mouseleave", () => {
+      cursorBubble.style.scale = 0;
+    });
+    pc.addEventListener("click", () => {
+      cursorBubble.style.height = "30px";
+      cursorBubble.style.width = "30px";
+      setTimeout(() => {
+        cursorBubble.style.height = "20px";
+        cursorBubble.style.width = "20px";
+      }, 300);
+    });
+    pc.addEventListener("mousemove", (event) => {
+      const mouseX = event.clientX;
+      const mouseY = event.clientY;
+      const maxRightPosition = window.innerWidth - 20;
+      const adjustedLeft = Math.min(mouseX, maxRightPosition);
+      const maxBottomPosition = window.innerHeight - 20;
+      const adjustedTop = Math.min(mouseY, maxBottomPosition);
+      // Update the position of the bubble
+      cursorBubble.style.left = `${adjustedLeft}px`;
+      cursorBubble.style.top = `${adjustedTop}px`;
+    });
+  }
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if (theme) {
@@ -23,29 +53,32 @@ function Routes() {
     }
   }, []);
   return (
-    <Router>
-      <Layout className={theme === "dark" ? "dark-theme" : "light-theme"}>
-        <Switch>
-          <Route
-            exact
-            path="/"
-            element={<Home theme={theme} setTheme={setTheme} />}
-          />
-          <Route
-            exact
-            path="/blog/:id"
-            element={<ViewBlog theme={theme} setTheme={setTheme} />}
-          />
-          <Route
-            exact
-            path="/dashboard"
-            element={<Dashboard theme={theme} setTheme={setTheme} />}
-          />
-          <Route exact path="/pageNotFound" element={<PageNotFound />} />
-          <Route path="*" element={<Navigate to="/pageNotFound" />} />
-        </Switch>
-      </Layout>
-    </Router>
+    <>
+      <div id="cursor-bubble"></div>
+      <Router>
+        <Layout className={theme === "dark" ? "dark-theme" : "light-theme"}>
+          <Switch>
+            <Route
+              exact
+              path="/"
+              element={<Home theme={theme} setTheme={setTheme} />}
+            />
+            <Route
+              exact
+              path="/blog/:id"
+              element={<ViewBlog theme={theme} setTheme={setTheme} />}
+            />
+            <Route
+              exact
+              path="/dashboard"
+              element={<Dashboard theme={theme} setTheme={setTheme} />}
+            />
+            <Route exact path="/pageNotFound" element={<PageNotFound />} />
+            <Route path="*" element={<Navigate to="/pageNotFound" />} />
+          </Switch>
+        </Layout>
+      </Router>
+    </>
   );
 }
 

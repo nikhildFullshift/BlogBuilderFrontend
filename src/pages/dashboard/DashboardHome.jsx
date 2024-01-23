@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import BlogService from "../../services/blogService";
 import ReportChart from "../../components/ReportChart";
 
-function DashboardHome({ theme, setSelectedKey }) {
+function DashboardHome({ theme, setSelectedKey, setFiltered }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState({
@@ -55,7 +55,14 @@ function DashboardHome({ theme, setSelectedKey }) {
       </div>
       <div className="dashboard-home-content">
         <div className="dashboard-stat-card">
-          <Card bordered={false}>
+          <Card
+            bordered={false}
+            className="stat-card-home"
+            onClick={() => {
+              setFiltered([]);
+              setSelectedKey("blogs");
+            }}
+          >
             <Statistic
               title="Lifetime total posts"
               loading={loading}
@@ -67,7 +74,14 @@ function DashboardHome({ theme, setSelectedKey }) {
               prefix={<FontAwesomeIcon icon={faBook} />}
             />
           </Card>
-          <Card bordered={false}>
+          <Card
+            bordered={false}
+            className="stat-card-home"
+            onClick={() => {
+              setFiltered(["Published"]);
+              setSelectedKey("blogs");
+            }}
+          >
             <Statistic
               loading={loading}
               title="Active posts"
@@ -79,7 +93,14 @@ function DashboardHome({ theme, setSelectedKey }) {
               prefix={<FontAwesomeIcon icon={faFileCircleCheck} />}
             />
           </Card>
-          <Card bordered={false}>
+          <Card
+            bordered={false}
+            className="stat-card-home"
+            onClick={() => {
+              setFiltered(["Pending for review"]);
+              setSelectedKey("blogs");
+            }}
+          >
             <Statistic
               loading={loading}
               title="Pending for review"
@@ -91,7 +112,18 @@ function DashboardHome({ theme, setSelectedKey }) {
               prefix={<FontAwesomeIcon icon={faExclamationCircle} />}
             />
           </Card>
-          <Card bordered={false}>
+          <Card
+            bordered={false}
+            className="stat-card-home"
+            onClick={() => {
+              if (user && user.role === "LEAD") {
+                setFiltered(["Reviewed"]);
+              } else {
+                setFiltered(["In draft"]);
+              }
+              setSelectedKey("blogs");
+            }}
+          >
             {user && user.role === "LEAD" ? (
               <Statistic
                 loading={loading}
