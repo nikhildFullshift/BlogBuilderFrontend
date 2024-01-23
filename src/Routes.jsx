@@ -13,7 +13,10 @@ import ViewBlog from "./pages/view-blog-page/ViewBlog";
 
 function Routes() {
   const [theme, setTheme] = useState();
-  if (document.querySelector("#root")) {
+  if (
+    document.querySelector("#root") &&
+    document.getElementById("cursor-bubble")
+  ) {
     const pc = document.querySelector("#root");
     const cursorBubble = document.getElementById("cursor-bubble");
     pc.addEventListener("mouseenter", () => {
@@ -24,8 +27,8 @@ function Routes() {
       cursorBubble.style.scale = 0;
     });
     pc.addEventListener("click", () => {
-      cursorBubble.style.height = "30px";
-      cursorBubble.style.width = "30px";
+      cursorBubble.style.height = "50px";
+      cursorBubble.style.width = "50px";
       setTimeout(() => {
         cursorBubble.style.height = "20px";
         cursorBubble.style.width = "20px";
